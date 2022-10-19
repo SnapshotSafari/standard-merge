@@ -1,0 +1,1306 @@
+INFO  [2022-10-10 13:09:32] Parameters ==============================
+Input folder: 
+Ignored: reports_FBIP_format_all_recs, README_FILES_for_TEAMS.txt, Special Projects, DHP/DHP+OVE_same_file, KGA/KGA-KHO_together
+
+INFO  [2022-10-10 13:09:33] Files ==============================
+92 file(s) to standardize.
+
+INFO  [2022-10-10 13:09:33] File APN/APN_S1_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:09:33] Initial data: 24 columns.
+INFO  [2022-10-10 13:09:33] Classifier set to zooniverse
+WARN  [2022-10-10 13:09:33] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:09:34] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	1#APN_13U#1#4	1	APN_13U	1	4	APN	2017-07-06	14:43:33
+2	1#APN_13U#1#5	1	APN_13U	1	5	APN	2017-07-06	14:44:33
+3	1#APN_13U#1#7	1	APN_13U	1	7	APN	2017-07-06	14:46:35
+4	1#APN_13U#1#8	1	APN_13U	1	8	APN	2017-07-07	21:53:52
+5	1#APN_13U#1#9	1	APN_13U	1	9	APN	2017-07-09	10:14:13
+
+
+INFO  [2022-10-10 13:09:34] File APN/APN_S2_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:09:34] Initial data: 33 columns.
+INFO  [2022-10-10 13:09:34] Classifier set to zooniverse
+WARN  [2022-10-10 13:09:34] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:09:34] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	2#APN_13U#3#5	2	APN_13U	3	5	APN	2017-10-27	04:59:53
+2	2#APN_13U#3#6	2	APN_13U	3	6	APN	2017-10-28	20:23:30
+3	2#APN_13U#3#7	2	APN_13U	3	7	APN	2017-10-31	12:00:42
+4	2#APN_13U#3#8	2	APN_13U	3	8	APN	2017-11-02	13:25:50
+5	2#APN_13U#3#9	2	APN_13U	3	9	APN	2017-11-04	06:35:55
+
+
+INFO  [2022-10-10 13:09:35] File APN/APN_S3_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:09:35] Initial data: 47 columns.
+INFO  [2022-10-10 13:09:35] Classifier set to zooniverse
+WARN  [2022-10-10 13:09:36] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:09:36] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	3#APN_13U#8#2	3	APN_13U	8	2	APN	2018-07-13	09:33:01
+2	3#APN_13U#8#3	3	APN_13U	8	3	APN	2018-07-13	09:35:07
+3	3#APN_13U#8#5	3	APN_13U	8	5	APN	2018-07-16	14:56:52
+4	3#APN_13U#8#6	3	APN_13U	8	6	APN	2018-07-16	15:32:13
+5	3#APN_13U#8#7	3	APN_13U	8	7	APN	2018-07-16	15:40:49
+
+
+INFO  [2022-10-10 13:09:37] File ATH/ATH_Roll1_Snapshot_UPDATED.csv ------------
+INFO  [2022-10-10 13:09:37] Initial data: 6 columns.
+INFO  [2022-10-10 13:09:37] Classifier set to traptagger
+WARN  [2022-10-10 13:09:37] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:09:37] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#ATH_C03#1#1	NA	ATH_C03	1	1	ATH	2020-03-06	21:57:00
+2	NA#ATH_C03#1#2	NA	ATH_C03	1	2	ATH	2020-03-06	21:58:00
+3	NA#ATH_C03#1#3	NA	ATH_C03	1	3	ATH	2020-03-06	21:59:00
+4	NA#ATH_C03#1#10	NA	ATH_C03	1	10	ATH	2020-03-07	02:18:00
+5	NA#ATH_D03#1#1	NA	ATH_D03	1	1	ATH	2020-03-07	09:30:00
+
+
+INFO  [2022-10-10 13:09:37] File ATH/ATH_Roll2_Snapshot_UPDATED.csv ------------
+INFO  [2022-10-10 13:09:37] Initial data: 6 columns.
+INFO  [2022-10-10 13:09:37] Classifier set to traptagger
+WARN  [2022-10-10 13:09:37] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:09:37] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#ATH_E03#2#1	NA	ATH_E03	2	1	ATH	2020-04-18	15:32:00
+2	NA#ATH_E03#2#2	NA	ATH_E03	2	2	ATH	2020-04-19	11:03:00
+3	NA#ATH_E03#2#3	NA	ATH_E03	2	3	ATH	2020-04-19	11:04:00
+4	NA#ATH_E03#2#5	NA	ATH_E03	2	5	ATH	2020-04-19	19:36:00
+5	NA#ATH_E03#2#8	NA	ATH_E03	2	8	ATH	2020-04-20	20:35:00
+
+
+INFO  [2022-10-10 13:09:37] File ATH/ATH_Roll3_Snapshot_UPDATED.csv ------------
+INFO  [2022-10-10 13:09:37] Initial data: 5 columns.
+INFO  [2022-10-10 13:09:37] Classifier set to traptagger
+WARN  [2022-10-10 13:09:37] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:09:38] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#ATH_E02#3#1	NA	ATH_E02	3	1	ATH	2020-10-01	07:14:00
+2	NA#ATH_E03#3#1	NA	ATH_E03	3	1	ATH	2020-10-01	07:25:00
+3	NA#ATH_D03#3#1	NA	ATH_D03	3	1	ATH	2020-10-01	07:47:00
+4	NA#ATH_B04#3#1	NA	ATH_B04	3	1	ATH	2020-10-01	08:14:00
+5	NA#ATH_C04#3#1	NA	ATH_C04	3	1	ATH	2020-10-01	08:25:00
+
+
+INFO  [2022-10-10 13:09:38] File ATH/ATH_Roll4_Snapshot_UPDATED.csv ------------
+INFO  [2022-10-10 13:09:38] Initial data: 5 columns.
+INFO  [2022-10-10 13:09:38] Classifier set to traptagger
+WARN  [2022-10-10 13:09:38] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:09:38] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#ATH_E02#4#1	NA	ATH_E02	4	1	ATH	2021-03-05	07:56:00
+2	NA#ATH_C03#4#1	NA	ATH_C03	4	1	ATH	2021-03-05	09:08:00
+3	NA#ATH_B05#4#1	NA	ATH_B05	4	1	ATH	2021-03-05	10:28:00
+4	NA#ATH_C06#4#1	NA	ATH_C06	4	1	ATH	2021-03-05	11:09:00
+5	NA#ATH_E05#4#1	NA	ATH_E05	4	1	ATH	2021-03-05	12:51:00
+
+
+INFO  [2022-10-10 13:09:38] File BLO/BLO_S1_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:09:38] Initial data: 26 columns.
+INFO  [2022-10-10 13:09:38] Classifier set to zooniverse
+WARN  [2022-10-10 13:09:38] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:09:38] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	1#BLO_A04#1#1	1	BLO_A04	1	1	BLO	2018-07-20	17:37:07
+2	1#BLO_A04#1#2	1	BLO_A04	1	2	BLO	2018-07-20	17:37:35
+3	1#BLO_A04#1#3	1	BLO_A04	1	3	BLO	2018-07-20	17:46:39
+4	1#BLO_A04#1#4	1	BLO_A04	1	4	BLO	2018-07-20	17:47:39
+5	1#BLO_A04#1#5	1	BLO_A04	1	5	BLO	2018-07-23	10:24:36
+
+
+INFO  [2022-10-10 13:09:38] File CDB/CDB_S2_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:09:38] Initial data: 27 columns.
+INFO  [2022-10-10 13:09:38] Classifier set to zooniverse
+WARN  [2022-10-10 13:09:39] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:09:39] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	2#CDB_A05#3#1	2	CDB_A05	3	1	CDB	2019-01-31	08:20:26
+2	2#CDB_A05#3#2	2	CDB_A05	3	2	CDB	2019-01-31	08:21:36
+3	2#CDB_A05#3#3	2	CDB_A05	3	3	CDB	2019-02-10	07:07:36
+4	2#CDB_A05#3#4	2	CDB_A05	3	4	CDB	2019-02-10	08:40:01
+5	2#CDB_A05#3#5	2	CDB_A05	3	5	CDB	2019-02-10	13:40:12
+
+
+INFO  [2022-10-10 13:09:39] File CDB/CDB_S3_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:09:39] Initial data: 27 columns.
+INFO  [2022-10-10 13:09:39] Classifier set to zooniverse
+WARN  [2022-10-10 13:09:39] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:09:39] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	3#CDB_A05#4#2	3	CDB_A05	4	2	CDB	2019-05-01	09:27:16
+2	3#CDB_A05#4#3	3	CDB_A05	4	3	CDB	2019-05-01	19:50:45
+3	3#CDB_A05#4#4	3	CDB_A05	4	4	CDB	2019-05-02	02:51:09
+4	3#CDB_A05#4#5	3	CDB_A05	4	5	CDB	2019-05-02	08:13:44
+5	3#CDB_A05#4#6	3	CDB_A05	4	6	CDB	2019-05-02	22:28:00
+
+
+INFO  [2022-10-10 13:09:39] File DHP/DHP_S1_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:09:40] Initial data: 39 columns.
+INFO  [2022-10-10 13:09:40] Classifier set to zooniverse
+WARN  [2022-10-10 13:09:40] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:09:40] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	1#DHP_DA06#1#1	1	DHP_DA06	1	1	DHP	2018-09-07	12:45:25
+2	1#DHP_DA06#1#2	1	DHP_DA06	1	2	DHP	2018-09-07	12:46:25
+3	1#DHP_DA06#1#3	1	DHP_DA06	1	3	DHP	2018-09-08	10:54:12
+4	1#DHP_DA06#1#5	1	DHP_DA06	1	5	DHP	2018-09-15	14:50:17
+5	1#DHP_DA06#1#6	1	DHP_DA06	1	6	DHP	2018-09-17	22:26:19
+
+
+INFO  [2022-10-10 13:09:40] File DHP/DHP_S2_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:09:40] Initial data: 28 columns.
+INFO  [2022-10-10 13:09:40] Classifier set to zooniverse
+WARN  [2022-10-10 13:09:40] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:09:40] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	2#DHP_B08#3#4	2	DHP_B08	3	4	DHP	2019-02-16	03:22:33
+2	2#DHP_B08#3#9	2	DHP_B08	3	9	DHP	2019-03-24	12:21:07
+3	2#DHP_B09#3#1021	2	DHP_B09	3	1021	DHP	2019-03-07	10:45:48
+4	2#DHP_B09#3#1092	2	DHP_B09	3	1092	DHP	2019-04-30	20:05:53
+5	2#DHP_D01#3#2	2	DHP_D01	3	2	DHP	2019-02-14	08:00:15
+
+
+INFO  [2022-10-10 13:09:40] File DHP/DHP_S3_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:09:40] Initial data: 31 columns.
+INFO  [2022-10-10 13:09:40] Classifier set to zooniverse
+WARN  [2022-10-10 13:09:41] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:09:41] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	3#DHP_DA06#4#4	3	DHP_DA06	4	4	DHP	2019-05-15	17:57:04
+2	3#DHP_DA06#4#5	3	DHP_DA06	4	5	DHP	2019-05-18	08:28:35
+3	3#DHP_DA06#4#6	3	DHP_DA06	4	6	DHP	2019-05-20	20:04:13
+4	3#DHP_DA06#4#7	3	DHP_DA06	4	7	DHP	2019-05-20	20:10:39
+5	3#DHP_DA06#4#8	3	DHP_DA06	4	8	DHP	2019-05-20	20:12:10
+
+
+INFO  [2022-10-10 13:09:41] File DHP/DHP+OVE_same_file/DHP_S1_full_report_0-50__agreement_corrected_fin_with_OVE.csv ------------
+INFO  [2022-10-10 13:09:41] Initial data: 38 columns.
+INFO  [2022-10-10 13:09:41] Classifier set to zooniverse
+WARN  [2022-10-10 13:09:41] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:09:41] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	1#DHP_DA06#1#1	1	DHP_DA06	1	1	DHP	2018-09-07	12:45:25
+2	1#DHP_DA06#1#2	1	DHP_DA06	1	2	DHP	2018-09-07	12:46:25
+3	1#DHP_DA06#1#3	1	DHP_DA06	1	3	DHP	2018-09-08	10:54:12
+4	1#DHP_DA06#1#5	1	DHP_DA06	1	5	DHP	2018-09-15	14:50:17
+5	1#DHP_DA06#1#6	1	DHP_DA06	1	6	DHP	2018-09-17	22:26:19
+
+
+INFO  [2022-10-10 13:09:41] File DNK/DNK_Roll1_Snapshot.csv ------------
+INFO  [2022-10-10 13:09:41] Initial data: 6 columns.
+INFO  [2022-10-10 13:09:41] Classifier set to traptagger
+WARN  [2022-10-10 13:09:41] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:09:41] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#DNK_B04#1#2	NA	DNK_B04	1	2	DNK	2019-06-13	14:08:00
+2	NA#DNK_B04#1#3	NA	DNK_B04	1	3	DNK	2019-06-13	14:09:00
+3	NA#DNK_B04#1#5	NA	DNK_B04	1	5	DNK	2019-06-13	14:11:00
+4	NA#DNK_B04#1#6	NA	DNK_B04	1	6	DNK	2019-06-13	14:12:00
+5	NA#DNK_B04#1#7	NA	DNK_B04	1	7	DNK	2019-06-13	14:14:00
+
+
+INFO  [2022-10-10 13:09:41] File DNK/DNK_Roll2_Snapshot.csv ------------
+INFO  [2022-10-10 13:09:41] Initial data: 6 columns.
+INFO  [2022-10-10 13:09:41] Classifier set to traptagger
+WARN  [2022-10-10 13:09:41] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:09:42] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#DNK_A05#2#1	NA	DNK_A05	2	1	DNK	2020-02-08	13:18:00
+2	NA#DNK_A04#2#1	NA	DNK_A04	2	1	DNK	2020-02-08	13:44:00
+3	NA#DNK_A03#2#1	NA	DNK_A03	2	1	DNK	2020-02-08	14:18:00
+4	NA#DNK_A02#2#1	NA	DNK_A02	2	1	DNK	2020-02-08	14:53:00
+5	NA#DNK_A01#2#1	NA	DNK_A01	2	1	DNK	2020-02-08	15:12:00
+
+
+INFO  [2022-10-10 13:09:42] File DNK/DNK_Roll3_Snapshot.csv ------------
+INFO  [2022-10-10 13:09:42] Initial data: 6 columns.
+INFO  [2022-10-10 13:09:42] Classifier set to traptagger
+WARN  [2022-10-10 13:09:42] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:09:42] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#DNK_A05#3#1	NA	DNK_A05	3	1	DNK	2020-06-29	08:38:00
+2	NA#DNK_A05#3#2	NA	DNK_A05	3	2	DNK	2020-06-29	08:39:00
+3	NA#DNK_A04#3#1	NA	DNK_A04	3	1	DNK	2020-06-29	09:06:00
+4	NA#DNK_A04#3#2	NA	DNK_A04	3	2	DNK	2020-06-29	09:09:00
+5	NA#DNK_A03#3#1	NA	DNK_A03	3	1	DNK	2020-06-29	09:40:00
+
+
+INFO  [2022-10-10 13:09:42] File GON/GON_S1_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:09:42] Initial data: 22 columns.
+INFO  [2022-10-10 13:09:42] Classifier set to zooniverse
+WARN  [2022-10-10 13:09:42] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:09:42] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	1#GON_GGR04#1#2	1	GON_GGR04	1	2	GON	2017-03-14	00:08:53
+2	1#GON_GGR04#1#3	1	GON_GGR04	1	3	GON	2017-03-23	01:18:34
+3	1#GON_GGR04#1#4	1	GON_GGR04	1	4	GON	2017-03-31	22:54:05
+4	1#GON_GGR04#1#5	1	GON_GGR04	1	5	GON	2017-03-31	22:54:50
+5	1#GON_GGR04#1#6	1	GON_GGR04	1	6	GON	2017-03-31	22:55:32
+
+
+INFO  [2022-10-10 13:09:42] File KAR/KAR_S1_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:09:42] Initial data: 37 columns.
+INFO  [2022-10-10 13:09:42] Classifier set to zooniverse
+WARN  [2022-10-10 13:09:42] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:09:42] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	1#KAR_A01#1#7	1	KAR_A01	1	7	KAR	2017-10-11	04:26:26
+2	1#KAR_A01#1#8	1	KAR_A01	1	8	KAR	2017-10-13	09:33:55
+3	1#KAR_A01#1#9	1	KAR_A01	1	9	KAR	2017-10-13	23:16:48
+4	1#KAR_A01#1#10	1	KAR_A01	1	10	KAR	2017-10-13	23:23:11
+5	1#KAR_A01#1#11	1	KAR_A01	1	11	KAR	2017-10-15	01:52:21
+
+
+INFO  [2022-10-10 13:09:42] File KAR/KAR_S2_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:09:42] Initial data: 31 columns.
+INFO  [2022-10-10 13:09:42] Classifier set to zooniverse
+WARN  [2022-10-10 13:09:43] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:09:43] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	2#KAR_A01#2#10	2	KAR_A01	2	10	KAR	2018-02-05	05:18:23
+2	2#KAR_A01#2#13	2	KAR_A01	2	13	KAR	2018-02-05	20:22:50
+3	2#KAR_A01#2#15	2	KAR_A01	2	15	KAR	2018-02-08	04:09:29
+4	2#KAR_A01#2#16	2	KAR_A01	2	16	KAR	2018-02-08	04:21:57
+5	2#KAR_A01#2#17	2	KAR_A01	2	17	KAR	2018-02-08	18:05:51
+
+
+INFO  [2022-10-10 13:09:44] File KAR/KAR_S3_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:09:44] Initial data: 27 columns.
+INFO  [2022-10-10 13:09:44] Classifier set to zooniverse
+WARN  [2022-10-10 13:09:44] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:09:44] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	3#KAR_A01#7#3	3	KAR_A01	7	3	KAR	2019-06-06	17:29:37
+2	3#KAR_A01#7#4	3	KAR_A01	7	4	KAR	2019-06-06	17:33:10
+3	3#KAR_A01#7#6	3	KAR_A01	7	6	KAR	2019-06-06	17:36:54
+4	3#KAR_A01#7#7	3	KAR_A01	7	7	KAR	2019-06-08	01:20:46
+5	3#KAR_A01#7#8	3	KAR_A01	7	8	KAR	2019-06-08	18:10:54
+
+
+INFO  [2022-10-10 13:09:44] File KGA/KGA_Roll10_Snapshot.csv ------------
+INFO  [2022-10-10 13:09:45] Initial data: 6 columns.
+INFO  [2022-10-10 13:09:45] Classifier set to traptagger
+WARN  [2022-10-10 13:09:45] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:09:46] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#KGA_A09#10#1	NA	KGA_A09	10	1	KGA	2021-06-08	00:13:00
+2	NA#KGA_A10#10#1	NA	KGA_A10	10	1	KGA	2021-06-08	00:23:00
+3	NA#KGA_B08#10#1	NA	KGA_B08	10	1	KGA	2021-06-08	08:09:00
+4	NA#KGA_B05#10#1	NA	KGA_B05	10	1	KGA	2021-06-08	09:02:00
+5	NA#KGA_B04#10#3	NA	KGA_B04	10	3	KGA	2021-06-08	09:18:00
+
+
+INFO  [2022-10-10 13:09:46] File KGA/KGA_Roll5_Snapshot.csv ------------
+INFO  [2022-10-10 13:09:46] Initial data: 7 columns.
+INFO  [2022-10-10 13:09:46] Classifier set to traptagger
+WARN  [2022-10-10 13:09:46] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:09:46] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#KGA_A02#5#1	NA	KGA_A02	5	1	KGA	2019-11-16	07:57:00
+2	NA#KGA_A03#5#1	NA	KGA_A03	5	1	KGA	2019-11-16	08:14:00
+3	NA#KGA_A05#5#1	NA	KGA_A05	5	1	KGA	2019-11-16	08:42:00
+4	NA#KGA_A06#5#1	NA	KGA_A06	5	1	KGA	2019-11-16	08:57:00
+5	NA#KGA_A07#5#1	NA	KGA_A07	5	1	KGA	2019-11-16	09:09:00
+
+
+INFO  [2022-10-10 13:09:46] File KGA/KGA_Roll6_Snapshot.csv ------------
+INFO  [2022-10-10 13:09:46] Initial data: 7 columns.
+INFO  [2022-10-10 13:09:46] Classifier set to traptagger
+WARN  [2022-10-10 13:09:46] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:09:46] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#KGA_A01#6#1	NA	KGA_A01	6	1	KGA	2019-11-16	07:39:00
+2	NA#KGA_A01#6#2	NA	KGA_A01	6	2	KGA	2019-11-16	07:39:00
+3	NA#KGA_A01#6#3	NA	KGA_A01	6	3	KGA	2019-11-16	07:40:00
+4	NA#KGA_B01#6#1	NA	KGA_B01	6	1	KGA	2020-02-17	06:43:00
+5	NA#KGA_B02#6#1	NA	KGA_B02	6	1	KGA	2020-02-17	06:57:00
+
+
+INFO  [2022-10-10 13:09:46] File KGA/KGA_Roll7_Snapshot.csv ------------
+INFO  [2022-10-10 13:09:46] Initial data: 5 columns.
+INFO  [2022-10-10 13:09:46] Classifier set to traptagger
+WARN  [2022-10-10 13:09:46] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:09:47] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#KGA_A01#7#1	NA	KGA_A01	7	1	KGA	2020-07-23	09:34:00
+2	NA#KGA_A02#7#1	NA	KGA_A02	7	1	KGA	2020-07-23	09:48:00
+3	NA#KGA_A03#7#1	NA	KGA_A03	7	1	KGA	2020-07-23	10:02:00
+4	NA#KGA_A04#7#1	NA	KGA_A04	7	1	KGA	2020-07-23	10:16:00
+5	NA#KGA_A05#7#1	NA	KGA_A05	7	1	KGA	2020-07-23	10:28:00
+
+
+INFO  [2022-10-10 13:09:47] File KGA/KGA_Roll8_Snapshot.csv ------------
+INFO  [2022-10-10 13:09:47] Initial data: 5 columns.
+INFO  [2022-10-10 13:09:47] Classifier set to traptagger
+WARN  [2022-10-10 13:09:47] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:09:47] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#KGA_B07#8#1	NA	KGA_B07	8	1	KGA	2020-11-17	07:13:00
+2	NA#KGA_B07#8#2	NA	KGA_B07	8	2	KGA	2020-11-17	07:14:00
+3	NA#KGA_B07#8#3	NA	KGA_B07	8	3	KGA	2020-11-17	10:46:00
+4	NA#KGA_B07#8#4	NA	KGA_B07	8	4	KGA	2020-11-17	23:27:00
+5	NA#KGA_B07#8#5	NA	KGA_B07	8	5	KGA	2020-11-18	14:09:00
+
+
+INFO  [2022-10-10 13:09:47] File KGA/KGA_Roll9_Snapshot.csv ------------
+INFO  [2022-10-10 13:09:48] Initial data: 5 columns.
+INFO  [2022-10-10 13:09:48] Classifier set to traptagger
+WARN  [2022-10-10 13:09:48] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:09:48] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#KGA_B09#9#1	NA	KGA_B09	9	1	KGA	2021-02-17	06:36:00
+2	NA#KGA_B08#9#1	NA	KGA_B08	9	1	KGA	2021-02-17	06:57:00
+3	NA#KGA_B08#9#2	NA	KGA_B08	9	2	KGA	2021-02-17	06:58:00
+4	NA#KGA_B07#9#1	NA	KGA_B07	9	1	KGA	2021-02-17	07:12:00
+5	NA#KGA_B06#9#1	NA	KGA_B06	9	1	KGA	2021-02-17	07:27:00
+
+
+INFO  [2022-10-10 13:09:48] File KGA/KGA_S1_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:09:48] Initial data: 27 columns.
+INFO  [2022-10-10 13:09:48] Classifier set to zooniverse
+WARN  [2022-10-10 13:09:48] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:09:48] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	1#KGA_A01#1#8	1	KGA_A01	1	8	KGA	2018-10-27	19:57:36
+2	1#KGA_A01#1#9	1	KGA_A01	1	9	KGA	2018-10-27	20:00:26
+3	1#KGA_A01#1#10	1	KGA_A01	1	10	KGA	2018-10-27	20:04:13
+4	1#KGA_A01#1#11	1	KGA_A01	1	11	KGA	2018-10-27	20:06:12
+5	1#KGA_A01#1#12	1	KGA_A01	1	12	KGA	2018-10-27	20:08:59
+
+
+INFO  [2022-10-10 13:09:48] File KGA/KGA_S2_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:09:48] Initial data: 29 columns.
+INFO  [2022-10-10 13:09:48] Classifier set to zooniverse
+WARN  [2022-10-10 13:09:48] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:09:48] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	2#KGA_KGAA01#1#1	2	KGA_KGAA01	1	1	KGA	2019-01-12	08:00:24
+2	2#KGA_KGAA01#1#2	2	KGA_KGAA01	1	2	KGA	2019-01-12	11:03:11
+3	2#KGA_KGAA01#1#3	2	KGA_KGAA01	1	3	KGA	2019-01-12	11:05:39
+4	2#KGA_KGAA01#1#4	2	KGA_KGAA01	1	4	KGA	2019-01-12	12:10:57
+5	2#KGA_KGAA01#1#5	2	KGA_KGAA01	1	5	KGA	2019-01-12	12:27:10
+
+
+INFO  [2022-10-10 13:09:48] File KGA/KGA_S3_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:09:48] Initial data: 29 columns.
+INFO  [2022-10-10 13:09:48] Classifier set to zooniverse
+WARN  [2022-10-10 13:09:48] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:09:48] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	3#KGA_KGAA01#3#4	3	KGA_KGAA01	3	4	KGA	2019-03-11	12:35:22
+2	3#KGA_KGAA01#3#7	3	KGA_KGAA01	3	7	KGA	2019-03-15	04:27:50
+3	3#KGA_KGAA01#3#8	3	KGA_KGAA01	3	8	KGA	2019-03-15	04:32:44
+4	3#KGA_KGAA01#3#10	3	KGA_KGAA01	3	10	KGA	2019-03-19	14:31:03
+5	3#KGA_KGAA01#3#12	3	KGA_KGAA01	3	12	KGA	2019-03-20	12:38:53
+
+
+INFO  [2022-10-10 13:09:49] File KHO/KHO_Roll10_Snapshot.csv ------------
+INFO  [2022-10-10 13:09:49] Initial data: 5 columns.
+INFO  [2022-10-10 13:09:49] Classifier set to traptagger
+WARN  [2022-10-10 13:09:49] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+WARN  [2022-10-10 13:09:49] Cameras E_A04, E_B03, E_C04, E_C07, E_B06, E_B04, E_C03, E_C05, M_A02, M_A03, M_A04, M_A06, M_A07, M_A08, M_A01, E_B05 already have a dash in it: adding the location before as RES_... might be a problem
+INFO  [2022-10-10 13:09:49] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#KHO_EW2#10#2	NA	KHO_EW2	10	2	KHO	2021-02-20	06:31:00
+2	NA#KHO_EW2#10#3	NA	KHO_EW2	10	3	KHO	2021-02-20	06:31:00
+3	NA#KHO_EW2#10#4	NA	KHO_EW2	10	4	KHO	2021-02-20	07:08:00
+4	NA#KHO_EW2#10#6	NA	KHO_EW2	10	6	KHO	2021-02-20	07:08:00
+5	NA#KHO_EW2#10#19	NA	KHO_EW2	10	19	KHO	2021-02-20	08:52:00
+
+
+INFO  [2022-10-10 13:09:50] File KHO/KHO_Roll11_Snapshot.csv ------------
+INFO  [2022-10-10 13:09:50] Initial data: 5 columns.
+INFO  [2022-10-10 13:09:50] Classifier set to traptagger
+WARN  [2022-10-10 13:09:50] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+WARN  [2022-10-10 13:09:51] Cameras M_A02, M_A01, M_A03, M_A04, M_A08, M_A05, M_A07, M_A06, E_B03, E_C03, E_C05, E_B07, E_A04, E_B06, E_B04, E_C04, E_C07 already have a dash in it: adding the location before as RES_... might be a problem
+INFO  [2022-10-10 13:09:51] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#KHO_M_A02#11#1	NA	KHO_M_A02	11	1	KHO	2021-10-09	09:30:00
+2	NA#KHO_M_A01#11#2	NA	KHO_M_A01	11	2	KHO	2021-10-09	09:50:00
+3	NA#KHO_M_A03#11#1	NA	KHO_M_A03	11	1	KHO	2021-10-09	09:52:00
+4	NA#KHO_M_A03#11#3	NA	KHO_M_A03	11	3	KHO	2021-10-09	09:54:00
+5	NA#KHO_M_A04#11#1	NA	KHO_M_A04	11	1	KHO	2021-10-09	10:14:00
+
+
+INFO  [2022-10-10 13:09:51] File KHO/KHO_Roll5_Snapshot.csv ------------
+INFO  [2022-10-10 13:09:51] Initial data: 5 columns.
+INFO  [2022-10-10 13:09:51] Classifier set to traptagger
+WARN  [2022-10-10 13:09:51] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+WARN  [2022-10-10 13:09:51] Cameras E_B04, E_B03, E_B05, E_B06, E_B07, M_A05, M_A02, M_A03, M_A04, M_A06, M_A07, M_A08, E_A04, E_C03, E_C04, E_C05, E_C07, M_A01 already have a dash in it: adding the location before as RES_... might be a problem
+INFO  [2022-10-10 13:09:51] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#KHO_EW1#5#1	NA	KHO_EW1	5	1	KHO	2019-02-25	17:33:00
+2	NA#KHO_EW1#5#1	NA	KHO_EW1	5	1	KHO	2019-02-25	17:33:00
+3	NA#KHO_EW1#5#2	NA	KHO_EW1	5	2	KHO	2019-02-25	17:33:00
+4	NA#KHO_EW1#5#2	NA	KHO_EW1	5	2	KHO	2019-02-25	17:33:00
+5	NA#KHO_EW1#5#5	NA	KHO_EW1	5	5	KHO	2019-02-25	20:57:00
+
+
+INFO  [2022-10-10 13:09:52] File KHO/KHO_Roll6_Snapshot.csv ------------
+INFO  [2022-10-10 13:09:52] Initial data: 5 columns.
+INFO  [2022-10-10 13:09:52] Classifier set to traptagger
+WARN  [2022-10-10 13:09:52] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+WARN  [2022-10-10 13:09:52] Cameras E_A04, E_B03, E_B04, E_B05, E_B06, E_B07, E_C07, E_C05, E_C04, E_C03, M_A01, M_A02, M_A03, M_A04, M_A05, M_A06, M_A07, M_A08 already have a dash in it: adding the location before as RES_... might be a problem
+INFO  [2022-10-10 13:09:52] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#KHO_E_A04#6#1	NA	KHO_E_A04	6	1	KHO	2020-07-22	13:20:00
+2	NA#KHO_E_A04#6#2	NA	KHO_E_A04	6	2	KHO	2020-07-22	13:21:00
+3	NA#KHO_E_B03#6#1	NA	KHO_E_B03	6	1	KHO	2020-07-22	13:52:00
+4	NA#KHO_E_B04#6#1	NA	KHO_E_B04	6	1	KHO	2020-07-22	14:06:00
+5	NA#KHO_E_B05#6#1	NA	KHO_E_B05	6	1	KHO	2020-07-22	14:32:00
+
+
+INFO  [2022-10-10 13:09:52] File KHO/KHO_Roll7_Snapshot.csv ------------
+INFO  [2022-10-10 13:09:52] Initial data: 6 columns.
+INFO  [2022-10-10 13:09:52] Classifier set to traptagger
+WARN  [2022-10-10 13:09:52] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+WARN  [2022-10-10 13:09:52] Cameras E_B03, E_B04, E_B05, E_B06, E_B07, E_C07, E_C04, E_C03, M_A01, M_A02, M_A03, M_A04, M_A05, M_A06, M_A07, M_A08, E_A04 already have a dash in it: adding the location before as RES_... might be a problem
+INFO  [2022-10-10 13:09:52] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#KHO_E_B03#7#1	NA	KHO_E_B03	7	1	KHO	2020-11-21	14:32:00
+2	NA#KHO_E_B04#7#1	NA	KHO_E_B04	7	1	KHO	2020-11-21	14:44:00
+3	NA#KHO_E_B05#7#1	NA	KHO_E_B05	7	1	KHO	2020-11-21	14:57:00
+4	NA#KHO_E_B06#7#1	NA	KHO_E_B06	7	1	KHO	2020-11-21	15:08:00
+5	NA#KHO_E_B07#7#1	NA	KHO_E_B07	7	1	KHO	2020-11-21	15:23:00
+
+
+INFO  [2022-10-10 13:09:52] File KHO/KHO_Roll8_Snapshot.csv ------------
+INFO  [2022-10-10 13:09:52] Initial data: 5 columns.
+INFO  [2022-10-10 13:09:52] Classifier set to traptagger
+WARN  [2022-10-10 13:09:52] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+WARN  [2022-10-10 13:09:53] Cameras E_C03, M_A08, M_A01, M_A02, M_A03, M_A04, M_A05, M_A06, M_A07, E_A04, E_B03, E_B04, E_B05, E_B06, E_C05, E_B07 already have a dash in it: adding the location before as RES_... might be a problem
+INFO  [2022-10-10 13:09:53] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#KHO_E_C03#8#1	NA	KHO_E_C03	8	1	KHO	2021-02-20	02:51:00
+2	NA#KHO_E_C03#8#2	NA	KHO_E_C03	8	2	KHO	2021-02-20	02:52:00
+3	NA#KHO_M_A08#8#1	NA	KHO_M_A08	8	1	KHO	2021-02-20	08:19:00
+4	NA#KHO_M_A01#8#1	NA	KHO_M_A01	8	1	KHO	2021-02-20	08:35:00
+5	NA#KHO_M_A02#8#1	NA	KHO_M_A02	8	1	KHO	2021-02-20	08:49:00
+
+
+INFO  [2022-10-10 13:09:53] File KHO/KHO_Roll9_Snapshot.csv ------------
+INFO  [2022-10-10 13:09:53] Initial data: 5 columns.
+INFO  [2022-10-10 13:09:53] Classifier set to traptagger
+WARN  [2022-10-10 13:09:53] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+WARN  [2022-10-10 13:09:54] Cameras E_C07, E_C05, E_A04, E_B03, E_B05, E_B06, M_A01, M_A02, M_A03, M_A04, M_A05, M_A06, M_A07, M_A08, E_C04, E_C03, E_B07 already have a dash in it: adding the location before as RES_... might be a problem
+INFO  [2022-10-10 13:09:54] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#KHO_EW3#9#2	NA	KHO_EW3	9	2	KHO	2016-01-01	08:00:00
+2	NA#KHO_EW4#9#2	NA	KHO_EW4	9	2	KHO	2016-01-01	08:00:00
+3	NA#KHO_EW4#9#3	NA	KHO_EW4	9	3	KHO	2016-01-01	08:00:00
+4	NA#KHO_EW4#9#4	NA	KHO_EW4	9	4	KHO	2016-01-01	08:01:00
+5	NA#KHO_EW4#9#6	NA	KHO_EW4	9	6	KHO	2016-01-01	08:02:00
+
+
+INFO  [2022-10-10 13:09:54] File KHO/KHO_S1_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:09:54] Initial data: 29 columns.
+INFO  [2022-10-10 13:09:54] Classifier set to zooniverse
+WARN  [2022-10-10 13:09:54] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:09:54] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	2#KGA_KHOGA04#1#1	2	KGA_KHOGA04	1	1	KGA	2019-01-15	11:38:38
+2	2#KGA_KHOGA04#1#2	2	KGA_KHOGA04	1	2	KGA	2019-01-15	11:39:40
+3	2#KGA_KHOGA04#1#3	2	KGA_KHOGA04	1	3	KGA	2019-01-16	00:40:38
+4	2#KGA_KHOGA04#1#4	2	KGA_KHOGA04	1	4	KGA	2019-01-18	00:50:05
+5	2#KGA_KHOGA04#1#6	2	KGA_KHOGA04	1	6	KGA	2019-01-18	01:49:38
+
+
+INFO  [2022-10-10 13:09:54] File KHO/KHO_S2_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:09:54] Initial data: 29 columns.
+INFO  [2022-10-10 13:09:54] Classifier set to zooniverse
+WARN  [2022-10-10 13:09:55] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:09:55] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	3#KGA_KHOGA04#2#3	3	KGA_KHOGA04	2	3	KGA	2019-03-19	22:02:07
+2	3#KGA_KHOGA04#2#4	3	KGA_KHOGA04	2	4	KGA	2019-03-19	22:05:50
+3	3#KGA_KHOGA04#2#5	3	KGA_KHOGA04	2	5	KGA	2019-03-19	22:08:39
+4	3#KGA_KHOGA04#2#6	3	KGA_KHOGA04	2	6	KGA	2019-03-19	22:24:59
+5	3#KGA_KHOGA04#2#11	3	KGA_KHOGA04	2	11	KGA	2019-03-23	01:20:23
+
+
+INFO  [2022-10-10 13:09:55] File KHO/KHO_S3_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:09:55] Initial data: 29 columns.
+INFO  [2022-10-10 13:09:55] Classifier set to zooniverse
+WARN  [2022-10-10 13:09:55] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:09:55] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	4#KGA_KHOGA04#4#1	4	KGA_KHOGA04	4	1	KGA	2019-11-15	15:10:39
+2	4#KGA_KHOGA04#4#2	4	KGA_KHOGA04	4	2	KGA	2019-11-16	07:14:23
+3	4#KGA_KHOGA04#4#3	4	KGA_KHOGA04	4	3	KGA	2019-11-17	05:18:18
+4	4#KGA_KHOGA04#4#4	4	KGA_KHOGA04	4	4	KGA	2019-11-18	05:39:16
+5	4#KGA_KHOGA04#4#5	4	KGA_KHOGA04	4	5	KGA	2019-11-18	05:40:16
+
+
+INFO  [2022-10-10 13:09:56] File KRU/KRU_S1_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:09:56] Initial data: 37 columns.
+INFO  [2022-10-10 13:09:56] Classifier set to zooniverse
+WARN  [2022-10-10 13:09:56] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:09:56] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	1#KRU_1#1#7	1	KRU_1	1	7	KRU	2018-05-31	18:16:20
+2	1#KRU_1#1#8	1	KRU_1	1	8	KRU	2018-06-01	04:41:03
+3	1#KRU_1#1#9	1	KRU_1	1	9	KRU	2018-06-01	04:42:14
+4	1#KRU_1#1#10	1	KRU_1	1	10	KRU	2018-06-01	04:43:19
+5	1#KRU_1#1#11	1	KRU_1	1	11	KRU	2018-06-01	04:44:21
+
+
+INFO  [2022-10-10 13:09:56] File KRU/KRU_S2_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:09:56] Initial data: 29 columns.
+INFO  [2022-10-10 13:09:56] Classifier set to zooniverse
+WARN  [2022-10-10 13:09:56] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:09:56] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	2#KRU_1#2#2	2	KRU_1	2	2	KRU	2018-07-18	20:32:42
+2	2#KRU_1#2#3	2	KRU_1	2	3	KRU	2018-07-18	20:33:42
+3	2#KRU_1#2#4	2	KRU_1	2	4	KRU	2018-07-18	20:34:42
+4	2#KRU_1#2#5	2	KRU_1	2	5	KRU	2018-07-19	11:58:36
+5	2#KRU_1#2#6	2	KRU_1	2	6	KRU	2018-07-19	12:27:12
+
+
+INFO  [2022-10-10 13:09:57] File MAD/MAD_Roll13_Snapshot.csv ------------
+INFO  [2022-10-10 13:09:57] Initial data: 9 columns.
+INFO  [2022-10-10 13:09:57] Classifier set to traptagger
+WARN  [2022-10-10 13:09:57] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:09:57] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#MAD_ADWA01#13#1	NA	MAD_ADWA01	13	1	MAD	2019-11-08	16:34:00
+2	NA#MAD_ADWA01#13#2	NA	MAD_ADWA01	13	2	MAD	2019-11-08	17:15:00
+3	NA#MAD_ADWA01#13#2	NA	MAD_ADWA01	13	2	MAD	2019-11-08	17:15:00
+4	NA#MAD_ADWA01#13#3	NA	MAD_ADWA01	13	3	MAD	2019-11-08	17:16:00
+5	NA#MAD_ADWA01#13#3	NA	MAD_ADWA01	13	3	MAD	2019-11-08	17:16:00
+
+
+INFO  [2022-10-10 13:09:57] File MAD/MAD_Roll14_Snapshot.csv ------------
+INFO  [2022-10-10 13:09:57] Initial data: 9 columns.
+INFO  [2022-10-10 13:09:57] Classifier set to traptagger
+WARN  [2022-10-10 13:09:59] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:09:59] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#MAD_C07#14#1	NA	MAD_C07	14	1	MAD	2020-03-16	03:32:00
+2	NA#MAD_I05#14#1	NA	MAD_I05	14	1	MAD	2020-03-16	07:54:00
+3	NA#MAD_I05#14#1	NA	MAD_I05	14	1	MAD	2020-03-16	07:54:00
+4	NA#MAD_I05#14#2	NA	MAD_I05	14	2	MAD	2020-03-16	07:55:00
+5	NA#MAD_I05#14#2	NA	MAD_I05	14	2	MAD	2020-03-16	07:55:00
+
+
+INFO  [2022-10-10 13:09:59] File MAD/MAD_S1_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:09:59] Initial data: 26 columns.
+INFO  [2022-10-10 13:09:59] Classifier set to zooniverse
+WARN  [2022-10-10 13:10:00] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:10:00] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	1#MAD_A03#1#4	1	MAD_A03	1	4	MAD	2018-06-13	12:44:56
+2	1#MAD_A03#1#5	1	MAD_A03	1	5	MAD	2018-06-16	09:18:22
+3	1#MAD_A03#1#6	1	MAD_A03	1	6	MAD	2018-06-18	07:25:02
+4	1#MAD_A03#1#7	1	MAD_A03	1	7	MAD	2018-06-22	18:11:20
+5	1#MAD_A03#1#8	1	MAD_A03	1	8	MAD	2018-06-22	19:10:37
+
+
+INFO  [2022-10-10 13:10:00] File MAD/MAD_S2_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:10:03] Initial data: 26 columns.
+INFO  [2022-10-10 13:10:03] Classifier set to zooniverse
+WARN  [2022-10-10 13:10:04] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:10:04] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	2#MAD_A03#5#2	2	MAD_A03	5	2	MAD	2019-02-05	11:56:11
+2	2#MAD_A03#5#3	2	MAD_A03	5	3	MAD	2019-02-05	17:52:09
+3	2#MAD_A03#5#5	2	MAD_A03	5	5	MAD	2019-02-06	22:58:59
+4	2#MAD_A03#5#6	2	MAD_A03	5	6	MAD	2019-02-07	04:27:13
+5	2#MAD_A03#5#7	2	MAD_A03	5	7	MAD	2019-02-07	08:20:03
+
+
+INFO  [2022-10-10 13:10:05] File MAD/MAD_S3_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:10:05] Initial data: 27 columns.
+INFO  [2022-10-10 13:10:05] Classifier set to zooniverse
+WARN  [2022-10-10 13:10:06] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:10:06] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	3#MAD_A03#8#2	3	MAD_A03	8	2	MAD	2019-05-21	08:13:45
+2	3#MAD_A03#8#3	3	MAD_A03	8	3	MAD	2019-05-21	08:35:21
+3	3#MAD_A03#8#4	3	MAD_A03	8	4	MAD	2019-05-21	08:36:21
+4	3#MAD_A03#8#5	3	MAD_A03	8	5	MAD	2019-05-21	08:37:58
+5	3#MAD_A03#8#6	3	MAD_A03	8	6	MAD	2019-05-21	08:39:27
+
+
+INFO  [2022-10-10 13:10:06] File MLP/MLP_Roll1_Snapshot.csv ------------
+INFO  [2022-10-10 13:10:06] Initial data: 7 columns.
+INFO  [2022-10-10 13:10:06] Classifier set to traptagger
+WARN  [2022-10-10 13:10:06] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:10:06] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#MLPG_1#1#06	NA	MLPG_1	1	06	MLPG	2018-06-20	09:38:00
+2	NA#MLPG_3#1#06	NA	MLPG_3	1	06	MLPG	2018-06-20	09:40:00
+3	NA#MLPG_4#1#06	NA	MLPG_4	1	06	MLPG	2018-06-20	09:41:00
+4	NA#MLPH_1#1#06	NA	MLPH_1	1	06	MLPH	2018-06-20	10:12:00
+5	NA#MLPH_2#1#06	NA	MLPH_2	1	06	MLPH	2018-06-20	10:14:00
+
+
+INFO  [2022-10-10 13:10:06] File MLP/MLP_Roll2_Snapshot.csv ------------
+INFO  [2022-10-10 13:10:06] Initial data: 7 columns.
+INFO  [2022-10-10 13:10:06] Classifier set to traptagger
+WARN  [2022-10-10 13:10:07] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:10:07] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#MLPG_1#2#06	NA	MLPG_1	2	06	MLPG	2018-09-29	08:06:00
+2	NA#MLPG_2#2#06	NA	MLPG_2	2	06	MLPG	2018-09-29	08:08:00
+3	NA#MLPH_1#2#06	NA	MLPH_1	2	06	MLPH	2018-09-29	08:32:00
+4	NA#MLPH_2#2#06	NA	MLPH_2	2	06	MLPH	2018-09-29	08:33:00
+5	NA#MLPH_1#2#05	NA	MLPH_1	2	05	MLPH	2018-09-29	08:52:00
+
+
+INFO  [2022-10-10 13:10:07] File MLP/MLP_Roll3_Snapshot.csv ------------
+INFO  [2022-10-10 13:10:07] Initial data: 7 columns.
+INFO  [2022-10-10 13:10:07] Classifier set to traptagger
+WARN  [2022-10-10 13:10:07] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:10:07] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#MLPE_1#3#05	NA	MLPE_1	3	05	MLPE	2016-05-01	06:12:00
+2	NA#MLPE_2#3#05	NA	MLPE_2	3	05	MLPE	2016-05-01	06:43:00
+3	NA#MLPE_3#3#05	NA	MLPE_3	3	05	MLPE	2016-05-01	07:13:00
+4	NA#MLPE_4#3#05	NA	MLPE_4	3	05	MLPE	2016-05-01	07:18:00
+5	NA#MLPE_5#3#05	NA	MLPE_5	3	05	MLPE	2016-05-01	08:18:00
+
+
+INFO  [2022-10-10 13:10:07] File MLP/MLP_Roll4_Snapshot.csv ------------
+INFO  [2022-10-10 13:10:07] Initial data: 7 columns.
+INFO  [2022-10-10 13:10:07] Classifier set to traptagger
+WARN  [2022-10-10 13:10:07] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:10:07] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#MLPF_1#4#06	NA	MLPF_1	4	06	MLPF	2019-03-20	16:57:00
+2	NA#MLPG_1#4#06	NA	MLPG_1	4	06	MLPG	2019-03-20	17:22:00
+3	NA#MLPH_1#4#06	NA	MLPH_1	4	06	MLPH	2019-03-20	17:49:00
+4	NA#MLPH_1#4#05	NA	MLPH_1	4	05	MLPH	2019-03-20	18:09:00
+5	NA#MLPG_1#4#05	NA	MLPG_1	4	05	MLPG	2019-03-20	18:33:00
+
+
+INFO  [2022-10-10 13:10:07] File MLP/MLP_Roll5_Snapshot.csv ------------
+INFO  [2022-10-10 13:10:07] Initial data: 7 columns.
+INFO  [2022-10-10 13:10:07] Classifier set to traptagger
+WARN  [2022-10-10 13:10:07] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:10:08] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#MLP_G03#5#1	NA	MLP_G03	5	1	MLP	2019-06-09	16:15:00
+2	NA#MLP_G03#5#2	NA	MLP_G03	5	2	MLP	2019-06-09	16:16:00
+3	NA#MLP_G03#5#3	NA	MLP_G03	5	3	MLP	2019-06-09	16:17:00
+4	NA#MLP_F03#5#1	NA	MLP_F03	5	1	MLP	2019-06-09	16:39:00
+5	NA#MLP_F03#5#2	NA	MLP_F03	5	2	MLP	2019-06-09	16:40:00
+
+
+INFO  [2022-10-10 13:10:08] File MLP/MLP_Roll6_Snapshot.csv ------------
+INFO  [2022-10-10 13:10:08] Initial data: 7 columns.
+INFO  [2022-10-10 13:10:08] Classifier set to traptagger
+WARN  [2022-10-10 13:10:08] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:10:08] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#MLP_H06#6#1	NA	MLP_H06	6	1	MLP	2019-11-13	12:22:00
+2	NA#MLP_H05#6#1	NA	MLP_H05	6	1	MLP	2019-11-13	12:39:00
+3	NA#MLP_G06#6#1	NA	MLP_G06	6	1	MLP	2019-11-13	13:05:00
+4	NA#MLP_F06#6#1	NA	MLP_F06	6	1	MLP	2019-11-13	13:29:00
+5	NA#MLP_G05#6#1	NA	MLP_G05	6	1	MLP	2019-11-13	13:53:00
+
+
+INFO  [2022-10-10 13:10:08] File MTZ/MTZ_S1_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:10:08] Initial data: 36 columns.
+INFO  [2022-10-10 13:10:08] Classifier set to zooniverse
+WARN  [2022-10-10 13:10:08] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:10:08] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	1#MTZ_B04#1#2	1	MTZ_B04	1	2	MTZ	2017-08-24	12:18:04
+2	1#MTZ_B04#1#11	1	MTZ_B04	1	11	MTZ	2017-08-27	15:17:05
+3	1#MTZ_B04#1#12	1	MTZ_B04	1	12	MTZ	2017-08-27	15:17:21
+4	1#MTZ_B04#1#13	1	MTZ_B04	1	13	MTZ	2017-08-27	15:17:33
+5	1#MTZ_B04#1#14	1	MTZ_B04	1	14	MTZ	2017-08-27	16:24:15
+
+
+INFO  [2022-10-10 13:10:08] File MTZ/MTZ_S2_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:10:08] Initial data: 45 columns.
+INFO  [2022-10-10 13:10:08] Classifier set to zooniverse
+WARN  [2022-10-10 13:10:09] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:10:09] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	2#MTZ_B04#2#9	2	MTZ_B04	2	9	MTZ	2017-11-30	13:17:51
+2	2#MTZ_B04#2#14	2	MTZ_B04	2	14	MTZ	2017-12-01	21:51:42
+3	2#MTZ_B04#2#15	2	MTZ_B04	2	15	MTZ	2017-12-02	21:08:32
+4	2#MTZ_B04#2#16	2	MTZ_B04	2	16	MTZ	2017-12-02	21:09:59
+5	2#MTZ_B04#2#53	2	MTZ_B04	2	53	MTZ	2017-12-07	09:50:42
+
+
+INFO  [2022-10-10 13:10:10] File MTZ/MTZ_S3_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:10:10] Initial data: 27 columns.
+INFO  [2022-10-10 13:10:10] Classifier set to zooniverse
+WARN  [2022-10-10 13:10:10] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:10:10] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	3#MTZ_B04#7#125	3	MTZ_B04	7	125	MTZ	2019-04-27	13:28:50
+2	3#MTZ_B04#7#331	3	MTZ_B04	7	331	MTZ	2019-04-27	17:13:25
+3	3#MTZ_B04#7#396	3	MTZ_B04	7	396	MTZ	2019-04-27	18:56:18
+4	3#MTZ_B04#7#424	3	MTZ_B04	7	424	MTZ	2019-04-28	08:24:46
+5	3#MTZ_B04#7#425	3	MTZ_B04	7	425	MTZ	2019-04-28	08:27:33
+
+
+INFO  [2022-10-10 13:10:10] File OVE/OVE_Roll10_Snapshot.csv ------------
+INFO  [2022-10-10 13:10:10] Initial data: 7 columns.
+INFO  [2022-10-10 13:10:10] Classifier set to traptagger
+WARN  [2022-10-10 13:10:10] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:10:10] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#OVE_B03#10#1	NA	OVE_B03	10	1	OVE	2020-10-25	14:58:00
+2	NA#OVE_B03#10#2	NA	OVE_B03	10	2	OVE	2020-10-25	14:59:00
+3	NA#OVE_B03#10#3	NA	OVE_B03	10	3	OVE	2020-10-27	23:39:00
+4	NA#OVE_B03#10#5	NA	OVE_B03	10	5	OVE	2020-10-29	10:20:00
+5	NA#OVE_B03#10#7	NA	OVE_B03	10	7	OVE	2020-10-30	07:30:00
+
+
+INFO  [2022-10-10 13:10:10] File OVE/OVE_Roll3_Snapshot.csv ------------
+INFO  [2022-10-10 13:10:10] Initial data: 7 columns.
+INFO  [2022-10-10 13:10:10] Classifier set to traptagger
+WARN  [2022-10-10 13:10:10] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:10:10] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#OVE_A01#3#1	NA	OVE_A01	3	1	OVE	2019-02-13	12:47:00
+2	NA#OVE_A02#3#1	NA	OVE_A02	3	1	OVE	2019-02-13	14:47:00
+3	NA#OVE_A02#3#2	NA	OVE_A02	3	2	OVE	2019-02-13	14:48:00
+4	NA#OVE_D01#3#1	NA	OVE_D01	3	1	OVE	2019-02-13	15:19:00
+5	NA#OVE_C04#3#1	NA	OVE_C04	3	1	OVE	2019-02-13	15:47:00
+
+
+INFO  [2022-10-10 13:10:10] File OVE/OVE_Roll6_Snapshot.csv ------------
+INFO  [2022-10-10 13:10:11] Initial data: 7 columns.
+INFO  [2022-10-10 13:10:11] Classifier set to traptagger
+WARN  [2022-10-10 13:10:11] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:10:11] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#OVE_A02#6#1	NA	OVE_A02	6	1	OVE	2019-11-13	14:01:00
+2	NA#OVE_A03#6#1	NA	OVE_A03	6	1	OVE	2019-11-13	14:16:00
+3	NA#OVE_A01#6#1	NA	OVE_A01	6	1	OVE	2019-11-13	14:47:00
+4	NA#OVE_B02#6#1	NA	OVE_B02	6	1	OVE	2019-11-13	15:16:00
+5	NA#OVE_B03#6#1	NA	OVE_B03	6	1	OVE	2019-11-13	15:29:00
+
+
+INFO  [2022-10-10 13:10:11] File OVE/OVE_Roll7_Snapshot.csv ------------
+INFO  [2022-10-10 13:10:11] Initial data: 7 columns.
+INFO  [2022-10-10 13:10:11] Classifier set to traptagger
+WARN  [2022-10-10 13:10:11] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:10:11] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#OVE_E04#7#1	NA	OVE_E04	7	1	OVE	2020-03-03	15:25:00
+2	NA#OVE_E05#7#1	NA	OVE_E05	7	1	OVE	2020-03-03	15:47:00
+3	NA#OVE_E05#7#2	NA	OVE_E05	7	2	OVE	2020-03-03	15:47:00
+4	NA#OVE_C05#7#1	NA	OVE_C05	7	1	OVE	2020-03-03	16:09:00
+5	NA#OVE_D02#7#1	NA	OVE_D02	7	1	OVE	2020-03-03	16:23:00
+
+
+INFO  [2022-10-10 13:10:11] File OVE/OVE_Roll8_Snapshot.csv ------------
+INFO  [2022-10-10 13:10:11] Initial data: 7 columns.
+INFO  [2022-10-10 13:10:11] Classifier set to traptagger
+WARN  [2022-10-10 13:10:11] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:10:11] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#OVE_F01#8#1	NA	OVE_F01	8	1	OVE	2020-07-03	08:31:00
+2	NA#OVE_F03#8#1	NA	OVE_F03	8	1	OVE	2020-07-03	09:58:00
+3	NA#OVE_F03#8#1	NA	OVE_F03	8	1	OVE	2020-07-03	09:58:00
+4	NA#OVE_F03#8#2	NA	OVE_F03	8	2	OVE	2020-07-03	09:59:00
+5	NA#OVE_C03#8#1	NA	OVE_C03	8	1	OVE	2020-07-03	11:59:00
+
+
+INFO  [2022-10-10 13:10:11] File OVE/OVE_Roll9_Snapshot.csv ------------
+INFO  [2022-10-10 13:10:11] Initial data: 6 columns.
+INFO  [2022-10-10 13:10:11] Classifier set to traptagger
+WARN  [2022-10-10 13:10:11] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:10:11] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#OVE_B02#9#1	NA	OVE_B02	9	1	OVE	2020-10-24	17:08:00
+2	NA#OVE_B02#9#2	NA	OVE_B02	9	2	OVE	2020-10-24	20:18:00
+3	NA#OVE_B02#9#3	NA	OVE_B02	9	3	OVE	2020-10-25	05:50:00
+4	NA#OVE_B02#9#4	NA	OVE_B02	9	4	OVE	2020-10-25	05:54:00
+5	NA#OVE_B01#9#1	NA	OVE_B01	9	1	OVE	2020-10-25	14:27:00
+
+
+INFO  [2022-10-10 13:10:11] File OVE/OVE_S1_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:10:11] Initial data: 39 columns.
+INFO  [2022-10-10 13:10:11] Classifier set to zooniverse
+WARN  [2022-10-10 13:10:11] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:10:11] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	1#DHP_OA01#1#5	1	DHP_OA01	1	5	DHP	2018-09-08	02:54:19
+2	1#DHP_OA01#1#15	1	DHP_OA01	1	15	DHP	2018-10-22	18:56:50
+3	1#DHP_OA01#2#6	1	DHP_OA01	2	6	DHP	2018-12-28	22:47:40
+4	1#DHP_OA01#2#8	1	DHP_OA01	2	8	DHP	2018-12-29	23:53:57
+5	1#DHP_OA01#2#19	1	DHP_OA01	2	19	DHP	2019-01-17	21:49:46
+
+
+INFO  [2022-10-10 13:10:11] File OVE/OVE_S3_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:10:11] Initial data: 31 columns.
+INFO  [2022-10-10 13:10:11] Classifier set to zooniverse
+WARN  [2022-10-10 13:10:11] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:10:11] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	3#DHP_OA01#4#3	3	DHP_OA01	4	3	DHP	2019-05-20	06:54:01
+2	3#DHP_OA01#4#4	3	DHP_OA01	4	4	DHP	2019-05-27	05:29:56
+3	3#DHP_OA01#4#6	3	DHP_OA01	4	6	DHP	2019-06-02	02:43:24
+4	3#DHP_OA01#4#11	3	DHP_OA01	4	11	DHP	2019-06-22	20:15:41
+5	3#DHP_OA01#4#12	3	DHP_OA01	4	12	DHP	2019-07-05	08:44:11
+
+
+INFO  [2022-10-10 13:10:11] File PLN/PLN_Roll11_Snapshot.csv ------------
+INFO  [2022-10-10 13:10:12] Initial data: 9 columns.
+INFO  [2022-10-10 13:10:12] Classifier set to traptagger
+WARN  [2022-10-10 13:10:12] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:10:12] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#PLN_B02#11#1	NA	PLN_B02	11	1	PLN	2019-11-28	07:32:00
+2	NA#PLN_B02#11#2	NA	PLN_B02	11	2	PLN	2019-11-28	10:57:00
+3	NA#PLN_B02#11#36	NA	PLN_B02	11	36	PLN	2019-11-30	18:58:00
+4	NA#PLN_B02#11#37	NA	PLN_B02	11	37	PLN	2019-12-01	00:50:00
+5	NA#PLN_B02#11#38	NA	PLN_B02	11	38	PLN	2019-12-01	00:56:00
+
+
+INFO  [2022-10-10 13:10:12] File PLN/PLN_Roll12_Snapshot.csv ------------
+INFO  [2022-10-10 13:10:12] Initial data: 9 columns.
+INFO  [2022-10-10 13:10:12] Classifier set to traptagger
+WARN  [2022-10-10 13:10:12] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+INFO  [2022-10-10 13:10:12] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#PLN_B05#12#1	NA	PLN_B05	12	1	PLN	2019-09-04	10:35:00
+2	NA#PLN_B05#12#2	NA	PLN_B05	12	2	PLN	2019-09-04	10:36:00
+3	NA#PLN_B05#12#3	NA	PLN_B05	12	3	PLN	2019-09-04	10:37:00
+4	NA#PLN_B05#12#4	NA	PLN_B05	12	4	PLN	2019-09-04	10:40:00
+5	NA#PLN_B05#12#6	NA	PLN_B05	12	6	PLN	2019-09-17	18:00:00
+
+
+INFO  [2022-10-10 13:10:12] File PLN/PLN_S1_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:10:12] Initial data: 28 columns.
+INFO  [2022-10-10 13:10:12] Classifier set to zooniverse
+WARN  [2022-10-10 13:10:12] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:10:12] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	1#PLN_A01#2#2	1	PLN_A01	2	2	PLN	2017-10-10	07:28:18
+2	1#PLN_A01#2#4	1	PLN_A01	2	4	PLN	2017-10-11	19:52:11
+3	1#PLN_A01#2#6	1	PLN_A01	2	6	PLN	2017-10-14	05:24:38
+4	1#PLN_A01#2#7	1	PLN_A01	2	7	PLN	2017-10-14	10:53:03
+5	1#PLN_A01#2#8	1	PLN_A01	2	8	PLN	2017-10-15	13:30:29
+
+
+INFO  [2022-10-10 13:10:12] File PLN/PLN_S2_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:10:13] Initial data: 31 columns.
+INFO  [2022-10-10 13:10:13] Classifier set to zooniverse
+WARN  [2022-10-10 13:10:13] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:10:13] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	2#PLN_A01#3#2	2	PLN_A01	3	2	PLN	2018-02-26	18:18:58
+2	2#PLN_A01#3#3	2	PLN_A01	3	3	PLN	2018-02-26	18:25:53
+3	2#PLN_A01#3#6	2	PLN_A01	3	6	PLN	2018-03-05	12:54:36
+4	2#PLN_A01#3#7	2	PLN_A01	3	7	PLN	2018-03-05	13:40:42
+5	2#PLN_A01#3#8	2	PLN_A01	3	8	PLN	2018-03-09	15:03:43
+
+
+INFO  [2022-10-10 13:10:13] File PLN/PLN_S3_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:10:13] Initial data: 28 columns.
+INFO  [2022-10-10 13:10:13] Classifier set to zooniverse
+WARN  [2022-10-10 13:10:13] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:10:13] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	3a#PLN_A01#7#1	3a	PLN_A01	7	1	PLN	2019-06-07	05:50:36
+2	3a#PLN_A01#7#2	3a	PLN_A01	7	2	PLN	2019-06-07	06:13:58
+3	3a#PLN_A01#7#3	3a	PLN_A01	7	3	PLN	2019-06-15	17:18:16
+4	3a#PLN_A01#7#4	3a	PLN_A01	7	4	PLN	2019-06-15	18:05:30
+5	3a#PLN_A01#7#5	3a	PLN_A01	7	5	PLN	2019-06-15	18:07:24
+
+
+INFO  [2022-10-10 13:10:13] File roaming/AUG_sp_report_digikam_2020-08-26_fin.csv ------------
+INFO  [2022-10-10 13:10:13] Initial data: 22 columns.
+INFO  [2022-10-10 13:10:13] Classifier set to digikam
+WARN  [2022-10-10 13:10:13] Message in standardize_columns: Match found in column names: renaming column metadata_Numberofindividuals into metadata_NumberOfIndividuals
+INFO  [2022-10-10 13:10:13] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#AUG_C02#1#1	NA	AUG_C02	1	1	AUG	2018-11-23	12:25:37
+2	NA#AUG_C02#1#2	NA	AUG_C02	1	2	AUG	2018-11-28	11:35:30
+3	NA#AUG_C02#1#3	NA	AUG_C02	1	3	AUG	2018-11-29	18:32:03
+4	NA#AUG_C02#1#4	NA	AUG_C02	1	4	AUG	2018-11-30	02:10:31
+5	NA#AUG_C02#1#5	NA	AUG_C02	1	5	AUG	2018-12-01	05:31:21
+
+
+INFO  [2022-10-10 13:10:13] File roaming/BER_record_table_0min_deltaT_2021-05-07.csv ------------
+INFO  [2022-10-10 13:10:13] Initial data: 21 columns.
+INFO  [2022-10-10 13:10:13] Classifier set to digikam
+INFO  [2022-10-10 13:10:14] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#BER_A04#1#1	NA	BER_A04	1	1	BER	2018-06-21	10:05:33
+2	NA#BER_A04#1#2	NA	BER_A04	1	2	BER	2018-06-21	10:06:36
+3	NA#BER_A04#1#3	NA	BER_A04	1	3	BER	2018-06-26	07:06:04
+4	NA#BER_A04#1#4	NA	BER_A04	1	4	BER	2018-07-15	02:22:46
+5	NA#BER_A04#1#5	NA	BER_A04	1	5	BER	2018-07-22	14:24:45
+
+
+INFO  [2022-10-10 13:10:14] File roaming/GOE_sp_report_digikam_2020-08-25_fin.csv ------------
+INFO  [2022-10-10 13:10:14] Initial data: 20 columns.
+INFO  [2022-10-10 13:10:14] Classifier set to digikam
+INFO  [2022-10-10 13:10:14] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#GOE_A01#1#1	NA	GOE_A01	1	1	GOE	2019-03-04	08:48:43
+2	NA#GOE_A01#1#2	NA	GOE_A01	1	2	GOE	2019-03-09	02:21:03
+3	NA#GOE_A01#1#3	NA	GOE_A01	1	3	GOE	2019-03-15	21:01:27
+4	NA#GOE_A01#1#4	NA	GOE_A01	1	4	GOE	2019-03-15	21:04:23
+5	NA#GOE_A01#1#5	NA	GOE_A01	1	5	GOE	2019-03-15	21:05:33
+
+
+INFO  [2022-10-10 13:10:14] File roaming/KHA_sp_report_digikam_2020-08-26_fin.csv ------------
+INFO  [2022-10-10 13:10:14] Initial data: 20 columns.
+INFO  [2022-10-10 13:10:14] Classifier set to digikam
+INFO  [2022-10-10 13:10:14] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#KHA_A03#1#1	NA	KHA_A03	1	1	KHA	2018-10-02	12:12:01
+2	NA#KHA_A03#1#2	NA	KHA_A03	1	2	KHA	2018-10-02	19:38:21
+3	NA#KHA_A03#1#3	NA	KHA_A03	1	3	KHA	2018-10-03	09:19:10
+4	NA#KHA_A03#1#4	NA	KHA_A03	1	4	KHA	2018-10-03	11:15:16
+5	NA#KHA_A03#1#5	NA	KHA_A03	1	5	KHA	2018-10-03	11:16:22
+
+
+INFO  [2022-10-10 13:10:14] File roaming/Marinmane NR _record_table_0min_deltaT_2021-06-10.csv ------------
+INFO  [2022-10-10 13:10:14] Initial data: 21 columns.
+INFO  [2022-10-10 13:10:14] Classifier set to digikam
+INFO  [2022-10-10 13:10:15] Manually setting location code for Marinmane.
+INFO  [2022-10-10 13:10:15] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#MAR_A05#NA#1	NA	MAR_A05	NA	1	MAR	2019-10-08	06:53:13
+2	NA#MAR_A05#NA#2	NA	MAR_A05	NA	2	MAR	2019-10-08	06:59:03
+3	NA#MAR_A05#NA#3	NA	MAR_A05	NA	3	MAR	2019-10-08	07:00:05
+4	NA#MAR_A05#NA#4	NA	MAR_A05	NA	4	MAR	2019-10-10	13:31:44
+5	NA#MAR_A05#NA#5	NA	MAR_A05	NA	5	MAR	2019-10-10	13:31:44
+
+
+INFO  [2022-10-10 13:10:16] File roaming/MOK_record_table_0min_deltaT_2021-05-07.csv ------------
+INFO  [2022-10-10 13:10:16] Initial data: 22 columns.
+INFO  [2022-10-10 13:10:16] Classifier set to digikam
+WARN  [2022-10-10 13:10:16] Message in standardize_columns: Match found in column names: renaming column metadata_Numberofindividuals into metadata_NumberOfIndividuals
+INFO  [2022-10-10 13:10:17] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#MOK_A08#1#1	NA	MOK_A08	1	1	MOK	2018-06-25	02:19:00
+2	NA#MOK_A08#1#2	NA	MOK_A08	1	2	MOK	2018-06-25	16:13:38
+3	NA#MOK_A08#1#3	NA	MOK_A08	1	3	MOK	2018-06-26	16:16:38
+4	NA#MOK_A08#1#4	NA	MOK_A08	1	4	MOK	2018-06-27	09:53:27
+5	NA#MOK_A08#1#5	NA	MOK_A08	1	5	MOK	2018-06-28	08:56:10
+
+
+INFO  [2022-10-10 13:10:17] File roaming/NAM_sp_report_digikam_2021-02-24_fin.csv ------------
+INFO  [2022-10-10 13:10:17] Initial data: 20 columns.
+INFO  [2022-10-10 13:10:17] Classifier set to digikam
+INFO  [2022-10-10 13:10:17] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#NAM_A01#1#1	NA	NAM_A01	1	1	NAM	2019-02-27	08:37:21
+2	NA#NAM_A01#1#2	NA	NAM_A01	1	2	NAM	2019-02-27	08:38:22
+3	NA#NAM_A01#1#3	NA	NAM_A01	1	3	NAM	2019-03-06	13:25:56
+4	NA#NAM_A01#1#4	NA	NAM_A01	1	4	NAM	2019-03-13	18:01:22
+5	NA#NAM_A01#1#5	NA	NAM_A01	1	5	NAM	2019-03-14	11:45:52
+
+
+INFO  [2022-10-10 13:10:17] File roaming/TAN_sp_report_digikam_2021-02-24_fin.csv ------------
+INFO  [2022-10-10 13:10:17] Initial data: 21 columns.
+INFO  [2022-10-10 13:10:17] Classifier set to digikam
+INFO  [2022-10-10 13:10:17] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#TAN_A01#1#1	NA	TAN_A01	1	1	TAN	2019-06-17	13:07:47
+2	NA#TAN_A01#1#2	NA	TAN_A01	1	2	TAN	2019-06-19	23:27:32
+3	NA#TAN_A01#1#3	NA	TAN_A01	1	3	TAN	2019-06-19	23:36:05
+4	NA#TAN_A01#1#4	NA	TAN_A01	1	4	TAN	2019-06-22	18:43:24
+5	NA#TAN_A01#1#5	NA	TAN_A01	1	5	TAN	2019-06-22	18:51:26
+
+
+INFO  [2022-10-10 13:10:17] File SAM/SAM_Roll1_Snapshot.csv ------------
+INFO  [2022-10-10 13:10:17] Initial data: 6 columns.
+INFO  [2022-10-10 13:10:17] Classifier set to traptagger
+WARN  [2022-10-10 13:10:17] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+WARN  [2022-10-10 13:10:17] Cameras B_F04, B_G05, B_H04, B_D04, S_F02, B_C03, B_D02, B_E02, S_A01, S_B01, S_C01, S_D01, S_D02, S_E02, S_G02, S_G01, S_H02 already have a dash in it: adding the location before as RES_... might be a problem
+INFO  [2022-10-10 13:10:17] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#SAM_B_F04#1#1	NA	SAM_B_F04	1	1	SAM	2019-04-01	10:22:00
+2	NA#SAM_B_G05#1#1	NA	SAM_B_G05	1	1	SAM	2019-04-02	00:09:00
+3	NA#SAM_B_G05#1#2	NA	SAM_B_G05	1	2	SAM	2019-04-02	00:10:00
+4	NA#SAM_B_G05#1#4	NA	SAM_B_G05	1	4	SAM	2019-04-02	03:56:00
+5	NA#SAM_B_G05#1#5	NA	SAM_B_G05	1	5	SAM	2019-04-02	07:07:00
+
+
+INFO  [2022-10-10 13:10:17] File SAM/SAM_Roll2_Snapshot.csv ------------
+INFO  [2022-10-10 13:10:17] Initial data: 6 columns.
+INFO  [2022-10-10 13:10:17] Classifier set to traptagger
+WARN  [2022-10-10 13:10:17] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+WARN  [2022-10-10 13:10:18] Cameras S_C01, B_G05, B_F04, B_H04, S_F02, B_E04, S_A01, S_B01, S_D01, S_D02, S_E02, S_G02, S_G01, S_H02, B_D04, B_C04, B_C03, B_C02, B_D02, B_E02 already have a dash in it: adding the location before as RES_... might be a problem
+INFO  [2022-10-10 13:10:18] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#SAM_S_C01#2#1	NA	SAM_S_C01	2	1	SAM	2016-05-28	04:54:00
+2	NA#SAM_S_C01#2#2	NA	SAM_S_C01	2	2	SAM	2016-05-28	22:21:00
+3	NA#SAM_S_C01#2#3	NA	SAM_S_C01	2	3	SAM	2016-05-29	05:36:00
+4	NA#SAM_S_C01#2#4	NA	SAM_S_C01	2	4	SAM	2016-05-29	23:58:00
+5	NA#SAM_S_C01#2#5	NA	SAM_S_C01	2	5	SAM	2016-05-30	05:06:00
+
+
+INFO  [2022-10-10 13:10:18] File SAM/SAM_Roll3_Snapshot.csv ------------
+INFO  [2022-10-10 13:10:18] Initial data: 6 columns.
+INFO  [2022-10-10 13:10:18] Classifier set to traptagger
+WARN  [2022-10-10 13:10:18] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+WARN  [2022-10-10 13:10:18] Cameras B_G05, B_E04, B_D04, B_C04, B_H04, B_F04, S_H02, S_G02, B_E02, B_D02, B_C02, B_C03, S_A01, S_B01, S_C01, S_D01, S_F02, S_D02, S_E02, S_G01 already have a dash in it: adding the location before as RES_... might be a problem
+INFO  [2022-10-10 13:10:18] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#SAM_B_G05#3#1	NA	SAM_B_G05	3	1	SAM	2019-09-25	12:53:00
+2	NA#SAM_B_G05#3#2	NA	SAM_B_G05	3	2	SAM	2019-09-25	12:55:00
+3	NA#SAM_B_G05#3#3	NA	SAM_B_G05	3	3	SAM	2019-09-25	12:56:00
+4	NA#SAM_B_G05#3#84	NA	SAM_B_G05	3	84	SAM	2019-09-26	16:33:00
+5	NA#SAM_B_G05#3#104	NA	SAM_B_G05	3	104	SAM	2019-09-27	10:51:00
+
+
+INFO  [2022-10-10 13:10:18] File SOM/SOM_S1_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:10:19] Initial data: 22 columns.
+INFO  [2022-10-10 13:10:19] Classifier set to zooniverse
+WARN  [2022-10-10 13:10:22] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:10:22] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	1#SOM_A2#1#1	1	SOM_A2	1	1	SOM	2017-12-17	07:58:53
+2	1#SOM_A2#1#12	1	SOM_A2	1	12	SOM	2017-12-17	08:01:04
+3	1#SOM_A2#1#13	1	SOM_A2	1	13	SOM	2017-12-17	08:01:18
+4	1#SOM_A2#1#15	1	SOM_A2	1	15	SOM	2017-12-17	10:12:17
+5	1#SOM_A2#1#16	1	SOM_A2	1	16	SOM	2017-12-17	10:15:30
+
+
+INFO  [2022-10-10 13:10:25] File TSW/TSW_Roll10_Snapshot.csv ------------
+INFO  [2022-10-10 13:10:25] Initial data: 5 columns.
+INFO  [2022-10-10 13:10:25] Classifier set to traptagger
+WARN  [2022-10-10 13:10:25] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+WARN  [2022-10-10 13:10:25] Cameras K_C07, K_A03, K_A02, K_B02, K_B03, K_B04, K_B05, K_B07, K_A05, K_A06, K_A07, K_C06, K_C04, K_C03, K_C02, K_D02, K_B06, K_D03, K_D06, K_C05, L_E03, L_D03, L_C03, L_B03, L_B02, L_B01, L_C01, L_D02, L_E02, L_E01 already have a dash in it: adding the location before as RES_... might be a problem
+INFO  [2022-10-10 13:10:25] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#TSW_K_C07#10#1	NA	TSW_K_C07	10	1	TSW	2021-06-12	00:35:00
+2	NA#TSW_K_A03#10#1	NA	TSW_K_A03	10	1	TSW	2021-06-12	08:23:00
+3	NA#TSW_K_A02#10#1	NA	TSW_K_A02	10	1	TSW	2021-06-12	09:06:00
+4	NA#TSW_K_B02#10#1	NA	TSW_K_B02	10	1	TSW	2021-06-12	09:34:00
+5	NA#TSW_K_B02#10#2	NA	TSW_K_B02	10	2	TSW	2021-06-12	09:34:00
+
+
+INFO  [2022-10-10 13:10:25] File TSW/TSW_Roll11_Snapshot.csv ------------
+INFO  [2022-10-10 13:10:25] Initial data: 5 columns.
+INFO  [2022-10-10 13:10:25] Classifier set to traptagger
+WARN  [2022-10-10 13:10:25] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+WARN  [2022-10-10 13:10:25] Cameras K_B04, L_C03, K_D03, K_C04, K_C03, K_B02, L_E02, K_A05, K_C07, K_D02, K_D06, K_B07, K_A07, K_B06, K_B05, K_B03, K_A02, L_D03, L_B02, L_C01, L_D02, K_A06, K_C02, K_A03, K_C05, L_B01, L_E01, K_C06, L_B03, L_E03 already have a dash in it: adding the location before as RES_... might be a problem
+INFO  [2022-10-10 13:10:25] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#TSW_K_B04#11#2	NA	TSW_K_B04	11	2	TSW	2021-02-26	08:08:00
+2	NA#TSW_L_C03#11#1	NA	TSW_L_C03	11	1	TSW	2021-03-02	10:46:00
+3	NA#TSW_K_D03#11#1	NA	TSW_K_D03	11	1	TSW	2021-03-07	10:58:00
+4	NA#TSW_K_D03#11#3	NA	TSW_K_D03	11	3	TSW	2021-03-10	01:53:00
+5	NA#TSW_K_D03#11#4	NA	TSW_K_D03	11	4	TSW	2021-03-10	07:33:00
+
+
+INFO  [2022-10-10 13:10:25] File TSW/TSW_Roll5_Snapshot.csv ------------
+INFO  [2022-10-10 13:10:25] Initial data: 6 columns.
+INFO  [2022-10-10 13:10:25] Classifier set to traptagger
+WARN  [2022-10-10 13:10:26] Cameras K_A05, K_A07, K_B07, K_C06, K_C05, K_C04, K_C03, K_D02, K_C02, K_D03, K_D06, K_A06, K_A03, K_A02, K_B02, K_B03, K_B04, K_B05, K_B06, L_E01, L_D02, L_D03, L_E03, L_E02, L_C01, L_C03, L_B03, L_B02, L_B01 already have a dash in it: adding the location before as RES_... might be a problem
+INFO  [2022-10-10 13:10:26] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#TSW_K_A05#5#1	NA	TSW_K_A05	5	1	TSW	2019-11-04	06:25:00
+2	NA#TSW_K_A05#5#2	NA	TSW_K_A05	5	2	TSW	2019-11-04	22:29:00
+3	NA#TSW_K_A05#5#3	NA	TSW_K_A05	5	3	TSW	2019-11-05	19:54:00
+4	NA#TSW_K_A05#5#4	NA	TSW_K_A05	5	4	TSW	2019-11-05	20:01:00
+5	NA#TSW_K_A05#5#5	NA	TSW_K_A05	5	5	TSW	2019-11-05	21:11:00
+
+
+INFO  [2022-10-10 13:10:26] File TSW/TSW_Roll6_Snapshot.csv ------------
+INFO  [2022-10-10 13:10:26] Initial data: 6 columns.
+INFO  [2022-10-10 13:10:26] Classifier set to traptagger
+WARN  [2022-10-10 13:10:26] Cameras K_A07, K_A06, K_A05, K_A03, K_A02, K_B02, K_B03, K_B04, K_B05, K_B06, K_B07, K_C07, K_C06, K_C05, K_C04, L_C03, K_D02, K_C02, K_D03, K_D06, L_L_E03W1, L_L_E03W2, L_L_E03W3, L_B01, L_C01, K_C03, L_B03, L_E03W already have a dash in it: adding the location before as RES_... might be a problem
+INFO  [2022-10-10 13:10:26] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#TSW_K_A07#6#1	NA	TSW_K_A07	6	1	TSW	2020-02-20	07:41:00
+2	NA#TSW_K_A06#6#1	NA	TSW_K_A06	6	1	TSW	2020-02-20	08:07:00
+3	NA#TSW_K_A06#6#2	NA	TSW_K_A06	6	2	TSW	2020-02-20	08:08:00
+4	NA#TSW_K_A05#6#1	NA	TSW_K_A05	6	1	TSW	2020-02-20	08:34:00
+5	NA#TSW_K_A05#6#2	NA	TSW_K_A05	6	2	TSW	2020-02-20	08:34:00
+
+
+INFO  [2022-10-10 13:10:26] File TSW/TSW_Roll7_Snapshot.csv ------------
+INFO  [2022-10-10 13:10:26] Initial data: 6 columns.
+INFO  [2022-10-10 13:10:26] Classifier set to traptagger
+WARN  [2022-10-10 13:10:26] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+WARN  [2022-10-10 13:10:26] Cameras L_B03, L_E02, L_D02, L_C01, L_B01, L_C03, L_D03, L_E03, L_E01, K_B06, K_B03, K_B02, K_C02, K_D02, K_D03, K_C03, K_C05, K_D06, K_A02, K_A05, K_A06, K_A03, K_A07, K_C06, K_C07, K_B07, K_B04, K_C04 already have a dash in it: adding the location before as RES_... might be a problem
+INFO  [2022-10-10 13:10:26] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#TSW_L_B03#7#1	NA	TSW_L_B03	7	1	TSW	2020-07-19	00:02:00
+2	NA#TSW_L_E02#7#1	NA	TSW_L_E02	7	1	TSW	2020-07-19	12:14:00
+3	NA#TSW_L_E02#7#2	NA	TSW_L_E02	7	2	TSW	2020-07-19	12:16:00
+4	NA#TSW_L_D02#7#1	NA	TSW_L_D02	7	1	TSW	2020-07-19	12:26:00
+5	NA#TSW_L_C01#7#2	NA	TSW_L_C01	7	2	TSW	2020-07-19	12:48:00
+
+
+INFO  [2022-10-10 13:10:27] File TSW/TSW_Roll8_Snapshot.csv ------------
+INFO  [2022-10-10 13:10:27] Initial data: 6 columns.
+INFO  [2022-10-10 13:10:27] Classifier set to traptagger
+WARN  [2022-10-10 13:10:27] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+WARN  [2022-10-10 13:10:27] Cameras L_C01, L_B03, K_C06, K_C05, K_C04, K_C03, K_C02, K_D02, K_D03, K_D06, L_E03, L_D03, L_C03, L_B02, L_B01, L_D02, L_E02, L_E01, K_C07, K_B07, K_B06, K_B05, K_B04, K_B03, K_B02, K_A02, K_A03, K_A06, K_A07, K_A05 already have a dash in it: adding the location before as RES_... might be a problem
+INFO  [2022-10-10 13:10:27] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#TSW_L_C01#8#1	NA	TSW_L_C01	8	1	TSW	2020-11-05	08:21:00
+2	NA#TSW_L_C01#8#4	NA	TSW_L_C01	8	4	TSW	2020-11-06	22:30:00
+3	NA#TSW_L_C01#8#5	NA	TSW_L_C01	8	5	TSW	2020-11-07	02:36:00
+4	NA#TSW_L_C01#8#6	NA	TSW_L_C01	8	6	TSW	2020-11-07	02:56:00
+5	NA#TSW_L_C01#8#7	NA	TSW_L_C01	8	7	TSW	2020-11-07	06:11:00
+
+
+INFO  [2022-10-10 13:10:27] File TSW/TSW_Roll9_Snapshot.csv ------------
+INFO  [2022-10-10 13:10:27] Initial data: 6 columns.
+INFO  [2022-10-10 13:10:27] Classifier set to traptagger
+WARN  [2022-10-10 13:10:27] Message in standardize_columns: Match found in column names: renaming column Capture_ID into capture_id
+WARN  [2022-10-10 13:10:27] Cameras K_A03, K_D06, K_C06, K_C05, K_C04, K_C03, K_C02, K_D02, K_D03, K_B02, K_A02, K_B04, K_B03, K_B05, K_B06, K_A05, K_A06, K_C07, K_B07, K_A07, L_D03, L_C03, L_B03, L_B01, L_D02, L_C01, L_B02 already have a dash in it: adding the location before as RES_... might be a problem
+INFO  [2022-10-10 13:10:27] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	NA#TSW_K_A03#9#1	NA	TSW_K_A03	9	1	TSW	2021-02-14	01:46:00
+2	NA#TSW_K_A03#9#2	NA	TSW_K_A03	9	2	TSW	2021-02-14	01:46:00
+3	NA#TSW_K_D06#9#1	NA	TSW_K_D06	9	1	TSW	2021-02-14	07:34:00
+4	NA#TSW_K_D06#9#2	NA	TSW_K_D06	9	2	TSW	2021-02-14	07:35:00
+5	NA#TSW_K_C06#9#1	NA	TSW_K_C06	9	1	TSW	2021-02-14	08:09:00
+
+
+INFO  [2022-10-10 13:10:28] File TSW/TSW_S1_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:10:28] Initial data: 27 columns.
+INFO  [2022-10-10 13:10:28] Classifier set to zooniverse
+WARN  [2022-10-10 13:10:29] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:10:29] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	1#TSW_KA02#1#1	1	TSW_KA02	1	1	TSW	2018-11-18	09:14:53
+2	1#TSW_KA02#1#3	1	TSW_KA02	1	3	TSW	2018-11-19	05:18:21
+3	1#TSW_KA02#1#4	1	TSW_KA02	1	4	TSW	2018-11-20	00:15:16
+4	1#TSW_KA02#1#5	1	TSW_KA02	1	5	TSW	2018-11-21	14:10:09
+5	1#TSW_KA02#1#6	1	TSW_KA02	1	6	TSW	2018-11-21	14:12:25
+
+
+INFO  [2022-10-10 13:10:29] File TSW/TSW_S2_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:10:29] Initial data: 28 columns.
+INFO  [2022-10-10 13:10:29] Classifier set to zooniverse
+WARN  [2022-10-10 13:10:30] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:10:30] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	2#TSW_KA02#3#5	2	TSW_KA02	3	5	TSW	2019-05-03	07:58:07
+2	2#TSW_KA02#3#6	2	TSW_KA02	3	6	TSW	2019-05-03	07:59:07
+3	2#TSW_KA02#3#7	2	TSW_KA02	3	7	TSW	2019-05-03	08:00:21
+4	2#TSW_KA02#3#8	2	TSW_KA02	3	8	TSW	2019-05-03	08:08:33
+5	2#TSW_KA02#3#9	2	TSW_KA02	3	9	TSW	2019-05-05	14:05:23
+
+
+INFO  [2022-10-10 13:10:30] File VEN/VEN_S1_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:10:30] Initial data: 26 columns.
+INFO  [2022-10-10 13:10:30] Classifier set to zooniverse
+WARN  [2022-10-10 13:10:30] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:10:30] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	1#VEN_A01#1#1	1	VEN_A01	1	1	VEN	2018-08-31	15:01:25
+2	1#VEN_A01#1#3	1	VEN_A01	1	3	VEN	2018-08-31	15:04:44
+3	1#VEN_A01#1#4	1	VEN_A01	1	4	VEN	2018-09-01	09:10:39
+4	1#VEN_A01#1#5	1	VEN_A01	1	5	VEN	2018-09-02	01:38:29
+5	1#VEN_A01#1#6	1	VEN_A01	1	6	VEN	2018-09-03	18:49:12
+
+
+INFO  [2022-10-10 13:10:30] File VEN/VEN_S2_full_report_0-50__agreement_corrected_fin.csv ------------
+INFO  [2022-10-10 13:10:30] Initial data: 27 columns.
+INFO  [2022-10-10 13:10:30] Classifier set to zooniverse
+WARN  [2022-10-10 13:10:31] Some capture_id in the initial data do not correspond to the collated columns
+INFO  [2022-10-10 13:10:31] Final data: 27  columns. 
+Here are some columns:
+capture_id	season	cam_site	roll	capture	location_code	date	time
+1	2#VEN_A01#2#1	2	VEN_A01	2	1	VEN	2018-11-16	16:22:20
+2	2#VEN_A01#2#3	2	VEN_A01	2	3	VEN	2018-11-16	22:20:11
+3	2#VEN_A01#2#4	2	VEN_A01	2	4	VEN	2018-11-19	05:22:25
+4	2#VEN_A01#2#5	2	VEN_A01	2	5	VEN	2018-11-19	06:34:58
+5	2#VEN_A01#2#6	2	VEN_A01	2	6	VEN	2018-11-20	09:39:14
+
+
+INFO  [2022-10-10 13:10:31] Code successfully executed yeah!
