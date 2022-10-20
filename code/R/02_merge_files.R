@@ -6,7 +6,7 @@ source(here("code/R/functions/functions_standardize.R"))
 source(here("code/R/functions/functions_files_handling.R"))
 
 # Parameters --------------------------------------------------------------
-readfolder <- here("data/2_standardized_data")
+readfolder <- "/home/lnicvert/Documents/PhD/Snapshot/data/2_standardized_data/"
 
 
 # Get all files -----------------------------------------------------------
@@ -51,6 +51,6 @@ alldata[is.na(alldata$time), c("season", "cam_site", "classifier")]
 sp <- alldata$common_name
 (unique_sp <- sort(unique(sp)))
 
-write.csv(alldata, here("data/2_standardized_data/alldata.csv"))
+write.csv(alldata, file.path(readfolder, "alldata.csv"))
 
 

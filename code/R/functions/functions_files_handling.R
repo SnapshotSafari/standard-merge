@@ -6,7 +6,7 @@ library(data.table)
 #' all files in the folder and all files in subfolders of this folder)
 #'
 #' @param folder the folder to list files in
-#' @param except Folders or files to ignore: these are the relative
+#' @param except Folders or files to ignore (optional): these are the relative
 #' path from 'folder'. If an element in 'except' is a folder, then all files in 
 #' this folder are ignored.
 #'
@@ -29,15 +29,17 @@ list_files_in_folder <- function(folder, except){
   in_files_list <- list.files(folder, recursive = TRUE)
   
   # --- Exclude some files
-  for(exc in except){
-    # Modify exc to match only the leading characters
-    exc <- paste0("^", exc, ".*$")
-    discard_i <- grep(pattern = exc, x = in_files_list)
-    
-    if(length(discard_i) != 0){
-      message("Files:\n", paste(in_files_list[discard_i], collapse = "\n"),
-              "\nwill be ignored.")
-      in_files_list <- in_files_list[-discard_i]
+  if(!missing(except)) {
+    for(exc in except){
+      # Modify exc to match only the leading characters
+      exc <- paste0("^", exc, ".*$")
+      discard_i <- grep(pattern = exc, x = in_files_list)
+      
+      if(length(discard_i) != 0){
+        message("Files:\n", paste(in_files_list[discard_i], collapse = "\n"),
+                "\nwill be ignored.")
+        in_files_list <- in_files_list[-discard_i]
+      }
     }
   }
   
@@ -105,6 +107,62 @@ get_logfile_name <- function(input, wd) {
   return(logfile_name)
 }
 
+#' Create logger
+#'
+#' Initializes a logger with a given logfile.
+#' 
+#' @param my_logfile path to the log file (character). 
+#'
+#' @return Returns a logger and creates a logfile at the given path. If the path given does not
+#' exist, also creates this path.
+#' 
+#' @export
+#'
+#' @examples
+create_logger <- function(my_logfile) {
+  
+  logfolder <- dirname(my_logfile)
+  
+  if(!dir.exists(logfolder)) {
+    dir.create(logfolder)
+  }
+  
+  file.create(my_logfile)
+  
+  my_console_appender = console_appender(layout = default_log_layout())
+  my_file_appender = file_appender(my_logfile, append = TRUE, 
+                                   layout = default_log_layout())
+  
+  my_logger <- log4r::logger(threshold = "INFO", 
+                             appenders = list(my_console_appender, 
+                                              my_file_appender))
+  
+  return(my_logger)
+}
+
+#' Write log message
+#'
+#' Writes a log message. If a logger is provided, writes to that logger; 
+#' if it is NA, displays a message.
+#' 
+#' @param message The message to display/write to the logger
+#' @param logger Logger to write to (log4r object of class "logger") (defaults to NA)
+#'
+#' @return Either a message or writes a log (with the logger parameters)
+#' 
+#' @export
+#'
+#' @examples
+write_log_message <- function(message, logger = NA) {
+  
+  if(all(is.na(logger))) {
+    message(msg)
+  } else {
+    log4r::info(logger, 
+                message)
+  }
+}
+
 #' Get relative path
 #'
 #' Get the relative path to a file or folder.
@@ -130,6 +188,49 @@ get_relative_path <- function(f, wd) {
                    rel_path)
   
   return(rel_path)
+}
+
+
+#' Get files and folder
+#' 
+#' Get all files inside the input folder (if it is a folder)
+#' else if it is a file, folder will just be its basename.
+#'
+#' @param input input (can be a file or a folder, but must be a valid path)
+#' @param to_ignore files to ignore (optional)
+#'
+#' @return
+#' @export
+#'
+#' @examples
+get_files_and_folder <- function(input, to_ignore) {
+  
+  # Guess if input is a file
+  is_file <- grepl("\\..+$", input)
+  
+  if(!is_file) { # If input is a folder
+    # Set folder to input
+    folder <- input 
+    
+    if(missing(to_ignore)) {
+      in_files_list <- list_files_in_folder(folder)
+    } else {
+      in_files_list <- list_files_in_folder(folder, 
+                                            except = to_ignore)
+    }
+    
+    
+    in_files_list <- sort(in_files_list)
+  } else { 
+    # in_files_list is set to the file (without the path)
+    in_files_list <- basename(input) 
+    
+    # Folder is the rest
+    folder <- dirname(input)
+  }
+  
+  return(list(folder = folder, 
+              files = in_files_list))
 }
 
 #' Read a file

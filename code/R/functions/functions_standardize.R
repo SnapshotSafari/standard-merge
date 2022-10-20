@@ -340,10 +340,19 @@ standardize_columns <- function(df,
   
   check_standard_colnames(standard_colnames, classifier)
   
+  # --- Prepare data
+  if(classifier == "traptagger") {
+    df_res <- prepare_traptagger(df)
+  } else if (classifier == "digikam") {
+    df_res <- prepare_digikam(df)
+  } else if (classifier == "zooniverse") {
+    df_res <- df
+  }
+  
   # --- Keep only columns expected with classifier 'classifier'
   cols <- standard_colnames[classifier][!is.na(standard_colnames[classifier])]
   
-  df_res <- keep_only_expected_columns(df, expected = cols, 
+  df_res <- keep_only_expected_columns(df_res, expected = cols, 
                                        verbose = verbose, approx = TRUE)
   
   # --- Rename according to new standard
@@ -562,6 +571,66 @@ get_capture_id <- function(season, cam_site, roll, capture) {
   return(capture_id)
   
 }
+
+
+fill_capture_info <- function(df,
+                              classifier = c("zooniverse", "traptagger", "digikam")) {
+  
+  classifier <- match.arg(classifier)
+  
+  if (classifier == "zooniverse") {
+    # Copy df
+    res <- df
+    
+    # --- Location code
+    # Set location to first set of majuscules letters in capture_id
+    location_code <- str_extract(res$capture_id, "^[A-Z]+")
+    
+    unique_location_code <- unique(location_code)
+    
+    if(length(unique_location_code) != 1) {
+      warning(paste("Location extracted from capture_id is not unique: ", 
+                        paste(location_code, collapse = ", ")))
+    }
+    
+    res$location_code <- location_code
+    
+    # --- Season
+    season <- str_match(res$season, "^.*_S(.*)$")[,2] # Get second match
+    res$season <- season
+    
+  } else if (classifier == "traptagger") {
+    res <- fill_capture_info_traptagger(df)
+  } else if (classifier == "digikam") {
+    res <- fill_capture_info_digikam(df)
+  }
+  
+  # --- Modify cam_site to add location_code
+  already_dash <- which(grepl(res$cam_site, pattern = "_"))
+  
+  if (length(already_dash) != 0) {
+    cam_prob <- unique(res$cam_site[already_dash])
+    msg <- paste0("Cameras ",
+                  paste(cam_prob, collapse = ", "),
+                  " already have a dash in it: adding the location before as RES_... might be a problem")
+    message(msg)
+  }
+  
+  res$cam_site <- paste(res$location_code, 
+                        res$cam_site,
+                        sep = "_")
+  
+  # --- Add capture_id
+  capture_id <- get_capture_id(season = res$season,
+                               cam_site = res$cam_site, 
+                               roll = res$roll, 
+                               capture = res$capture)
+  
+  res$capture_id <- capture_id
+  
+  return(res)
+}
+
 #' Fill capture info for Digikam
 #'
 #' Fills some data on capture event for Digikam-format data.
@@ -583,6 +652,8 @@ fill_capture_info_digikam <- function(df){
   df_res <- df
   
   # --- Add capture number
+  df_res <- df_res %>% arrange(cam_site, date, time)
+  
   df_res <- df_res %>% 
     group_by(cam_site) %>%
     mutate(capture = order(date, time))
