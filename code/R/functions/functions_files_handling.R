@@ -91,6 +91,9 @@ get_logfile_name <- function(input, wd) {
   
   rel_input <- get_relative_path(input, wd)
   
+  if(rel_input == "") { # In case the selative path is the root of wd
+    rel_input <- basename(input) # Set the logname to the last folder
+  }
   rel_input <- gsub(pattern = "/", 
                     replacement = "-",
                     rel_input)
@@ -187,7 +190,9 @@ write_standardized_file <- function(df, in_filename, to) {
   
   # Check if results folder exists
   if(!dir.exists(to)){
-    stop(paste("Folder ", to, " does not exist."))
+    message(paste("Creating folder", to))
+    dir.create(to, recursive = TRUE)
+    # stop(paste("Folder ", to, " does not exist."))
   }
   
   # Get subdir name

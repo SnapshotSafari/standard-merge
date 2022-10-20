@@ -8,20 +8,21 @@ source(here("code/R/functions/functions_standardize.R"))
 source(here("code/R/functions/functions_files_handling.R"))
 
 # Parameters --------------------------------------------------------------
-IN_DATADIR <- here("data/1_raw_data") # Where is the general folder in which you want to read your data ?
+# Where is the general folder in which you want to read your data ?
+IN_DATADIR <- "/home/lnicvert/Documents/PhD/Code/Snapshot_cleaning/data/1_raw_data/"
 # This path will not be copied into the destination.
 
-OUT_DATADIR <- here("data/2_standardized_data")
 # Where do you want to copy your files?
+OUT_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/2_standardized_data/"
 
 # File or folder you actually want to copy, within IN_DATADIR and to OUT_DATADIR.
 # If this has a subfolder structure, it will be copied into OUT_DATADIR.
 # Must be an absolute path.
 
-input <- IN_DATADIR
-# input <- file.path(IN_DATADIR, "KHO")
-# input <- file.path(IN_DATADIR,
-#                    "APN/APN_S1_full_report_0-50__agreement_corrected_fin.csv")
+# input <- IN_DATADIR # Here we standardize all files in IN_DATADIR
+input <- file.path(IN_DATADIR, "KHO") # Here we only standardize files in "KHO"
+input <- file.path(IN_DATADIR,
+                   "APN/APN_S1_full_report_0-50__agreement_corrected_fin.csv") # Here we only standardize first season of APN
 
 # Files or folders in IN_DATADIR that should be ignored.
 to_ignore <- c("reports_FBIP_format_all_recs",
@@ -37,7 +38,7 @@ if(!dir.exists(logfolder)) {
   dir.create(logfolder)
 }
 
-logfile_name <- get_logfile_name(input, here())
+logfile_name <- get_logfile_name(input, IN_DATADIR)
 
 my_logfile <- file.path(logfolder, logfile_name)
 
@@ -258,6 +259,8 @@ for(in_filename in in_files_list) {
   # Write data --------------------------------------------------------------
   full_file <- file.path(folder, in_filename)
   file_from_datadir <- get_relative_path(full_file, wd = IN_DATADIR)
+  
+  # Write data --------------------------------------------------------------
   
   write_standardized_file(std_dat, file_from_datadir, to = OUT_DATADIR)
 
