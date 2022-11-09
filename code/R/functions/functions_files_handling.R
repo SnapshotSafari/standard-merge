@@ -75,35 +75,21 @@ list_files_in_folder <- function(folder, except){
 #'
 #' Create a name for the logfile from an input file/folder.
 #' 
-#' @param input The input file/folder that will appear in the logfile
-#' name.
 #'
-#' @return A string with the path to the file/folder ("/" and "." replaced by "-") 
-#' and the current date/time, separated with "__". Has the extension .log
+#' @return A string with format "log__YYYY-MM-DD_HH:MM:SS.log" 
+#' where YYYY-MM-DD_HH:MM:SS is the current date/time.
 #' 
 #' @export
 #'
 #' @examples
-get_logfile_name <- function(input, wd) {
+get_logfile_name <- function() {
   
   now <- Sys.time()
   now <- gsub(pattern = " ", 
               replacement = "_",
               now)
   
-  rel_input <- get_relative_path(input, wd)
-  
-  if(rel_input == "") { # In case the selative path is the root of wd
-    rel_input <- basename(input) # Set the logname to the last folder
-  }
-  rel_input <- gsub(pattern = "/", 
-                    replacement = "-",
-                    rel_input)
-  rel_input <- gsub(pattern = "\\.", 
-                    replacement = "-",
-                    rel_input)
-  
-  logfile_name <- paste0(paste(rel_input, now, sep = "__"), ".log")
+  logfile_name <- paste0(paste("log", now, sep = "__"), ".log")
   return(logfile_name)
 }
 

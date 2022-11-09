@@ -61,7 +61,7 @@ STANDARD <- read.csv(here("docs/standard.csv"),
 logfolder <- here("code/log")
 
 if(create_log) {
-  logfile_name <- get_logfile_name(input, IN_DATADIR) # Get automated name for the logger
+  logfile_name <- get_logfile_name() # Get automated name for the logger
   my_logfile <- file.path(logfolder, logfile_name) # Get logger path
   my_logger <- create_logger(my_logfile) # Create logger
 } else {
