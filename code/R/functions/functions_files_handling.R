@@ -179,44 +179,53 @@ get_relative_path <- function(f, wd) {
 
 #' Get files and folder
 #' 
-#' Get all files inside the input folder (if it is a folder)
-#' else if it is a file, folder will just be its basename.
+#' Get all files from the input character vector. Either the basename from input
+#' if they are files, or all files into input recursively if input are folders.
 #'
-#' @param input input (can be a file or a folder, but must be a valid path)
+#' @param input a character vector of valid paths: can be files or folders
 #' @param to_ignore files to ignore (optional)
 #'
-#' @return
+#' @return A dataframe with columns folder and files, where folder is the 
+#' folder up to a given file and file is the file.
+#' 
 #' @export
 #'
 #' @examples
 get_files_and_folder <- function(input, to_ignore) {
   
-  # Guess if input is a file
-  is_file <- grepl("\\..+$", input)
+  # Initialize results
+  folders <- c()
+  files <- c()
   
-  if(!is_file) { # If input is a folder
-    # Set folder to input
-    folder <- input 
+  for(inp in input) { # Iterate through inputs
+    # Guess if input is a file
+    is_file <- grepl("\\..+$", inp)
     
-    if(missing(to_ignore)) {
-      in_files_list <- list_files_in_folder(folder)
-    } else {
-      in_files_list <- list_files_in_folder(folder, 
-                                            except = to_ignore)
+    if(!is_file) { # If input is a folder
+      # Set folder to input
+      folder <- inp 
+      
+      if(missing(to_ignore)) {
+        in_files_list <- list_files_in_folder(folder)
+      } else {
+        in_files_list <- list_files_in_folder(folder, 
+                                              except = to_ignore)
+      }
+      in_files_list <- sort(in_files_list)
+    } else { 
+      # in_files_list is set to the file (without the path)
+      in_files_list <- basename(inp) 
+
+      # Folder is the rest
+      folder <- dirname(inp)
     }
     
-    
-    in_files_list <- sort(in_files_list)
-  } else { 
-    # in_files_list is set to the file (without the path)
-    in_files_list <- basename(input) 
-    
-    # Folder is the rest
-    folder <- dirname(input)
+    # Store all folders and files
+    folders <- c(folders, rep(folder, length(in_files_list)))
+    files <- c(files, in_files_list)
   }
   
-  return(list(folder = folder, 
-              files = in_files_list))
+  df <- data.frame(folders, files)
 }
 
 #' Read a file
