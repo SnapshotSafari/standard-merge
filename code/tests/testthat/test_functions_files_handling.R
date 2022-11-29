@@ -21,7 +21,7 @@ test_that("Get files and folder (folder input)", {
   res <- get_files_and_folder(f)
   
   folders <- rep("/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data/ATH/", 4)
-  files <- list_csv_in_folder(folder)
+  files <- list_csv_in_folder(f)
   expected <- data.frame(folders, files)
   
   expect_equal(res, expected)
