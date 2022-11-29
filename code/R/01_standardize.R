@@ -22,24 +22,21 @@ source(here("code/R/functions/functions_files_handling.R"))
 # --- Path to the data
 # Where is the general folder in which you want to read your data ?
 # This path will not be copied into the destination.
-# IN_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/test_TSW/input"
 IN_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data"
 
 # --- Where wou want to copy data
 # Where do you want to copy your files?
-# OUT_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/test_TSW/output"
+# OUT_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/test"
 OUT_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/2_standardized_data"
 
 # --- Data to standardize
 # File or folder you actually want to copy, within IN_DATADIR and to OUT_DATADIR.
 # If this has a subfolder structure, it will be copied into OUT_DATADIR.
 
-# input <- file.path(IN_DATADIR,
-#                    "TSW/TSW_Roll5_Snapshot.csv")
 input <- IN_DATADIR # Here we standardize all files in IN_DATADIR
 # input <- c(file.path(IN_DATADIR, "roaming"),
-#            file.path(IN_DATADIR, "APN/APN_S1_full_report_0-50__agreement_corrected_fin.csv"),
-#            file.path(IN_DATADIR, "ATH/ATH_Roll1_Snapshot_UPDATED.csv")) # custom input
+#            file.path(IN_DATADIR, "MAD"))
+
 
 # --- Any files/folders to ignore?
 # Files or folders in IN_DATADIR that should be ignored.
@@ -126,26 +123,26 @@ for(i in 1:nrow(files_df)) {
   }
   
   # Standardize date/times --------------------------------------------------
-  std_dat <- std_dat %>% mutate(date = standardize_date(date))
-  std_dat <- std_dat %>% mutate(time = standardize_time(time))
+  std_dat <- std_dat %>% mutate(eventDate = standardize_date(eventDate))
+  std_dat <- std_dat %>% mutate(eventTime = standardize_time(eventTime))
   
 
   # Get location code (Digikam) ---------------------------------------------
-  if(classifier == "digikam") { # Get location_code from filename
+  if(classifier == "digikam") { # Get locationID from filename
     # --- First add location field
     fname <- basename(in_filename)
     
     if(fname == "Marinmane NR _record_table_0min_deltaT_2021-06-10.csv") {
       # Manually set location
-      location_code <- "MAR"
+      locationID <- "MAR"
       
       msg <- "Manually setting location code for Marinmane."
       write_log_message(msg, logger = my_logger)
     } else {
-      location_code <- str_extract(fname, "^[A-Z]+")
+      locationID <- str_extract(fname, "^[A-Z]+")
     }
     # Add location code
-    std_dat$location_code <- location_code
+    std_dat$locationID <- locationID
   }
   
   # Fill capture info -------------------------------------------------------
@@ -156,21 +153,22 @@ for(i in 1:nrow(files_df)) {
   
   # Standardize species names -----------------------------------------------
   std_dat <- std_dat %>%
-    mutate(common_name = standardize_species(common_name))
+    mutate(snapshotName = standardize_species(snapshotName))
   
   # Reorder -----------------------------------------------------------------
   # Reorder columns (to be sure)
-  std_dat <- std_dat %>% select(all_of(STANDARD$new[!is.na(STANDARD$new)]))
+  to_reorder <- STANDARD$new[!is.na(STANDARD$new) & (STANDARD$new != "captureID_temp")]
+  std_dat <- std_dat %>% select(all_of(to_reorder))
   
   # Reorder data
-  std_dat <- std_dat %>% arrange(cam_site, date, time)
+  std_dat <- std_dat %>% arrange(cameraID, eventDate, eventTime)
   
   # Previsualize final data -------------------------------------------------
-  msg <- paste("Final data:", ncol(std_dat), " columns.",
+  msg <- paste("Final data:", ncol(std_dat), "columns,", nrow(std_dat), "rows.",
                "\nHere are some columns:")
   
   write_log_message(msg, logger = my_logger)
-  (std_cat <- head(std_dat[, 1:8], n = 5))
+  (std_cat <- head(std_dat[, 1:9], n = 5))
   
   # Write head of result to logfile if there is a logfile
   if(create_log) {
@@ -181,18 +179,28 @@ for(i in 1:nrow(files_df)) {
                   sep = "\t",
                   append = TRUE)
     })
-    write("\n",
-          file = my_logfile,
-          append = TRUE)
   }
   
   # Write data --------------------------------------------------------------
   full_file <- file.path(folder, in_filename)
   file_from_datadir <- get_relative_path(full_file, wd = IN_DATADIR)
   
-  write_standardized_file(std_dat, file_from_datadir, to = OUT_DATADIR)
-
+  filepath <- write_standardized_file(std_dat, 
+                                      file_from_datadir, 
+                                      to = OUT_DATADIR)
+  
+  filename <- basename(filepath)
+  dir <- dirname(filepath)
+  
+  msg <- paste("File", filename, "successfully copied into", dir)
+  write_log_message(msg, logger = my_logger)
+  
+  if(create_log) {
+    write("\n",
+          file = my_logfile,
+          append = TRUE)
+  }
 }
 
-msg <- "Code successfully executed yeah!"
+
 write_log_message(msg, logger = my_logger)

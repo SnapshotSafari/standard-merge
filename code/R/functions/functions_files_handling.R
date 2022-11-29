@@ -258,6 +258,35 @@ read_file <- function(filename, base_folder, verbose = FALSE){
   return(dat)
 }
 
+
+#' Get final filemane
+#'
+#' Return the filename from the file columns.
+#' 
+#' @param df The dataframe to be copied. Must have columns locationID, season, roll.
+#'
+#' @return The filename for this file in the format locationID_Sseason_Rroll.csv
+#' It there are several locationID, seasons or rolls, they are separated by a dash
+#' in the filename: locationID1-locationID2...
+#' 
+#' @export
+#'
+#' @examples
+get_final_filename <- function(df) {
+  
+  reserve <- unique(df$locationID)
+  reserve <- paste(reserve, collapse = "-")
+  
+  season <- unique(df$season)
+  season <- paste(season, collapse = "-")
+  
+  roll <- unique(df$roll)
+  roll <- paste(roll, collapse = "-")
+  
+  filename <- paste0(reserve, "_S", season, "_R", roll, ".csv")
+  return(filename)
+}
+
 #' Write the standardized file
 #'
 #' @param df The standardized file
@@ -267,6 +296,7 @@ read_file <- function(filename, base_folder, verbose = FALSE){
 #'
 #' @return Writes the file to the folder to/xxx where xxx is
 #' the subdirectory in which the original file was in.
+#' Also returns the path to the file.
 #' 
 #' @export
 #'
@@ -290,18 +320,14 @@ write_standardized_file <- function(df, in_filename, to) {
     }
   }
   
-  # Prepare file name
-  reserve <- str_extract(basename(in_filename), "^[A-Z]+")
+  # Get filename
+  filename <- get_final_filename(df)
   
-  season <- std_dat$season
-  season <- unique(season)
-  season <- paste(season, collapse = "-")
+  # Get full filepath
+  filepath <- file.path(to, subdir, filename)
   
-  roll <- unique(df$roll)
-  roll <- paste(roll, collapse = "-")
-  
-  filename <- paste0(reserve, "_S", season, "_R", roll, ".csv")
-  
-  write.csv(df, file.path(to, subdir, filename), 
+  write.csv(df, filepath, 
             row.names = FALSE)
+  
+  return(filepath)
 }

@@ -543,38 +543,24 @@ standardize_date <- function(dates){
   return(dat)
 }
 
-#' Get capture_id
-#'
-#' Get the capture_id from the capture info. All vectors must be the
-#' same length or they will be recycled.
+#' Fill capture info
 #' 
-#' @param season character vector of season
-#' @param cam_site character vector of cam_site
-#' @param roll character vector of roll
-#' @param capture character vector of capture
+#' Fills different columns related to capture info.
 #'
-#' @return A character vector of the same length of the inputs (or the
-#' longest input) with fields formatted as 
-#' season#cam_site#roll#event_no
+#' @param df a dataframe for which columns should be filled. 
+#' 
+#' @param classifier The classifier
+#' @param remove_temp should the column 'captureID_temp' be removed if present?
+#'
+#' @return A dataframe with values filled for locationID, cameraID,
+#' roll and capture. Also fills season if Zooniverse.
 #' 
 #' @export
 #'
 #' @examples
-get_capture_id <- function(season, cam_site, roll, capture) {
-  
-  capture_id <- paste(season,
-                      cam_site,
-                      roll, 
-                      capture,
-                      sep = "#")
-  
-  return(capture_id)
-  
-}
-
-
 fill_capture_info <- function(df,
-                              classifier = c("zooniverse", "traptagger", "digikam")) {
+                              classifier = c("zooniverse", "traptagger", "digikam"),
+                              remove_temp = TRUE) {
   
   classifier <- match.arg(classifier)
   
@@ -583,50 +569,48 @@ fill_capture_info <- function(df,
     res <- df
     
     # --- Location code
-    # Set location to first set of majuscules letters in capture_id
-    location_code <- str_extract(res$capture_id, "^[A-Z]+")
+    # Set location to first set of majuscules letters in captureID_temp
+    locationID <- str_extract(res$captureID_temp, "^[A-Z]+")
     
-    unique_location_code <- unique(location_code)
+    unique_locationID <- unique(locationID)
     
-    if(length(unique_location_code) != 1) {
-      warning(paste("Location extracted from capture_id is not unique: ", 
-                        paste(location_code, collapse = ", ")))
+    if(length(unique_locationID) != 1) {
+      warning(paste("Location extracted from captureID_temp is not unique: ", 
+                        paste(locationID, collapse = ", ")))
     }
     
-    res$location_code <- location_code
+    res$locationID <- locationID
     
     # --- Season
     season <- str_match(res$season, "^.*_S(.*)$")[,2] # Get second match
     res$season <- season
-    
   } else if (classifier == "traptagger") {
     res <- fill_capture_info_traptagger(df)
   } else if (classifier == "digikam") {
     res <- fill_capture_info_digikam(df)
   }
   
-  # --- Modify cam_site to add location_code
-  already_dash <- which(grepl(res$cam_site, pattern = "_"))
+  # --- Remove captureID_temp
+  if(remove_temp) {
+    if("captureID_temp" %in% colnames(res)) {
+      res <- res %>% select(-captureID_temp)
+    }
+  }
+  
+  # --- Modify cameraID to add locationID
+  already_dash <- which(grepl(res$cameraID, pattern = "_"))
   
   if (length(already_dash) != 0) {
-    cam_prob <- unique(res$cam_site[already_dash])
+    cam_prob <- unique(res$cameraID[already_dash])
     msg <- paste0("Cameras ",
                   paste(cam_prob, collapse = ", "),
                   " already have a dash in it: adding the location before as RES_... might be a problem")
     message(msg)
   }
   
-  res$cam_site <- paste(res$location_code, 
-                        res$cam_site,
+  res$cameraID <- paste(res$locationID, 
+                        res$cameraID,
                         sep = "_")
-  
-  # --- Add capture_id
-  capture_id <- get_capture_id(season = res$season,
-                               cam_site = res$cam_site, 
-                               roll = res$roll, 
-                               capture = res$capture)
-  
-  res$capture_id <- capture_id
   
   return(res)
 }
@@ -634,9 +618,9 @@ fill_capture_info <- function(df,
 #' Fill capture info for Digikam
 #'
 #' Fills some data on capture event for Digikam-format data.
-#' Fills capture_id, season, roll and capture (as character).
+#' Fills season, roll and capture (as character).
 #' 
-#' @param df The dataframe to fill. Must have a column 'location_code'
+#' @param df The dataframe to fill. Must have a column 'locationID'
 #'
 #' @return The dataframe with completed values for columns 
 #' 'season', 'roll' and 'capture'. season' defaults to 1; 
@@ -652,11 +636,11 @@ fill_capture_info_digikam <- function(df){
   df_res <- df
   
   # --- Add capture number
-  df_res <- df_res %>% arrange(cam_site, date, time)
+  df_res <- df_res %>% arrange(cameraID, eventDate, eventTime)
   
   df_res <- df_res %>% 
-    group_by(cam_site) %>%
-    mutate(capture = order(date, time))
+    group_by(cameraID) %>%
+    mutate(capture = order(eventDate, eventTime))
   
   df_res$capture <- as.character(df_res$capture)
   
@@ -664,7 +648,7 @@ fill_capture_info_digikam <- function(df){
   df_res$season <- NA # Season is NA
 
   # --- Fill roll
-  extracted_roll <- str_extract(df_res$file_path_1, 
+  extracted_roll <- str_extract(df_res$filePath1, 
                                 pattern = "Roll\\d+")
   extracted_roll <- str_extract(extracted_roll, 
                                 pattern = "\\d+")
@@ -676,8 +660,8 @@ fill_capture_info_digikam <- function(df){
 
 #' Fill capture info TrapTagger
 #'
-#' Completes capture info for TrapTagger from the capture_id.
-#' Completes values for columns cam_site, roll, capture, location and 
+#' Completes capture info for TrapTagger from the captureID_temp.
+#' Completes values for columns cameraID, roll, capture, location and 
 #' adds column season (NA). These columns are character.
 #' 
 #' @param df The dataframe to complete
@@ -692,33 +676,33 @@ fill_capture_info_traptagger <- function(df) {
   
   df_res <- df
   
-  # --- Parse capture_id
-  capture_split <- strsplit(df_res$capture_id, "#")
+  # --- Parse captureID_temp
+  capture_split <- strsplit(df_res$captureID_temp, "#")
   
   nfields <- unique(sapply(capture_split, length))
   
   if(length(nfields) != 1) {
-    warning("All capture_id fields don't have the same length...")
+    warning("All captureID_temp fields don't have the same length...")
   } else if (nfields == 3) { # First format
     location_event <- sapply(capture_split, function(l) l[1])
     
     roll <- sapply(capture_split, function(l) l[2])
-    cam_site <- sapply(capture_split, function(l) l[3])
+    cameraID <- sapply(capture_split, function(l) l[3])
     
     # Format location_event to get location and event
-    location_code <- gsub(location_event, pattern = "\\d*", 
+    locationID <- gsub(location_event, pattern = "\\d*", 
                           replacement = "")
     capture <- gsub(location_event, pattern = "[a-zA-Z]*", 
                     replacement = "")
     
   } else if (nfields == 4) { # Second format
-    location_code <- sapply(capture_split, function(l) l[1])
-    cam_site <- sapply(capture_split, function(l) l[2])
+    locationID <- sapply(capture_split, function(l) l[1])
+    cameraID <- sapply(capture_split, function(l) l[2])
     roll <- sapply(capture_split, function(l) l[3])
     capture <- sapply(capture_split, function(l) l[4])
   }
   
-  unique_location <- unique(location_code)
+  unique_location <- unique(locationID)
   if(length(unique_location) != 1) {
     message(paste("Non-unique location name:",
                   paste(unique_location, collapse = ", ")))
@@ -726,10 +710,10 @@ fill_capture_info_traptagger <- function(df) {
   
   # --- Fill in info
   df_res$season <-  NA
-  df_res$cam_site <- as.character(cam_site)
+  df_res$cameraID <- as.character(cameraID)
   df_res$roll <- as.character(roll)
   df_res$capture <- as.character(capture)
-  df_res$location_code <- as.character(location_code)
+  df_res$locationID <- as.character(locationID)
   
   return(df_res)
 }
