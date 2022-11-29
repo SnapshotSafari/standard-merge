@@ -6,9 +6,9 @@ library(data.table)
 #' (lists all files in the folder and all files in subfolders of this folder)
 #'
 #' @param folder the folder to list files in
-#' @param except Folders or files to ignore (optional): these are the relative
-#' path from 'folder'. If an element in 'except' is a folder, then all files in 
-#' this folder are ignored.
+#' @param except Paths to ignore (optional): these are the relative
+#' path from 'folder'. They are either full file names, or a path
+#' with partial matching like "folder/*".
 #'
 #' @return A character vector with relative paths of all files in the folder 'folder',
 #' except the files that are indicated by 'except'.
@@ -29,18 +29,28 @@ list_csv_in_folder <- function(folder, except){
   in_files_list <- list.files(folder, recursive = TRUE)
   
   # --- Exclude some files
+  
   if(!missing(except)) {
+    discarded <- c() # initialize vector of discarded files indices
     for(exc in except){
-      # Modify exc to match only the leading characters
-      exc <- paste0("^", exc, ".*$")
-      discard_i <- grep(pattern = exc, x = in_files_list)
+      # Modify exc 
+      exc <- gsub(pattern = "*", replacement = ".*", 
+                  x = exc,
+                  fixed = TRUE) # Replace * (anything) by .* (compatible with R syntax)
+      exc <- paste0("^", exc, "$") # match the exact expression from start to end
       
-      if(length(discard_i) != 0){
-        message("Files:\n", 
-                paste(in_files_list[discard_i], collapse = "\n"),
-                "\nwill be ignored.")
-        in_files_list <- in_files_list[-discard_i]
-      }
+      # get all discarded files for element i
+      discard_i <- grep(pattern = exc, x = in_files_list) 
+      
+      discarded <- c(discarded, discard_i) # add discarded files to total vector
+    }
+    
+    # Message
+    if(length(discarded) != 0){
+      message("Files:\n", 
+              paste(in_files_list[discarded], collapse = "\n"),
+              "\nwill be ignored (they are in 'except').")
+      in_files_list <- in_files_list[-discarded]
     }
   }
   
@@ -172,7 +182,7 @@ get_relative_path <- function(f, wd) {
 #' if they are files, or all files into input recursively if input are folders.
 #'
 #' @param input a character vector of valid paths: can be files or folders
-#' @param to_ignore files to ignore (optional)
+#' @param except files to ignore (optional)
 #'
 #' @return A dataframe with columns folder and files, where folder is the 
 #' folder up to a given file and file is the file.
@@ -180,7 +190,7 @@ get_relative_path <- function(f, wd) {
 #' @export
 #'
 #' @examples
-get_files_and_folder <- function(input, to_ignore) {
+get_files_and_folder <- function(input, except) {
   
   # Initialize results
   folders <- c()
@@ -194,11 +204,11 @@ get_files_and_folder <- function(input, to_ignore) {
       # Set folder to input
       folder <- inp
       
-      if(missing(to_ignore)) {
+      if(missing(except)) {
         in_files_list <- list_csv_in_folder(folder)
       } else {
         in_files_list <- list_csv_in_folder(folder, 
-                                            except = to_ignore)
+                                            except = except)
       }
       in_files_list <- sort(in_files_list)
     } else { 

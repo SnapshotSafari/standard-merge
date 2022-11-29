@@ -40,12 +40,12 @@ input <- IN_DATADIR # Here we standardize all files in IN_DATADIR
 
 # --- Any files/folders to ignore?
 # Files or folders in IN_DATADIR that should be ignored.
-# All files/folders starting with these will be ignored.
-to_ignore <- c("reports_FBIP_format_all_recs",
+# You can use "*" to match any character of any length (possibly empty)
+to_ignore <- c("reports_FBIP_format_all_recs/*",
                "README_FILES_for_TEAMS.txt",
-               "Special Projects",
-               "DHP/DHP+OVE_same_file",
-               "KGA/KGA-KHO_together")
+               "Special Projects/*",
+               "DHP/DHP+OVE_same_file/*",
+               "KGA/KGA-KHO_together/*")
 
 # --- Log
 # Do you want to create a logfile in code/log (TRUE) or not (FALSE)?
@@ -79,7 +79,8 @@ write_log_message(msg, logger = my_logger)
 
 # List files --------------------------------------------------------------
 # l is a list of the same length than input
-files_df <- get_files_and_folder(input, to_ignore)
+files_df <- get_files_and_folder(input, 
+                                 except = to_ignore)
 
 msg <- paste0("Files ==============================\n", 
               nrow(files_df), " file(s) to standardize.\n")
@@ -202,5 +203,5 @@ for(i in 1:nrow(files_df)) {
   }
 }
 
-
+msg <- "Code successfully executed yeah!"
 write_log_message(msg, logger = my_logger)
