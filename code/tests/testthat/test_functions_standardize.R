@@ -142,15 +142,15 @@ test_that("Standardize dates", {
 })
 
 test_that("Fill capture info digikam", {
-  df_test <- data.frame(capture_id = rep(NA, 3),
+  df_test <- data.frame(id = rep(NA, 3),
+                        locationID = rep("RES", 3),
+                        cameraID = c("A01", "A02", "A02"),
                         season = rep(NA, 3),
-                        cam_site = c("A01", "A02", "A02"),
                         roll = rep(1, 3),
                         capture = rep(NA, 3),
-                        reserve = rep("RES", 3),
-                        date = as.Date("2022-10-04", "2022-10-04", "2022-10-04"),
-                        time = times(c("00:00:00", "00:00:00", "00:00:01")),
-                        file_path_1 = c("foo/bar/baz_Roll1/foo/bar1.JPG",
+                        eventDate = as.Date("2022-10-04", "2022-10-04", "2022-10-04"),
+                        eventTime = times(c("00:00:00", "00:00:00", "00:00:01")),
+                        filePath1 = c("foo/bar/baz_Roll1/foo/bar1.JPG",
                                         "foo/bar/baz_Roll1/foo/bar2.JPG",
                                         "foo/bar/baz_Roll1/foo/bar3.JPG"))
   
@@ -165,14 +165,14 @@ test_that("Fill capture info digikam", {
 })
 
 test_that("Fill capture info traptagger", {
-  df_test <- data.frame(capture_id = c("RES1#1#A01",
-                                       "RES1#1#A02",
-                                       "RES2#1#A02"),
+  df_test <- data.frame(captureID_temp = c("RES1#1#A01",
+                                           "RES1#1#A02",
+                                           "RES2#1#A02"),
                         season = rep(NA, 3),
-                        cam_site = rep(NA, 3),
+                        cameraID = rep(NA, 3),
                         roll = rep(NA, 3),
                         capture = rep(NA, 3),
-                        reserve = rep(NA, 3))
+                        locationID = rep(NA, 3))
   
   df_fill <- fill_capture_info_traptagger(df_test)
   
@@ -182,22 +182,4 @@ test_that("Fill capture info traptagger", {
                c("1", "1", "2"))
   expect_equal(df_fill$roll,
                rep("1", 3))
-})
-
-test_that("Get capture id", {
-  
-  cap <- get_capture_id(season = rep("1", 2),
-                        cam_site = rep("RES_A03", 2), 
-                        roll = rep("1", 2),
-                        capture = c("1", "2"))
-  
-  expect_equal(cap, c("1#RES_A03#1#1",
-                      "1#RES_A03#1#2"))
-  
-  cap <- get_capture_id(season = rep("1", 2),
-                        cam_site = rep("RES_A03", 2), 
-                        roll = rep("1", 2),
-                        capture = c("1", NA))
-  expect_equal(cap, c("1#RES_A03#1#1",
-                      "1#RES_A03#1#NA"))
 })
