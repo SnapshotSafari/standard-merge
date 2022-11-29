@@ -2,8 +2,8 @@ library(data.table)
 
 #' List all files in folder
 #' 
-#' This function lists all files il a base folder. It works recursively (lists
-#' all files in the folder and all files in subfolders of this folder)
+#' This function lists all csv files in a base folder. It works recursively 
+#' (lists all files in the folder and all files in subfolders of this folder)
 #'
 #' @param folder the folder to list files in
 #' @param except Folders or files to ignore (optional): these are the relative
@@ -16,7 +16,7 @@ library(data.table)
 #' @export
 #'
 #' @examples
-list_files_in_folder <- function(folder, except){
+list_csv_in_folder <- function(folder, except){
   
   if(length(folder) > 1){
     stop(paste("Only give one folder in 'folder' please."))
@@ -36,39 +36,28 @@ list_files_in_folder <- function(folder, except){
       discard_i <- grep(pattern = exc, x = in_files_list)
       
       if(length(discard_i) != 0){
-        message("Files:\n", paste(in_files_list[discard_i], collapse = "\n"),
+        message("Files:\n", 
+                paste(in_files_list[discard_i], collapse = "\n"),
                 "\nwill be ignored.")
         in_files_list <- in_files_list[-discard_i]
       }
     }
   }
   
-  # --- Look for xls/xlsx files that are copies of csv
-  split_extension_list <- str_split(in_files_list, "\\.")
+  # --- Get csv
+  csv_files <- grep(pattern = "\\.csv$", in_files_list, value = TRUE)
+
+  not_csv <- grep(pattern = "\\.csv$", in_files_list, value = TRUE,
+                  invert = TRUE)
   
-  excel_files <- sapply(split_extension_list, 
-                        function(l) grepl(l[2], pattern = "xls"))
-  excel_files <- split_extension_list[excel_files]
-  
-  if(length(excel_files) != 0) {
-    message("Excel file(s) detected: ", paste(excel_files, collapse = ", "))
-    
-    # Look for doublets
-    for (ex in excel_files) {
-      filename_i <- ex[1]
-      
-      csvname <- paste0(filename_i, ".csv")
-      
-      if(csvname %in% in_files_list) {
-        ex_total <- paste(ex, collapse = ".")
-        message("File ", ex_total, "\nalready present in csv as ",
-                csvname, "\nDiscarding Excel file.")
-        in_files_list <- in_files_list[-which(in_files_list == ex_total)]
-      }
-    }
+  # --- Keep only csv
+  if(length(not_csv) != 0) {
+    message(paste0("File(s) ", 
+                   paste(not_csv, collapse = ", "),
+                   " will be ignored (they are not csv)."))
   }
   
-  return(in_files_list)
+  return(csv_files)
 }
 
 #' Name logfile
@@ -203,13 +192,13 @@ get_files_and_folder <- function(input, to_ignore) {
     
     if(!is_file) { # If input is a folder
       # Set folder to input
-      folder <- inp 
+      folder <- inp
       
       if(missing(to_ignore)) {
-        in_files_list <- list_files_in_folder(folder)
+        in_files_list <- list_csv_in_folder(folder)
       } else {
-        in_files_list <- list_files_in_folder(folder, 
-                                              except = to_ignore)
+        in_files_list <- list_csv_in_folder(folder, 
+                                            except = to_ignore)
       }
       in_files_list <- sort(in_files_list)
     } else { 

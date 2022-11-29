@@ -1,4 +1,7 @@
 library(testthat)
+library(here)
+source(here("code/R/functions/functions_standardize.R"))
+
 
 test_that("Prepare Digikam", {
   prep <- prepare_digikam(dat_digikam)

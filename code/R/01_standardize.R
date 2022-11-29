@@ -22,16 +22,20 @@ source(here("code/R/functions/functions_files_handling.R"))
 # --- Path to the data
 # Where is the general folder in which you want to read your data ?
 # This path will not be copied into the destination.
+# IN_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/test_TSW/input"
 IN_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data"
 
 # --- Where wou want to copy data
 # Where do you want to copy your files?
+# OUT_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/test_TSW/output"
 OUT_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/2_standardized_data"
 
 # --- Data to standardize
 # File or folder you actually want to copy, within IN_DATADIR and to OUT_DATADIR.
 # If this has a subfolder structure, it will be copied into OUT_DATADIR.
 
+# input <- file.path(IN_DATADIR,
+#                    "TSW/TSW_Roll5_Snapshot.csv")
 input <- IN_DATADIR # Here we standardize all files in IN_DATADIR
 # input <- c(file.path(IN_DATADIR, "roaming"),
 #            file.path(IN_DATADIR, "APN/APN_S1_full_report_0-50__agreement_corrected_fin.csv"),

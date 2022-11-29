@@ -1,8 +1,6 @@
 library(here)
 here::i_am("code/tests/testthat/helper.R")
 
-source(here("code/R/functions/functions_standardize.R"))
-
 # Get standard
 STANDARD <- read.csv(here("docs/standard.csv"),
                      na.strings = "")
