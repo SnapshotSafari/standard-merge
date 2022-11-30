@@ -52,14 +52,14 @@ test_that("Recode behaviors Digikam", {
 test_that("Prepare TrapTagger", {
   prep <- prepare_traptagger(dat_traptagger)
   
-  # Normal case
+  # Real data case
   removed_cols <- colnames(dat_traptagger)[!(colnames(dat_traptagger) %in% colnames(prep))]
-  expect_equal(removed_cols, c("timestamp", "capture_label_1", "capture_label_2", "capture_label_3")) 
+  expect_equal(removed_cols, "timestamp") 
   
   added_cols <- colnames(prep)[!(colnames(prep) %in% colnames(dat_traptagger))]
-  expect_equal(added_cols, c("capture_label", "date", "time"))
+  expect_equal(added_cols, c("date", "time"))
   
-  # Case only capture_label
+  # Simulated data
   df <- data.frame(Capture_ID = c(1, 2, 3),
                    timestamp = c("2022-10-03 16:07:57", "2022-10-03 16:07:57", "2022-10-03 16:07:57"),
                    capture_label = c("foo", "bar", "baz"),
@@ -147,7 +147,7 @@ test_that("Fill capture info digikam", {
                         cameraID = c("A01", "A02", "A02"),
                         season = rep(NA, 3),
                         roll = rep(1, 3),
-                        capture = rep(NA, 3),
+                        captureID = rep(NA, 3),
                         eventDate = as.Date("2022-10-04", "2022-10-04", "2022-10-04"),
                         eventTime = times(c("00:00:00", "00:00:00", "00:00:01")),
                         filePath1 = c("foo/bar/baz_Roll1/foo/bar1.JPG",
@@ -158,28 +158,51 @@ test_that("Fill capture info digikam", {
   
   expect_equal(df_fill$season, 
                rep(NA, 3))
-  expect_equal(df_fill$capture, 
+  expect_equal(df_fill$captureID, 
                c("1", "1", "2"))
   expect_equal(df_fill$roll,
                rep("1", 3))
 })
 
 test_that("Fill capture info traptagger", {
-  df_test <- data.frame(captureID_temp = c("RES1#1#A01",
-                                           "RES1#1#A02",
-                                           "RES2#1#A02"),
+  df_test <- data.frame(eventID = c("RES1#1#A01",
+                                    "RES1#1#A02",
+                                    "RES2#1#A02"),
                         season = rep(NA, 3),
                         cameraID = rep(NA, 3),
                         roll = rep(NA, 3),
-                        capture = rep(NA, 3),
+                        captureID = rep(NA, 3),
                         locationID = rep(NA, 3))
   
   df_fill <- fill_capture_info_traptagger(df_test)
   
   expect_equal(df_fill$season, 
                rep(NA, 3))
-  expect_equal(df_fill$capture, 
+  expect_equal(df_fill$captureID, 
                c("1", "1", "2"))
   expect_equal(df_fill$roll,
                rep("1", 3))
+})
+
+test_that("Change cameraID works well", {
+  locationID <- c("MAD", "MAF", "MAD")
+  
+  # --- Not present (all)
+  camera <- c("A01", "A01", "B01")
+  cameraID <- get_cameraID(locationID, camera)
+  expect_equal(cameraID, c("MAD_A01", "MAF_A01", "MAD_B01"))
+  
+  # --- Already present (all)
+  camera <- c("MAD_A01", "MAF_A01", "MAD_B01")
+  cameraID <- suppressMessages(get_cameraID(locationID, camera))
+  expect_equal(cameraID, c("MAD_A01", "MAF_A01", "MAD_B01"))
+  expect_message(get_cameraID(locationID, camera),
+                 "Cameras MAD_A01, MAF_A01, MAD_B01 already begin with code_loc: not adding the location.")
+  
+  # --- Mix
+  camera <- c("A01", "MAF_A01", "MAD_B01")
+  cameraID <- suppressMessages(get_cameraID(locationID, camera))
+  expect_equal(cameraID, c("MAD_A01", "MAF_A01", "MAD_B01"))
+  expect_message(get_cameraID(locationID, camera),
+                 "Cameras MAF_A01, MAD_B01 already begin with code_loc: not adding the location.")
 })

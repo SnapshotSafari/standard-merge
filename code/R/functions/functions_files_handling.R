@@ -132,19 +132,32 @@ create_logger <- function(my_logfile) {
 #' 
 #' @param message The message to display/write to the logger
 #' @param logger Logger to write to (log4r object of class "logger") (defaults to NA)
+#' @param level Logging level: either 'info', 'warn', 'debug' or 'error'.
 #'
 #' @return Either a message or writes a log (with the logger parameters)
 #' 
 #' @export
 #'
 #' @examples
-write_log_message <- function(message, logger = NA) {
+write_log_message <- function(message, logger = NA,
+                              level = "info") {
   
   if(all(is.na(logger))) {
     message(msg)
   } else {
-    log4r::info(logger, 
-                message)
+    if(level == "info") {
+      log4r::info(logger, 
+                  message)
+    } else if (level == "warn") {
+      log4r::warn(logger, 
+                  message)
+    } else if (level == "error") {
+      log4r::error(logger, 
+                   message)
+    } else if (level == "debug") {
+      log4r::debug(logger, 
+                   message)
+    }
   }
 }
 

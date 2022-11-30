@@ -26,16 +26,16 @@ IN_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data"
 
 # --- Where wou want to copy data
 # Where do you want to copy your files?
-# OUT_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/test"
 OUT_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/2_standardized_data"
+# OUT_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/test_new"
 
 # --- Data to standardize
 # File or folder you actually want to copy, within IN_DATADIR and to OUT_DATADIR.
 # If this has a subfolder structure, it will be copied into OUT_DATADIR.
 
 input <- IN_DATADIR # Here we standardize all files in IN_DATADIR
-# input <- c(file.path(IN_DATADIR, "roaming"),
-#            file.path(IN_DATADIR, "MAD"))
+# input <- c(file.path(IN_DATADIR, "MAD"),
+#            file.path(IN_DATADIR, "roaming"))
 
 
 # --- Any files/folders to ignore?
@@ -43,7 +43,7 @@ input <- IN_DATADIR # Here we standardize all files in IN_DATADIR
 # You can use "*" to match any character of any length (possibly empty)
 to_ignore <- c("reports_FBIP_format_all_recs/*",
                "README_FILES_for_TEAMS.txt",
-               "Special Projects/*",
+               # "Special Projects /*",
                "DHP/DHP+OVE_same_file/*",
                "KGA/KGA-KHO_together/*")
 
@@ -78,7 +78,6 @@ msg <- paste0("Parameters ==============================\n",
 write_log_message(msg, logger = my_logger)
 
 # List files --------------------------------------------------------------
-# l is a list of the same length than input
 files_df <- get_files_and_folder(input, 
                                  except = to_ignore)
 
@@ -101,7 +100,10 @@ for(i in 1:nrow(files_df)) {
   dat_in <- read_file(in_filename, 
                       base_folder = folder)
   
-  msg <- paste("Initial data:", ncol(dat_in), "columns.")
+  nrow_init <- nrow(dat_in)
+  msg <- paste("Initial data:", 
+               ncol(dat_in), "columns and",
+               nrow_init, "rows.")
   write_log_message(msg, logger = my_logger)
   
   # Guess classifier --------------------------------------------------------
@@ -147,7 +149,15 @@ for(i in 1:nrow(files_df)) {
   }
   
   # Fill capture info -------------------------------------------------------
-  std_dat <- fill_capture_info(std_dat, classifier)
+  
+  out2 <- capture.output(
+    std_dat <- fill_capture_info(std_dat, classifier),
+    type = "message")
+  
+  if(length(out2) != 0){
+    msg <- paste("Message in fill_capture_info:", out2)
+    write_log_message(msg, logger = my_logger)
+  }
   
   # Add classifier -------------------------------------------------------------
   std_dat$classifier <- classifier
@@ -158,18 +168,27 @@ for(i in 1:nrow(files_df)) {
   
   # Reorder -----------------------------------------------------------------
   # Reorder columns (to be sure)
-  to_reorder <- STANDARD$new[!is.na(STANDARD$new) & (STANDARD$new != "captureID_temp")]
+  to_reorder <- STANDARD$new[!is.na(STANDARD$new)]
   std_dat <- std_dat %>% select(all_of(to_reorder))
   
   # Reorder data
   std_dat <- std_dat %>% arrange(cameraID, eventDate, eventTime)
   
   # Previsualize final data -------------------------------------------------
-  msg <- paste("Final data:", ncol(std_dat), "columns,", nrow(std_dat), "rows.",
+  nrow_fin <- nrow(std_dat)
+  msg <- paste("Final data:", ncol(std_dat), "columns,", 
+               nrow_fin, "rows.",
                "\nHere are some columns:")
   
+  if(nrow_init != nrow_fin) {
+    msg <- paste("Different number of rows: initially", nrow_init, "rows,",
+                 "final data has", nrow_fin, "rows.")
+    write_log_message(msg, logger = my_logger,
+                      level = "warning")
+  }
   write_log_message(msg, logger = my_logger)
-  (std_cat <- head(std_dat[, 1:9], n = 5))
+  (std_cat <- head(std_dat[, 1:8], 
+                   n = min(nrow(std_dat), 5)))
   
   # Write head of result to logfile if there is a logfile
   if(create_log) {
@@ -193,7 +212,7 @@ for(i in 1:nrow(files_df)) {
   filename <- basename(filepath)
   dir <- dirname(filepath)
   
-  msg <- paste("File", filename, "successfully copied into", dir)
+  msg <- paste("File", filename, "successfully created into", dir)
   write_log_message(msg, logger = my_logger)
   
   if(create_log) {

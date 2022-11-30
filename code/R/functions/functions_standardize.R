@@ -47,17 +47,20 @@ guess_classifier <- function(colnames_df) {
 #' @examples
 prepare_traptagger <- function(df){
   
-  # --- Address multiple species
+  # --- Copy data
+  df_res <- df
+  
+  # --- Address multiple species columns
   # Transform "None" species to NA
-  df_res <- df %>% mutate(
-    across(.cols = starts_with("capture_label"),
-           .fns = ~ na_if(.x, y = "None")))
+  # df_res <- df_res %>% mutate(
+  #   across(.cols = starts_with("capture_label"),
+  #          .fns = ~ na_if(.x, y = "None")))
   
   # Pivot table
-  df_res <- df_res %>% pivot_longer(cols = starts_with("capture_label"), 
-                                    names_to = "capture_nb",
-                                    values_to = "capture_label",
-                                    values_drop_na = TRUE) 
+  # df_res <- df_res %>% pivot_longer(cols = starts_with("capture_label"), 
+  #                                   names_to = "capture_nb",
+  #                                   values_to = "capture_label",
+  #                                   values_drop_na = TRUE) 
   
   # --- Split dates/times
   date_time <- strsplit(df_res$timestamp, " ")
@@ -72,7 +75,8 @@ prepare_traptagger <- function(df){
   df_res$time <- sapply(date_time, function(l) l[2])
   
   # --- Delete intermediate columns
-  df_res <- df_res %>% select(-c(timestamp, capture_nb))
+  # df_res <- df_res %>% select(-c(timestamp, capture_nb))
+  df_res <- df_res %>% select(-timestamp)
   
   return(df_res)
 }
@@ -543,6 +547,88 @@ standardize_date <- function(dates){
   return(dat)
 }
 
+#' Get eventID
+#'
+#' Get the eventID from the capture info. All vectors must be the
+#' same length or they will be recycled.
+#' 
+#' @param locationID character vector of location
+#' @param cameraID character vector of cam_site
+#' @param roll character vector of roll
+#' @param captureID character vector of captureID
+#'
+#' @return A character vector of the same length of the inputs (or the
+#' longest input) with fields formatted as 
+#' season#cam_site#roll#event_no
+#' 
+#' @export
+#'
+#' @examples
+get_eventID <- function(locationID, cameraID, roll, captureID) {
+  
+  eventID <- paste(locationID,
+                   cameraID,
+                   roll, 
+                   captureID,
+                   sep = "#")
+  
+  return(eventID)
+  
+}
+
+#' Get camera ID
+#' 
+#' Returns the complete cameraID as locationID_camera.
+#'
+#' @param locationID the location code vector (usually 3 letters)
+#' @param camera the "old" camera code vector, which is expected not to contain the locationID already.
+#' In case it does, then it will not be added and give a message.
+#' @param classifier The classifier used. If it is traptagger, will not display message
+#' because it is expected that cameraID will already be locationID_camera.
+#' It is optional (if not specified, it will display the message by default)
+#'
+#' @return a vector of same lengths as locationID and camera with pasted
+#' locationID_camera. If camera is already in format locationID_camera, 
+#' then it does not changes and displays a message.
+#' 
+#' @export
+#'
+#' @examples
+get_cameraID <- function(locationID, camera, classifier) {
+  
+  if(missing(classifier)) {
+    classifier <- "placeholder"
+  }
+  
+  # Get unique locationID
+  unique_locationID <- unique(locationID)
+  
+  # Check if camera is already in format locationID_camera.
+  already_loc <- which(grepl(camera, 
+                             pattern = paste0("^", paste0(unique_locationID, collapse = "|"), "_")))
+  
+  if (length(already_loc) != 0) { # if some cameras already begin with code_loc
+    cam_prob <- unique(camera[already_loc])
+    
+    if(classifier != "traptagger") {
+      msg <- paste0("Cameras ",
+                    paste(cam_prob, collapse = ", "),
+                    " already begin with code_loc: not adding the location.")
+      message(msg)
+    }
+    
+    cameraID <- camera
+    cameraID[-already_loc] <- paste(locationID[-already_loc], 
+                                    camera[-already_loc],
+                                    sep = "_")
+  } else {
+    cameraID <- paste(locationID, 
+                      camera,
+                      sep = "_")
+  }
+  return(cameraID)
+}
+
 #' Fill capture info
 #' 
 #' Fills different columns related to capture info.
@@ -550,7 +636,7 @@ standardize_date <- function(dates){
 #' @param df a dataframe for which columns should be filled. 
 #' 
 #' @param classifier The classifier
-#' @param remove_temp should the column 'captureID_temp' be removed if present?
+#' @param remove_temp should the column 'eventID' be removed if present?
 #'
 #' @return A dataframe with values filled for locationID, cameraID,
 #' roll and capture. Also fills season if Zooniverse.
@@ -559,8 +645,7 @@ standardize_date <- function(dates){
 #'
 #' @examples
 fill_capture_info <- function(df,
-                              classifier = c("zooniverse", "traptagger", "digikam"),
-                              remove_temp = TRUE) {
+                              classifier = c("zooniverse", "traptagger", "digikam")) {
   
   classifier <- match.arg(classifier)
   
@@ -569,13 +654,13 @@ fill_capture_info <- function(df,
     res <- df
     
     # --- Location code
-    # Set location to first set of majuscules letters in captureID_temp
-    locationID <- str_extract(res$captureID_temp, "^[A-Z]+")
+    # Set location to first set of majuscules letters in eventID
+    locationID <- str_extract(res$eventID, "^[A-Z]+")
     
     unique_locationID <- unique(locationID)
     
     if(length(unique_locationID) != 1) {
-      warning(paste("Location extracted from captureID_temp is not unique: ", 
+      warning(paste("Location extracted from eventID is not unique: ", 
                         paste(locationID, collapse = ", ")))
     }
     
@@ -590,27 +675,18 @@ fill_capture_info <- function(df,
     res <- fill_capture_info_digikam(df)
   }
   
-  # --- Remove captureID_temp
-  if(remove_temp) {
-    if("captureID_temp" %in% colnames(res)) {
-      res <- res %>% select(-captureID_temp)
-    }
-  }
-  
   # --- Modify cameraID to add locationID
-  already_dash <- which(grepl(res$cameraID, pattern = "_"))
+  res <- res %>% mutate(cameraID = get_cameraID(locationID = locationID,
+                                                camera = cameraID, 
+                                                classifier = !!classifier))
   
-  if (length(already_dash) != 0) {
-    cam_prob <- unique(res$cameraID[already_dash])
-    msg <- paste0("Cameras ",
-                  paste(cam_prob, collapse = ", "),
-                  " already have a dash in it: adding the location before as RES_... might be a problem")
-    message(msg)
-  }
+  # --- Add eventID
+  eventID <- get_eventID(locationID = res$locationID,
+                         cameraID = res$cameraID, 
+                         roll = res$roll, 
+                         captureID = res$captureID)
   
-  res$cameraID <- paste(res$locationID, 
-                        res$cameraID,
-                        sep = "_")
+  res$eventID <- eventID
   
   return(res)
 }
@@ -623,9 +699,9 @@ fill_capture_info <- function(df,
 #' @param df The dataframe to fill. Must have a column 'locationID'
 #'
 #' @return The dataframe with completed values for columns 
-#' 'season', 'roll' and 'capture'. season' defaults to 1; 
+#' 'season', 'roll' and 'captureID'. season' defaults to 1; 
 #' 'roll' is extracted from 'file_path_1'; 
-#' 'capture' is the i-th picture for a given camera.
+#' 'captureID' is the i-th picture for a given camera.
 #' 
 #' @export
 #'
@@ -640,9 +716,9 @@ fill_capture_info_digikam <- function(df){
   
   df_res <- df_res %>% 
     group_by(cameraID) %>%
-    mutate(capture = order(eventDate, eventTime))
+    mutate(captureID = order(eventDate, eventTime))
   
-  df_res$capture <- as.character(df_res$capture)
+  df_res$captureID <- as.character(df_res$captureID)
   
   # --- Fill season
   df_res$season <- NA # Season is NA
@@ -660,13 +736,13 @@ fill_capture_info_digikam <- function(df){
 
 #' Fill capture info TrapTagger
 #'
-#' Completes capture info for TrapTagger from the captureID_temp.
-#' Completes values for columns cameraID, roll, capture, location and 
+#' Completes capture info for TrapTagger from the eventID.
+#' Completes values for columns cameraID, roll, captureID, location and 
 #' adds column season (NA). These columns are character.
 #' 
 #' @param df The dataframe to complete
 #'
-#' @return The dataframe with values completed for the capture
+#' @return The dataframe with values completed for the captureID
 #' info columns. If no info, it remains NA.
 #' 
 #' @export
@@ -676,30 +752,43 @@ fill_capture_info_traptagger <- function(df) {
   
   df_res <- df
   
-  # --- Parse captureID_temp
-  capture_split <- strsplit(df_res$captureID_temp, "#")
+  # --- Parse eventID
+  capture_split <- strsplit(df_res$eventID, "#")
   
   nfields <- unique(sapply(capture_split, length))
   
   if(length(nfields) != 1) {
-    warning("All captureID_temp fields don't have the same length...")
+    warning("All eventID fields don't have the same length...")
   } else if (nfields == 3) { # First format
     location_event <- sapply(capture_split, function(l) l[1])
     
     roll <- sapply(capture_split, function(l) l[2])
-    cameraID <- sapply(capture_split, function(l) l[3])
-    
+
     # Format location_event to get location and event
     locationID <- gsub(location_event, pattern = "\\d*", 
                           replacement = "")
-    capture <- gsub(location_event, pattern = "[a-zA-Z]*", 
+    captureID <- gsub(location_event, pattern = "[a-zA-Z]*", 
                     replacement = "")
     
   } else if (nfields == 4) { # Second format
-    locationID <- sapply(capture_split, function(l) l[1])
-    cameraID <- sapply(capture_split, function(l) l[2])
-    roll <- sapply(capture_split, function(l) l[3])
-    capture <- sapply(capture_split, function(l) l[4])
+    
+    # 2 formats possible (at least fount in TSW roll 5)
+    # To discriminate, look at last part (most of the time
+    # it is event but can be camera)
+    test <- sapply(capture_split, function(l) l[4])
+    test <- suppressWarnings(as.integer(test))
+    
+    # If any last part cannot be coerced to numeric, then use locationID#captureID#roll#cameraID format
+    if(any(is.na(test))) {
+      locationID <- sapply(capture_split, function(l) l[1])
+      captureID <- sapply(capture_split, function(l) l[2])
+      roll <- sapply(capture_split, function(l) l[3])
+    } else { # use locationID#cameraID#roll#captureID format
+      locationID <- sapply(capture_split, function(l) l[1])
+      roll <- sapply(capture_split, function(l) l[3])
+      captureID <- sapply(capture_split, function(l) l[4])
+    }
+    
   }
   
   unique_location <- unique(locationID)
@@ -708,11 +797,47 @@ fill_capture_info_traptagger <- function(df) {
                   paste(unique_location, collapse = ", ")))
   }
   
+  # --- Sanity check
+  check_locationID <- get_NAs(transformed_data = suppressWarnings(as.integer(locationID)), 
+                              origin_data = locationID, 
+                              collapse = FALSE,
+                              nmax = length(locationID)) # all should be NAs
+  if(length(check_locationID) != length(locationID)) { # problem, is maybe a numeric
+    head_locationID <- locationID[1:min(10, length(locationID))]
+    head_locationID <- paste(head_locationID, collapse = ", ")
+    warning(paste("locationID might be incorrect: all values are corecible to integer.",
+                  "Here are some data:",
+                  head_locationID))
+  }
+  
+  check_roll <- get_NAs(transformed_data = suppressWarnings(as.integer(roll)), 
+                        origin_data = roll, 
+                        collapse = FALSE,
+                        nmax = length(roll))
+  if(length(check_roll) == length(roll)) { # problem, is maybe a character
+    head_roll <- roll[1:min(10, length(roll))]
+    head_roll <- paste(head_roll, collapse = ", ")
+    warning(paste("roll might be incorrect: values not coercible to integer.",
+                  "Here are some data:",
+                  head_roll))
+  }
+  
+  check_capture <- get_NAs(transformed_data = suppressWarnings(as.integer(captureID)), 
+                           origin_data = captureID, 
+                           collapse = FALSE,
+                           nmax = length(captureID))
+  if(length(check_capture) == length(captureID)) { # problem, is maybe a character
+    head_capture <- captureID[1:min(10, length(captureID))]
+    head_capture <- paste(head_capture, collapse = ", ")
+    warning(paste("roll might be incorrect: values not coercible to integer.",
+                  "Here are some data:",
+                  head_capture))
+  }
+  
   # --- Fill in info
   df_res$season <-  NA
-  df_res$cameraID <- as.character(cameraID)
   df_res$roll <- as.character(roll)
-  df_res$capture <- as.character(capture)
+  df_res$captureID <- as.character(captureID)
   df_res$locationID <- as.character(locationID)
   
   return(df_res)
