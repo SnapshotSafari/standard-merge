@@ -158,10 +158,12 @@ test_that("Fill capture info digikam", {
   
   expect_equal(df_fill$season, 
                rep(NA, 3))
-  expect_equal(df_fill$captureID, 
+  expect_equal(df_fill$capture, 
                c("1", "1", "2"))
   expect_equal(df_fill$roll,
                rep("1", 3))
+  expect_equal(df_fill$captureID, 
+               rep(NA, 3))
 })
 
 test_that("Fill capture info traptagger", {
@@ -171,17 +173,19 @@ test_that("Fill capture info traptagger", {
                         season = rep(NA, 3),
                         cameraID = rep(NA, 3),
                         roll = rep(NA, 3),
-                        captureID = rep(NA, 3),
+                        captureID = c(12111, 12232, 12323),
                         locationID = rep(NA, 3))
   
   df_fill <- fill_capture_info_traptagger(df_test)
   
   expect_equal(df_fill$season, 
                rep(NA, 3))
-  expect_equal(df_fill$captureID, 
+  expect_equal(df_fill$capture, 
                c("1", "1", "2"))
   expect_equal(df_fill$roll,
                rep("1", 3))
+  expect_equal(df_fill$captureID, 
+               c(12111, 12232, 12323))
 })
 
 test_that("Change cameraID works well", {
