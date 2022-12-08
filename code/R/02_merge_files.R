@@ -28,7 +28,7 @@ for(i in 1:length(datnames)){
   # Read file
   d <- read.csv(file.path(readfolder, dn),
                 stringsAsFactors = FALSE, 
-                colClasses = rep("character", 27))
+                colClasses = rep("character", 26))
   
   datlist <- c(datlist, list(d))
   
@@ -39,17 +39,21 @@ for(i in 1:length(datnames)){
 
 # Merge list --------------------------------------------------------------
 alldata <- do.call(bind_rows, datlist)
-
+rm(datlist)
 
 # Check data --------------------------------------------------------------
-alldata[is.na(alldata$capture_id), c("season", "cam_site", "classifier")]
+alldata[is.na(alldata$eventID), c("locationID", "cameraID", "classifier")]
 
-alldata[is.na(alldata$date), c("season", "cam_site", "classifier")]
-alldata[is.na(alldata$time), c("season", "cam_site", "classifier")]
+alldata[is.na(alldata$eventDate), c("locationID", "cameraID", "classifier")]
+alldata[is.na(alldata$eventTime), c("locationID", "cameraID", "classifier")]
 
 
-sp <- alldata$common_name
+sp <- alldata$snapshotName
 (unique_sp <- sort(unique(sp)))
+
+source(here("code/R/functions/functions_standardize.R"))
+spp_clean <- standardize_species(sp)
+(unique_sp_clean <- sort(unique(spp_clean)))
 
 write.csv(alldata, file.path(readfolder, "alldata.csv"))
 

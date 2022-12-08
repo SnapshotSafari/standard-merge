@@ -34,8 +34,9 @@ OUT_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/2_standardized_data"
 # If this has a subfolder structure, it will be copied into OUT_DATADIR.
 
 input <- IN_DATADIR # Here we standardize all files in IN_DATADIR
-# input <- c(file.path(IN_DATADIR, "MAD"),
-#            file.path(IN_DATADIR, "roaming"))
+# input <- c(file.path(IN_DATADIR, "MAD/MAD_Roll15_Snapshot.csv"),
+#            file.path(IN_DATADIR, "MAD/MAD_S1_full_report_0-50__agreement_corrected_fin.csv"),
+#            file.path(IN_DATADIR, "roaming/TAN_sp_report_digikam_2021-02-24_fin.csv"))
 
 
 # --- Any files/folders to ignore?
@@ -163,14 +164,18 @@ for(i in 1:nrow(files_df)) {
   std_dat$classifier <- classifier
   
   # Standardize species names -----------------------------------------------
-  std_dat <- std_dat %>%
-    mutate(snapshotName = standardize_species(snapshotName))
+  # std_dat <- std_dat %>%
+  #   mutate(snapshotName = standardize_species(snapshotName))
   
   # Reorder -----------------------------------------------------------------
   # Reorder columns (to be sure)
   to_reorder <- STANDARD$new[!is.na(STANDARD$new)]
   std_dat <- std_dat %>% select(all_of(to_reorder))
   
+
+  # Remove capture column ---------------------------------------------------
+  std_dat <- std_dat %>% select(-capture)
+
   # Reorder data
   std_dat <- std_dat %>% arrange(cameraID, eventDate, eventTime)
   

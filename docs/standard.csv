@@ -11,8 +11,8 @@ capture_time_local,time,Time,eventTime
 zooniverse_url_0,capture_url,file_path_1,filePath1
 zooniverse_url_1,,,filePath2
 zooniverse_url_2,,,filePath3
-capture,,,captureID
-subject_id,,,zooniverseID
+capture,,,capture
+subject_id,id,,captureID
 question__count_max,,,countMax
 question__count_median,capture_sighting_count,metadata_Number,countMedian
 question__count_min,,,countMin

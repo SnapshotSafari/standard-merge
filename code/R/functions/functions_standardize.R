@@ -669,6 +669,7 @@ fill_capture_info <- function(df,
     # --- Season
     season <- str_match(res$season, "^.*_S(.*)$")[,2] # Get second match
     res$season <- season
+    
   } else if (classifier == "traptagger") {
     res <- fill_capture_info_traptagger(df)
   } else if (classifier == "digikam") {
@@ -684,7 +685,7 @@ fill_capture_info <- function(df,
   eventID <- get_eventID(locationID = res$locationID,
                          cameraID = res$cameraID, 
                          roll = res$roll, 
-                         captureID = res$captureID)
+                         captureID = res$capture)
   
   res$eventID <- eventID
   
@@ -716,9 +717,9 @@ fill_capture_info_digikam <- function(df){
   
   df_res <- df_res %>% 
     group_by(cameraID) %>%
-    mutate(captureID = order(eventDate, eventTime))
+    mutate(capture = order(eventDate, eventTime))
   
-  df_res$captureID <- as.character(df_res$captureID)
+  df_res$capture <- as.character(df_res$capture)
   
   # --- Fill season
   df_res$season <- NA # Season is NA
@@ -767,7 +768,7 @@ fill_capture_info_traptagger <- function(df) {
     # Format location_event to get location and event
     locationID <- gsub(location_event, pattern = "\\d*", 
                           replacement = "")
-    captureID <- gsub(location_event, pattern = "[a-zA-Z]*", 
+    capture <- gsub(location_event, pattern = "[a-zA-Z]*", 
                     replacement = "")
     
   } else if (nfields == 4) { # Second format
@@ -778,15 +779,15 @@ fill_capture_info_traptagger <- function(df) {
     test <- sapply(capture_split, function(l) l[4])
     test <- suppressWarnings(as.integer(test))
     
-    # If any last part cannot be coerced to numeric, then use locationID#captureID#roll#cameraID format
+    # If any last part cannot be coerced to numeric, then use locationID#capture#roll#cameraID format
     if(any(is.na(test))) {
       locationID <- sapply(capture_split, function(l) l[1])
-      captureID <- sapply(capture_split, function(l) l[2])
+      capture <- sapply(capture_split, function(l) l[2])
       roll <- sapply(capture_split, function(l) l[3])
-    } else { # use locationID#cameraID#roll#captureID format
+    } else { # use locationID#cameraID#roll#capture format
       locationID <- sapply(capture_split, function(l) l[1])
       roll <- sapply(capture_split, function(l) l[3])
-      captureID <- sapply(capture_split, function(l) l[4])
+      capture <- sapply(capture_split, function(l) l[4])
     }
     
   }
@@ -822,12 +823,12 @@ fill_capture_info_traptagger <- function(df) {
                   head_roll))
   }
   
-  check_capture <- get_NAs(transformed_data = suppressWarnings(as.integer(captureID)), 
-                           origin_data = captureID, 
+  check_capture <- get_NAs(transformed_data = suppressWarnings(as.integer(capture)), 
+                           origin_data = capture, 
                            collapse = FALSE,
-                           nmax = length(captureID))
-  if(length(check_capture) == length(captureID)) { # problem, is maybe a character
-    head_capture <- captureID[1:min(10, length(captureID))]
+                           nmax = length(capture))
+  if(length(check_capture) == length(capture)) { # problem, is maybe a character
+    head_capture <- capture[1:min(10, length(capture))]
     head_capture <- paste(head_capture, collapse = ", ")
     warning(paste("roll might be incorrect: values not coercible to integer.",
                   "Here are some data:",
@@ -837,7 +838,7 @@ fill_capture_info_traptagger <- function(df) {
   # --- Fill in info
   df_res$season <-  NA
   df_res$roll <- as.character(roll)
-  df_res$captureID <- as.character(captureID)
+  df_res$capture <- as.character(capture)
   df_res$locationID <- as.character(locationID)
   
   return(df_res)
@@ -916,98 +917,111 @@ standardize_species <- function(species){
               res)
   
   # --- Standardize
-  res[res == "birdsofprey"] <- "birdofprey"
-  res[res == "duiker"] <- "duikercommon"
-  res[res == "duikercommongrey"] <- "duikercommon"
-  res[res == "harecape"] <- "hare"
-  res[res == "wildcat"] <- "catafricanwild"
-  res[res == "groundsquirrel"] <- "squirrelground"
-  res[res == "mongoosewater"] <- "mongoosewatermarsh"
-  res[res == "mongoosecapesmallgrey"] <- "mongoosesmallcapegrey"
-  res[res == "mongooseegyptianlargegrey"] <- "mongooselargegrey"
-  res[res == "mongoose(whitetailed)"] <- "mongoosewhitetailed"
-  res[res == "springhare"] <- "harespring"
-  res[res == "zorillastripedpolecat"] <- "polecatstriped"
-  res[res == "rhino"] <- "rhinoceros"
-  res[res == "zorillapolecatstriped"] <- "polecatstriped"
-  res[res == "genetlargespotted"] <- "genetcapelargespotted"
-  res[res == "genet(small)"] <- "genetcommonsmallspotted"
-  res[res == "genetcape"] <- "genetcapelargespotted"
-  res[res == "rhinocerossp"] <- "rhinoceros"
-  res[res == "genetsmallspotted"] <- "genetcommonsmallspotted"
-  res[res == "galagosouthernlesser"] <- "bushbaby"
+  ## Species
   res[res == "aardvark"] <- "aardvarkantbear"
-  res[res == "duiker"] <- "duikercommon"
-  res[res == "grysbok"] <- "grysbokcape"
-  res[res == "rodents"] <- "rodent"
-  res[res == "rhebok(grey)"] <- "rhebokgrey"
-  res[res == "unknown"] <- "unresolvable"
   res[res == "africanwildcat"] <- "catafricanwild"
-  res[res == "catdomestic"] <- "domesticanimal"
-  # res[res == "lionmale"] <- "lion"
-  # res[res == "lionfemale"] <- "lion"
-  # res[res == "lioncub"] <- "lion"
-  # res[res == "lionfemaleorcub"] <- "lion"
-  res[res == "NOT identifiable"] <- "unresolvable"
-  res[res == "Unidentifiable"] <- "unresolvable"
-  res[res == "unidentifiable"] <- "unresolvable"
-  res[res == "UNIDENTIFIED"] <- "unresolvable"
-  
-  # ################### Added
   res[res == "africanwilddog"] <- "wilddog"
   res[res == "antelopeunknown"] <- "antelope"
   res[res == "bandedmongoose"] <- "mongoosebanded"
   res[res == "batearedfox"] <- "foxbateared"
-  res[res == "blanks"] <- "blank"
   res[res == "blackbackedjackal"] <- "jackalblackbacked"
   res[res == "bustardludwig's"] <- "bustardludwigs"
   res[res == "blackwildebeest"] <- "wildebeestblack"
   res[res == "bluewildebeest"] <- "wildebeestblue"
   res[res == "brownhyena"] <- "hyenabrown"
+  res[res == "birdsofprey"] <- "birdofprey"
+  res[res == "bird"] <- "birdother" # ?
   res[res == "capeporcupine"] <- "porcupinecape"
   res[res == "capemountainzebra"] <- "zebramountaincape"
+  res[res == "catdomestic"] <- "domesticanimal"
+  res[res == "chacmababoon"] <- "baboon"
   res[res == "commonduiker"] <- "duikercommon"
   res[res == "commonwarthog"] <- "warthog"
   res[res == "crestedguineafowl"] <- "guineafowlcrested" # ?
-  res[res == "gemsbokoryx"] <- "gemsbok"
+  res[res == "domesticcat"] <- "domesticanimal" # ?
+  res[res == "domesticcow"] <- "domesticanimal" # ?
+  res[res == "domesticdog"] <- "domesticanimal" # ?
+  res[res == "domestichorse"] <- "domesticanimal" # ?
+  res[res == "duiker"] <- "duikercommon"
+  res[res == "duikercommongrey"] <- "duikercommon"
   res[res == "dwarfmongoose"] <- "mongoosedwarf"
-  res[res == "feralcat"] <- "catferal"
+  res[res == "feralcat"] <- "catferal" # ?
   res[res == "fowlguinea"] <- "guineafowl" # ?
-  res[res == "jackleblackbacked"] <- "jackalblackbacked"
+  res[res == "gemsbokoryx"] <- "gemsbok"
+  res[res == "genetlargespotted"] <- "genetcapelargespotted"
+  res[res == "genet(small)"] <- "genetcommonsmallspotted"
+  res[res == "genetcape"] <- "genetcapelargespotted"
+  res[res == "genetsmallspotted"] <- "genetcommonsmallspotted"
+  res[res == "galagosouthernlesser"] <- "bushbaby"
+  res[res == "groundsquirrel"] <- "squirrelground"
+  res[res == "grysbok"] <- "grysbokcape"
+  res[res == "harecape"] <- "hare"
+  res[res == "horse"] <- "domesticanimal" # ?
   res[res == "helmetedguineafowl"] <- "guineafowlhelmeted"
+  res[res == "jackleblackbacked"] <- "jackalblackbacked"
+  res[res == "mongoosewater"] <- "mongoosewatermarsh"
   res[res == "koribustard"] <- "bustardkori"
-  res[res == "chacmababoon"] <- "baboon"
-  res[res == "noanimalpresent"] <- "blank"
-  res[res == "people"] <- "human"
+  res[res == "livestock"] <- "domesticanimal"
+  res[res == "mongoosecapesmallgrey"] <- "mongoosesmallcapegrey"
+  res[res == "mongooseegyptianlargegrey"] <- "mongooselargegrey"
+  res[res == "mongoose(whitetailed)"] <- "mongoosewhitetailed"
+  res[res == "pig"] <- "domesticanimal" # ?
+  res[res == "poultry"] <- "domesticanimal" # ?
+  res[res == "poulty"] <- "domesticanimal" # ?
   res[res == "plainszebra"] <- "zebraplains"
   res[res == "rabbitsp"] <- "rabbit"
   res[res == "redhartebeest"] <- "hartebeestred"
   res[res == "reptiles|amphibians"] <- "reptilesamphibians"
+  res[res == "reptile"] <- "reptilesamphibians"
   res[res == "roanantelope"] <- "roan"
   res[res == "sharpe'sgrysbok"] <- "grysboksharpes"
   res[res == "smallspottedgenet"] <- "genetcommonsmallspotted"
   res[res == "slendermongoose"] <- "mongooseslender"
+  res[res == "springhare"] <- "harespring"
   res[res == "spottedhyena"] <- "hyenaspotted"
+  res[res == "wildcat"] <- "catafricanwild"
+  res[res == "rhino"] <- "rhinoceros"
+  res[res == "rhinocerossp"] <- "rhinoceros"
+  res[res == "rhebok(grey)"] <- "rhebokgrey"
+  res[res == "rodents"] <- "rodent"
   res[res == "vervetmonkey"] <- "monkeyvervet"
-  res[res == "vegetation"] <- "blank" # ?
-  res[res == "unidentified"] <- "unresolvable"
   res[res == "wildebeestsp"] <- "wildebeest"
   res[res == "whitetailedmongoose"] <- "mongoosewhitetailed"
   res[res == "zebrasp"] <- "zebra"
+  res[res == "zebraplains"] <- "zebraburchells"
+  res[res == "zorillapolecatstriped"] <- "polecatstriped"
+  res[res == "zorillastripedpolecat"] <- "polecatstriped"
   
-  # Not sure what to do with:
-  # 0
-  # 1
-  # knockeddown
-  # mongoosemellers (is it a species?)
-  # rabbit|hare -> merge with rabbit (was rabbitsp before)?...
-  # sundryother
-  # vehicles/humans/livestock
-  # guineafowlhelmeted = guineafowl?
-  # guineafowlcrested = other guineafowls?
-  # zebraplains = zebraburchells?
-  # researchteam
-  # reptile = reptilesambhibians?
+  ## People
+  res[res == "humans"] <- "human" # ?
+  res[res == "humancyclist"] <- "human" # ?
+  res[res == "humanmotorcycle"] <- "human" # ?
+  res[res == "people"] <- "human"
+  res[res == "researchteam"] <- "human"
+  res[res == "vehicle"] <- "human"
+  
+  ## Other
+  res[res == "1"] <- "blank"
+  res[res == "NOT identifiable"] <- "unresolvable"
+  res[res == "Unidentifiable"] <- "unresolvable"
+  res[res == "unidentifiable"] <- "unresolvable"
+  res[res == "UNIDENTIFIED"] <- "unresolvable"
+  res[res == "blanks"] <- "blank"
+  res[res == "empty"] <- "blank"
+  res[res == "noanimalpresent"] <- "blank"
+  res[res == "none"] <- "blank"
+  res[res == "vegetation"] <- "blank"
+  res[res == "unidentified"] <- "unresolvable"
+  res[res == "unknown"] <- "unresolvable"
+  
+  # Observations
+  # 0 -> the image is duplicated somewhere in other rows and is not empty
+  # sundryother -> something is in there
+  # "knockeddown" ?
+  
+  # Questions
+  # "porcupine" = "porcupinecape"?
+  # "zebramountain" = "zebramountaincape"?
   
   return(res)
 }
