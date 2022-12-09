@@ -10,8 +10,6 @@ fill_capture_info(df, classifier = c("zooniverse", "traptagger", "digikam"))
 \item{df}{a dataframe for which columns should be filled.}
 
 \item{classifier}{The classifier}
-
-\item{remove_temp}{should the column 'eventID' be removed if present?}
 }
 \value{
 A dataframe with values filled for locationID, cameraID,

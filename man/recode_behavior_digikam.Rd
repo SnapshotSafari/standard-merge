@@ -7,7 +7,7 @@
 recode_behavior_digikam(behaviors)
 }
 \arguments{
-\item{behavior}{a character vector of behaviors, expected to be separated by a '_&_'}
+\item{behaviors}{a character vector of behaviors, expected to be separated by a '_&_'}
 }
 \value{
 A dataframe with one column per behavior initially present, with

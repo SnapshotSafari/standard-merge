@@ -1,3 +1,12 @@
+# Header #############################################################
+# 
+# Author: Lisa Nicvert
+# Email:  lisa.nicvert@univ-lyon1.fr
+# 
+# Date: 2022-12-09
+#
+# Script Description: functions to clean data from Snapshot files
+
 #' Standardize species
 #'
 #' Eliminate species duplicate names (things like 'birdofprey' ans 'birdsofprey')

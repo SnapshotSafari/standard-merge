@@ -1,74 +1,13 @@
-library(data.table)
+# Header #############################################################
+# 
+# Author: Lisa Nicvert
+# Email:  lisa.nicvert@univ-lyon1.fr
+# 
+# Date: 2022-12-09
+#
+# Script Description: functions to help read and write files to standardize Snapshot data.
 
-#' List all files in folder
-#' 
-#' This function lists all csv files in a base folder. It works recursively 
-#' (lists all files in the folder and all files in subfolders of this folder)
-#'
-#' @param folder the folder to list files in
-#' @param except Paths to ignore (optional): these are the relative
-#' path from 'folder'. They are either full file names, or a path
-#' with partial matching like "folder/*".
-#'
-#' @return A character vector with relative paths of all files in the folder 'folder',
-#' except the files that are indicated by 'except'.
-#' 
-#' @export
-#'
-#' @examples
-list_csv_in_folder <- function(folder, except){
-  
-  if(length(folder) > 1){
-    stop(paste("Only give one folder in 'folder' please."))
-  }
-  if(!dir.exists(folder)){
-    stop(paste("The folder", folder, "does not exist."))
-  }
-  
-  # --- List files
-  in_files_list <- list.files(folder, recursive = TRUE)
-  
-  # --- Exclude some files
-  
-  if(!missing(except)) {
-    discarded <- c() # initialize vector of discarded files indices
-    for(exc in except){
-      # Modify exc 
-      exc <- gsub(pattern = "*", replacement = ".*", 
-                  x = exc,
-                  fixed = TRUE) # Replace * (anything) by .* (compatible with R syntax)
-      exc <- paste0("^", exc, "$") # match the exact expression from start to end
-      
-      # get all discarded files for element i
-      discard_i <- grep(pattern = exc, x = in_files_list) 
-      
-      discarded <- c(discarded, discard_i) # add discarded files to total vector
-    }
-    
-    # Message
-    if(length(discarded) != 0){
-      message("Files:\n", 
-              paste(in_files_list[discarded], collapse = "\n"),
-              "\nwill be ignored (they are in 'except').")
-      in_files_list <- in_files_list[-discarded]
-    }
-  }
-  
-  # --- Get csv
-  csv_files <- grep(pattern = "\\.csv$", in_files_list, value = TRUE)
-
-  not_csv <- grep(pattern = "\\.csv$", in_files_list, value = TRUE,
-                  invert = TRUE)
-  
-  # --- Keep only csv
-  if(length(not_csv) != 0) {
-    message(paste0("File(s) ", 
-                   paste(not_csv, collapse = ", "),
-                   " will be ignored (they are not csv)."))
-  }
-  
-  return(csv_files)
-}
+# Logger ------------------------------------------------------------------
 
 #' Name logfile
 #'
@@ -80,7 +19,6 @@ list_csv_in_folder <- function(folder, except){
 #' 
 #' @export
 #'
-#' @examples
 get_logfile_name <- function() {
   
   now <- Sys.time()
@@ -103,7 +41,6 @@ get_logfile_name <- function() {
 #' 
 #' @export
 #'
-#' @examples
 create_logger <- function(my_logfile) {
   
   logfolder <- dirname(my_logfile)
@@ -114,9 +51,9 @@ create_logger <- function(my_logfile) {
   
   file.create(my_logfile)
   
-  my_console_appender = console_appender(layout = default_log_layout())
-  my_file_appender = file_appender(my_logfile, append = TRUE, 
-                                   layout = default_log_layout())
+  my_console_appender = log4r::console_appender(layout = log4r::default_log_layout())
+  my_file_appender = log4r::file_appender(my_logfile, append = TRUE, 
+                                          layout = log4r::default_log_layout())
   
   my_logger <- log4r::logger(threshold = "INFO", 
                              appenders = list(my_console_appender, 
@@ -138,7 +75,6 @@ create_logger <- function(my_logfile) {
 #' 
 #' @export
 #'
-#' @examples
 write_log_message <- function(message, logger = NA,
                               level = "info") {
   
@@ -161,40 +97,16 @@ write_log_message <- function(message, logger = NA,
   }
 }
 
-#' Get relative path
-#'
-#' Get the relative path to a file or folder.
-#' 
-#' @param f the full path to the folder/file.
-#' @param wd a string describing the part of the path to delete.
-#'
-#' @return A string with the truncated path, without leading/terminal "/"
-#' if f is a folder.
-#' 
-#' @export
-#'
-#' @examples
-get_relative_path <- function(f, wd) {
-  
-  # Get relative path
-  rel_path <- gsub(pattern = wd, 
-                   replacement = "",
-                   f)
-  
-  rel_path <- gsub(pattern = "^/|/$", 
-                   replacement = "",
-                   rel_path)
-  
-  return(rel_path)
-}
 
+# Read Snapshot files -----------------------------------------------------
 
 #' Get files and folder
 #' 
-#' Get all files from the input character vector. Either the basename from input
-#' if they are files, or all files into input recursively if input are folders.
-#'
-#' @param input a character vector of valid paths: can be files or folders
+#' Get all csv files from the input character vector. 
+#' If 'input' is a folder, will list all files within input; if 'input'
+#' is a file, will only list this file.
+#' 
+#' @param input a character vector of valid paths: can be files or folders, or a mix of both
 #' @param except files to ignore (optional)
 #'
 #' @return A dataframe with columns folder and files, where folder is the 
@@ -202,9 +114,7 @@ get_relative_path <- function(f, wd) {
 #' 
 #' @export
 #'
-#' @examples
-get_files_and_folder <- function(input, except) {
-  
+get_csv_files_and_folders <- function(input, except) {
   # Initialize results
   folders <- c()
   files <- c()
@@ -250,8 +160,7 @@ get_files_and_folder <- function(input, except) {
 #' @return A dataframe with the contents of the csv file
 #' @export
 #'
-#' @examples
-read_file <- function(filename, base_folder, verbose = FALSE){
+read_snapshot_file <- function(filename, base_folder, verbose = FALSE){
   
   # Set file name
   in_file <- file.path(base_folder, filename)
@@ -267,7 +176,7 @@ read_file <- function(filename, base_folder, verbose = FALSE){
   
   # Issue, empty columns
   if(grepl(filename, pattern = "MAD_S2_full_report_0-50__agreement_corrected_fin.csv")){
-    dat <- fread(in_file, select = c(1:26))
+    dat <- data.table::fread(in_file, select = c(1:26))
     dat <- as.data.frame(dat)
   }else{
     dat <- read.csv(in_file, sep = ",")
@@ -282,6 +191,9 @@ read_file <- function(filename, base_folder, verbose = FALSE){
 }
 
 
+
+# Write Snapshot files ----------------------------------------------------
+
 #' Get final filemane
 #'
 #' Return the filename from the file columns.
@@ -294,7 +206,6 @@ read_file <- function(filename, base_folder, verbose = FALSE){
 #' 
 #' @export
 #'
-#' @examples
 get_final_filename <- function(df) {
   
   reserve <- unique(df$locationID)
@@ -323,7 +234,6 @@ get_final_filename <- function(df) {
 #' 
 #' @export
 #'
-#' @examples
 write_standardized_file <- function(df, in_filename, to) {
   
   # Check if results folder exists
@@ -353,4 +263,102 @@ write_standardized_file <- function(df, in_filename, to) {
             row.names = FALSE)
   
   return(filepath)
+}
+
+
+# Helpers -----------------------------------------------------------------
+
+#' List all files in folder
+#' 
+#' This function lists all csv files in a base folder. It works recursively 
+#' (lists all files in the folder and all files in subfolders of this folder)
+#'
+#' @param folder the folder to list files in
+#' @param except Paths to ignore (optional): these are the relative
+#' path from 'folder'. They are either full file names, or a path
+#' with partial matching like "folder/*".
+#'
+#' @return A character vector with relative paths of all files in the folder 'folder',
+#' except the files that are indicated by 'except'.
+#' 
+#'
+#' @noRd
+list_csv_in_folder <- function(folder, except){
+  
+  if(length(folder) > 1){
+    stop(paste("Only give one folder in 'folder' please."))
+  }
+  if(!dir.exists(folder)){
+    stop(paste("The folder", folder, "does not exist."))
+  }
+  
+  # --- List files
+  in_files_list <- list.files(folder, recursive = TRUE)
+  
+  # --- Exclude some files
+  
+  if(!missing(except)) {
+    discarded <- c() # initialize vector of discarded files indices
+    for(exc in except){
+      # Modify exc 
+      exc <- gsub(pattern = "*", replacement = ".*", 
+                  x = exc,
+                  fixed = TRUE) # Replace * (anything) by .* (compatible with R syntax)
+      exc <- paste0("^", exc, "$") # match the exact expression from start to end
+      
+      # get all discarded files for element i
+      discard_i <- grep(pattern = exc, x = in_files_list) 
+      
+      discarded <- c(discarded, discard_i) # add discarded files to total vector
+    }
+    
+    # Message
+    if(length(discarded) != 0){
+      message("Files:\n", 
+              paste(in_files_list[discarded], collapse = "\n"),
+              "\nwill be ignored (they are in 'except').")
+      in_files_list <- in_files_list[-discarded]
+    }
+  }
+  
+  # --- Get csv
+  csv_files <- grep(pattern = "\\.csv$", in_files_list, value = TRUE)
+  
+  not_csv <- grep(pattern = "\\.csv$", in_files_list, value = TRUE,
+                  invert = TRUE)
+  
+  # --- Keep only csv
+  if(length(not_csv) != 0) {
+    message(paste0("File(s) ", 
+                   paste(not_csv, collapse = ", "),
+                   " will be ignored (they are not csv)."))
+  }
+  
+  return(csv_files)
+}
+
+#' Get relative path
+#'
+#' Get the relative path to a file or folder.
+#' 
+#' @param f the full path to the folder/file.
+#' @param wd a string describing the part of the path to delete.
+#'
+#' @return A string with the truncated path, without leading/terminal "/"
+#' if f is a folder.
+#' 
+#'
+#' @noRd
+get_relative_path <- function(f, wd) {
+  
+  # Get relative path
+  rel_path <- gsub(pattern = wd, 
+                   replacement = "",
+                   f)
+  
+  rel_path <- gsub(pattern = "^/|/$", 
+                   replacement = "",
+                   rel_path)
+  
+  return(rel_path)
 }

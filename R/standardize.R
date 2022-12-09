@@ -1,10 +1,20 @@
-library(here)
-library(tidyverse)
-library(lubridate)
-library(stringr)
-library(chron)
+# Header #############################################################
+# 
+# Author: Lisa Nicvert
+# Email:  lisa.nicvert@univ-lyon1.fr
+# 
+# Date: 2022-12-09
+#
+# Script Description: functions to standardize Snapshot files.
 
-here::i_am("R/standardize.R") # Set working directory
+
+# Libraries ---------------------------------------------------------------
+# library(lubridate)
+# library(stringr)
+# library(chron)
+
+
+# Prepare data ------------------------------------------------------------
 
 #' Guess classifier
 #' 
@@ -17,7 +27,6 @@ here::i_am("R/standardize.R") # Set working directory
 #' 
 #' @export
 #'
-#' @examples
 guess_classifier <- function(colnames_df) {
   
   if ("question__species" %in% colnames_df) {
@@ -43,23 +52,10 @@ guess_classifier <- function(colnames_df) {
 #' @return Returns the dataframe with 2 additional columns date and time, minus the timestamp column, and with merged capture_label
 #' @export
 #'
-#' @examples
 prepare_traptagger <- function(df){
   
   # --- Copy data
   df_res <- df
-  
-  # --- Address multiple species columns
-  # Transform "None" species to NA
-  # df_res <- df_res %>% mutate(
-  #   across(.cols = starts_with("capture_label"),
-  #          .fns = ~ na_if(.x, y = "None")))
-  
-  # Pivot table
-  # df_res <- df_res %>% pivot_longer(cols = starts_with("capture_label"), 
-  #                                   names_to = "capture_nb",
-  #                                   values_to = "capture_label",
-  #                                   values_drop_na = TRUE) 
   
   # --- Split dates/times
   date_time <- strsplit(df_res$timestamp, " ")
@@ -74,64 +70,73 @@ prepare_traptagger <- function(df){
   df_res$time <- sapply(date_time, function(l) l[2])
   
   # --- Delete intermediate columns
-  # df_res <- df_res %>% select(-c(timestamp, capture_nb))
   df_res <- df_res %>% select(-timestamp)
   
   return(df_res)
 }
 
-#' Add columns that don't exist
+#' Prepare Digikam data
 #'
-#' Helper function to add columns that are not in the original data (code found on https://stackoverflow.com/questions/45857787/adding-column-if-it-does-not-exist)
+#' Standardizes Digikam data to be ready to be standardized: removes 'X' index column,
+#' (if it exists), merges 'Directory' and 'Filename' to create a path, 
+#' splits 'metadata_Behaviour' column into the relevant behaviors and 
+#' recodes 'metadata_young_present' into 0 and 1.
 #' 
-#' @param data the dataframe to add columns to
-#' @param cname a character vector with names that should be added (these names can be present in the data already)
-#'
-#' @return The dataframe with all original columns + those that are in 'cname' 
+#' @param df Dataframe to standardize (must have columns 'metadata_Behaviour' and 'metadata_young_present').
+#' 
+#' @return Returns the dataframe without 'X' column, 'Directory' and 'Filename' merged
+#' into 'file_path_1' column, 'metadata_Behaviour' splitted into up to 6 columns
+#' 'Eating', 'Drinking', 'Resting', 'Standing', 'Moving', 'Interacting' (depending on the
+#' behavoirs that were present in the data) and the 'metadata_young_present' column recoded
+#' so that 'Yes'/'No' becomes 0/1.
 #' @export
 #'
-#' @examples
-fncols <- function(data, cname, approx = FALSE) {
-  res <- data
+prepare_digikam <- function(df){
   
-  # First check if the name we wanna add is "almost" in data
-  if(approx) {
-    for(cn in cname) {
-      match <- grep(pattern = paste0("^", cn, "$"), 
-                    x = names(data), ignore.case = TRUE)
-      if(length(match) == 1) {
-        if(names(data)[match] != cn){ # If match but different
-          message("Match found in column names: renaming column ", 
-                  names(data)[match],
-                  " into ", cn)
-          names(res)[match] <- cn
-        }
-      } else if (length(match) > 1) {
-        message("Multiple matches for ", cn, " in column names: ", 
-                paste(names(data)[match], collapse = ", "),
-                ", not renaming.")
-      }
-    }
+  df_res <- df
+  
+  # --- Remove index column
+  if ("X" %in% colnames(df_res)) {
+    df_res <- df_res %>% select(-X) 
   }
   
-  add <- cname[!(cname %in% names(res))]
+  # --- Create file path from 2 columns
+  if("Directory" %in% colnames(df_res) &  "FileName" %in% colnames(df_res)){
+    df_res$file_path_1 <- file.path(df_res$Directory, df_res$FileName)
+    df_res <- df_res %>% select(-c(Directory, FileName)) # Remove merged columns
+  }else{
+    warning("Could not create column file_path_1: missing columns 'Directory' and 'FileName'")
+  }
   
-  if(length(add)!=0){
-    res[add] <- NA
-  } 
-  return(res)
+  # --- Format behaviors
+  behaviors <- recode_behavior_digikam(df_res$metadata_Behaviour) 
+  
+  # Add rows to df_res
+  df_res <- df_res %>% select(-metadata_Behaviour)
+  
+  if(nrow(behaviors) != 0) { # If not all behaviors are NA
+    df_res <- cbind(df_res, behaviors)
+  }
+  
+  
+  # --- Recode young present column
+  df_res <- df_res %>%
+    mutate(metadata_young_present = ifelse(metadata_young_present == "Yes", 
+                                           1, 0))
+  df_res$metadata_young_present <- as.numeric(df_res$metadata_young_present)
+  
+  return(df_res)
 }
 
 #' Recode a behavior column
 #'
-#' @param behavior a character vector of behaviors, expected to be separated by a '_&_'
+#' @param behaviors a character vector of behaviors, expected to be separated by a '_&_'
 #'
 #' @return A dataframe with one column per behavior initially present, with
 #' 1 if the behavior was present and 0 otherwise.
 #' 
 #' @export
 #'
-#' @examples
 recode_behavior_digikam <- function(behaviors) {
   
   # Split according to separator
@@ -193,123 +198,10 @@ recode_behavior_digikam <- function(behaviors) {
   return(res)
 }
 
-#' Prepare Digikam data
-#'
-#' Standardizes Digikam data to be ready to be standardized: removes 'X' index column,
-#' (if it exists), merges 'Directory' and 'Filename' to create a path, 
-#' splits 'metadata_Behaviour' column into the relevant behaviors and 
-#' recodes 'metadata_young_present' into 0 and 1.
-#' 
-#' @param df Dataframe to standardize (must have columns 'metadata_Behaviour' and 'metadata_young_present').
-#' 
-#' @return Returns the dataframe without 'X' column, 'Directory' and 'Filename' merged
-#' into 'file_path_1' column, 'metadata_Behaviour' splitted into up to 6 columns
-#' 'Eating', 'Drinking', 'Resting', 'Standing', 'Moving', 'Interacting' (depending on the
-#' behavoirs that were present in the data) and the 'metadata_young_present' column recoded
-#' so that 'Yes'/'No' becomes 0/1.
-#' @export
-#'
-#' @examples
-prepare_digikam <- function(df){
-  
-  df_res <- df
-  
-  # --- Remove index column
-  if ("X" %in% colnames(df_res)) {
-    df_res <- df_res %>% select(-X) 
-  }
-  
-  # --- Create file path from 2 columns
-  if("Directory" %in% colnames(df_res) &  "FileName" %in% colnames(df_res)){
-    df_res$file_path_1 <- file.path(df_res$Directory, df_res$FileName)
-    df_res <- df_res %>% select(-c(Directory, FileName)) # Remove merged columns
-  }else{
-    warning("Could not create column file_path_1: missing columns 'Directory' and 'FileName'")
-  }
-  
-  # --- Format behaviors
-  behaviors <- recode_behavior_digikam(df_res$metadata_Behaviour) 
-  
-  # Add rows to df_res
-  df_res <- df_res %>% select(-metadata_Behaviour)
-  
-  if(nrow(behaviors) != 0) { # If not all behaviors are NA
-    df_res <- cbind(df_res, behaviors)
-  }
-  
-  
-  # --- Recode young present column
-  df_res <- df_res %>%
-    mutate(metadata_young_present = ifelse(metadata_young_present == "Yes", 
-                                           1, 0))
-  df_res$metadata_young_present <- as.numeric(df_res$metadata_young_present)
-  
-  return(df_res)
-}
 
-#' Keep only expected columns
-#'
-#' @param df The dataframe to filter
-#' @param expected Character vector of expected column names.
-#' @param verbose Should a message be displayed if some columns are deleted?
-#' @param approx Should partial name matching be used to match expected columns?
-#'
-#' @return The dataframe with all columns in expected, and no others.
-#' If a column was not originally there, then it is filled with NAs.
-#' @export
-#'
-#' @examples
-keep_only_expected_columns <- function(df, expected, verbose, approx) {
-  
-  # --- Create columns that don't exist 
-  df_res <- fncols(df, expected, approx = approx)
-  
-  # --- Discard all columns not in the standard (and reorder)
-  discarded <- colnames(df_res)[!(colnames(df_res) %in% expected)]
-  
-  if(verbose) {
-    if(length(discarded) != 0) {
-      message(paste0("Column(s) ", paste(discarded, collapse = ", "),
-                     " will be discarded."))
-    }
-  }
-  
-  df_res <- df_res %>% select(all_of(expected)) # reorder in the same order as cols used before
-  
-  return(df_res)
-}
 
-#' Check standard column names
-#'
-#' Check that the standard column names match expectations, i.e.
-#' is a dataframe with >= 2 columns named like the classifier object and 'new'.
+# Standardize -------------------------------------------------------------
 
-#' @param standard_colnames The dataframe to check
-#' @param classifier The classifier.
-#'
-#' @return Nothing or stops execution if standard_colnames is not in
-#' compliance with expectations.
-#' 
-#' @export
-#'
-#' @examples
-check_standard_colnames <- function(standard_colnames, 
-                                    classifier = c("zooniverse", "traptagger", "digikam")) {
-  
-  classifier <- match.arg(classifier)
-  
-  if(!is.data.frame(standard_colnames)) {
-    stop("standard_colnames must be a dataframe")
-  } else if (ncol(standard_colnames) < 2) { # if it is a df but has less than 2 columns
-    stop("standard_colnames must have 2 columns at least")
-  } else { # a df with >= 2 columns
-    cond <- all(c(classifier, 'new') %in% colnames(standard_colnames))
-    if(!cond) {
-      stop(paste("2 columns in standard_colnames must be named",
-                 paste(c(classifier, 'new'), sep = ", ")))
-    }
-  }
-}
 
 #' Standardize data
 #'
@@ -333,7 +225,6 @@ check_standard_colnames <- function(standard_colnames,
 #' @return A dataframe with 25 columns with the standardized names
 #' @export
 #'
-#' @examples
 standardize_columns <- function(df, 
                                 classifier = c("zooniverse", "traptagger", "digikam"), 
                                 standard_colnames,
@@ -392,7 +283,6 @@ standardize_columns <- function(df,
 #' @return Returns a dataframe for which the columns have been renamed
 #' @export
 #'
-#' @examples
 rename_standard <- function(df,
                             classifier = c("zooniverse", "traptagger", "digikam"),
                             standard_colnames){
@@ -418,7 +308,21 @@ rename_standard <- function(df,
   return(df_res)
 }
 
+
+# Re-format columns -------------------------------------------------------
+
+#' Standardize times
+#' 
+#' Standardizes a times vector to match the format "HH:MM:SS"
+#'
+#' @param times A times vector (character). Will work if the times are
+#' already "HH:MM:SS" or "HH:MM:SS AM/PM"
+#'
+#' @return The vector standardized in the format "HH:MM:SS"
+#' @export
+#'
 standardize_time <- function(times){
+  
   # Copy
   tim <- times
   
@@ -495,7 +399,7 @@ standardize_time <- function(times){
     timsplit <- add_zero(timsplit)
     
     tim_final <- sapply(timsplit, paste, collapse =":")
-    tim_final <- times(tim_final)
+    tim_final <- chron::times(tim_final)
     
     NAs <- get_NAs(transformed_data = tim_final,
                    origin_data = times)
@@ -508,7 +412,18 @@ standardize_time <- function(times){
   return(tim_final)
 }
 
+#' Standardize dates
+#'
+#' Standardizes a vector of dates to the format "AAAA-MM-DD".
+#' 
+#' @param dates A dates vector (character). Accepts all formats coercible to date
+#' with lubridate::as_date, else will look for "\%d-\%m-\%Y" or "\%m-\%d-\%Y".
+#'
+#' @return A vector of dates in the format "AAAA-MM-DD".
+#' @export
+#'
 standardize_date <- function(dates){
+  
   # Copy
   dat <- dates
   
@@ -517,7 +432,7 @@ standardize_date <- function(dates){
                 pattern = "/", replacement = "-")
   
   # Try vanilla date conversion
-  dat_test <- suppressWarnings( as_date(dat) )
+  dat_test <- suppressWarnings( lubridate::as_date(dat) )
   
   if(all(is.na(dat_test))) { # Failed to parse
     # Try month/date first
@@ -531,7 +446,7 @@ standardize_date <- function(dates){
       # Leading digit = day
       fmt <- "%m-%d-%Y"
     }
-    dat <- as_date(dat, format = fmt)
+    dat <- lubridate::as_date(dat, format = fmt)
   } else { # Parsing successful
     dat <- dat_test
   }
@@ -545,6 +460,7 @@ standardize_date <- function(dates){
   
   return(dat)
 }
+
 
 #' Get eventID
 #'
@@ -562,7 +478,6 @@ standardize_date <- function(dates){
 #' 
 #' @export
 #'
-#' @examples
 get_eventID <- function(locationID, cameraID, roll, captureID) {
   
   eventID <- paste(locationID,
@@ -592,7 +507,6 @@ get_eventID <- function(locationID, cameraID, roll, captureID) {
 #' 
 #' @export
 #'
-#' @examples
 get_cameraID <- function(locationID, camera, classifier) {
   
   if(missing(classifier)) {
@@ -633,16 +547,13 @@ get_cameraID <- function(locationID, camera, classifier) {
 #' Fills different columns related to capture info.
 #'
 #' @param df a dataframe for which columns should be filled. 
-#' 
 #' @param classifier The classifier
-#' @param remove_temp should the column 'eventID' be removed if present?
 #'
 #' @return A dataframe with values filled for locationID, cameraID,
 #' roll and capture. Also fills season if Zooniverse.
 #' 
 #' @export
 #'
-#' @examples
 fill_capture_info <- function(df,
                               classifier = c("zooniverse", "traptagger", "digikam")) {
   
@@ -691,6 +602,117 @@ fill_capture_info <- function(df,
   return(res)
 }
 
+
+
+
+
+
+# Helpers -----------------------------------------------------------------
+#' Add columns that don't exist
+#'
+#' Helper function to add columns that are not in the original data (code found on https://stackoverflow.com/questions/45857787/adding-column-if-it-does-not-exist)
+#' 
+#' @param data the dataframe to add columns to
+#' @param cname a character vector with names that should be added (these names can be present in the data already)
+#'
+#' @return The dataframe with all original columns + those that are in 'cname' 
+#'
+#' @noRd
+fncols <- function(data, cname, approx = FALSE) {
+  res <- data
+  
+  # First check if the name we wanna add is "almost" in data
+  if(approx) {
+    for(cn in cname) {
+      match <- grep(pattern = paste0("^", cn, "$"), 
+                    x = names(data), ignore.case = TRUE)
+      if(length(match) == 1) {
+        if(names(data)[match] != cn){ # If match but different
+          message("Match found in column names: renaming column ", 
+                  names(data)[match],
+                  " into ", cn)
+          names(res)[match] <- cn
+        }
+      } else if (length(match) > 1) {
+        message("Multiple matches for ", cn, " in column names: ", 
+                paste(names(data)[match], collapse = ", "),
+                ", not renaming.")
+      }
+    }
+  }
+  
+  add <- cname[!(cname %in% names(res))]
+  
+  if(length(add)!=0){
+    res[add] <- NA
+  } 
+  return(res)
+}
+
+#' Keep only expected columns
+#'
+#' @param df The dataframe to filter
+#' @param expected Character vector of expected column names.
+#' @param verbose Should a message be displayed if some columns are deleted?
+#' @param approx Should partial name matching be used to match expected columns?
+#'
+#' @return The dataframe with all columns in expected, and no others.
+#' If a column was not originally there, then it is filled with NAs.
+#' 
+#'
+#' @noRd
+keep_only_expected_columns <- function(df, expected, verbose, approx) {
+  
+  # --- Create columns that don't exist 
+  df_res <- fncols(df, expected, approx = approx)
+  
+  # --- Discard all columns not in the standard (and reorder)
+  discarded <- colnames(df_res)[!(colnames(df_res) %in% expected)]
+  
+  if(verbose) {
+    if(length(discarded) != 0) {
+      message(paste0("Column(s) ", paste(discarded, collapse = ", "),
+                     " will be discarded."))
+    }
+  }
+  
+  df_res <- df_res %>% select(all_of(expected)) # reorder in the same order as cols used before
+  
+  return(df_res)
+}
+
+#' Check standard column names
+#'
+#' Check that the standard column names match expectations, i.e.
+#' is a dataframe with >= 2 columns named like the classifier object and 'new'.
+#' 
+#' @param standard_colnames The dataframe to check
+#' @param classifier The classifier.
+#'
+#' @return Nothing or stops execution if standard_colnames is not in
+#' compliance with expectations.
+#' 
+#'
+#' @noRd
+check_standard_colnames <- function(standard_colnames, 
+                                    classifier = c("zooniverse", "traptagger", "digikam")) {
+  
+  classifier <- match.arg(classifier)
+  
+  if(!is.data.frame(standard_colnames)) {
+    stop("standard_colnames must be a dataframe")
+  } else if (ncol(standard_colnames) < 2) { # if it is a df but has less than 2 columns
+    stop("standard_colnames must have 2 columns at least")
+  } else { # a df with >= 2 columns
+    cond <- all(c(classifier, 'new') %in% colnames(standard_colnames))
+    if(!cond) {
+      stop(paste("2 columns in standard_colnames must be named",
+                 paste(c(classifier, 'new'), sep = ", ")))
+    }
+  }
+}
+
+
 #' Fill capture info for Digikam
 #'
 #' Fills some data on capture event for Digikam-format data.
@@ -703,9 +725,8 @@ fill_capture_info <- function(df,
 #' 'roll' is extracted from 'file_path_1'; 
 #' 'captureID' is the i-th picture for a given camera.
 #' 
-#' @export
 #'
-#' @examples
+#' @noRd
 fill_capture_info_digikam <- function(df){
   
   # Copy df
@@ -722,7 +743,7 @@ fill_capture_info_digikam <- function(df){
   
   # --- Fill season
   df_res$season <- NA # Season is NA
-
+  
   # --- Fill roll
   extracted_roll <- str_extract(df_res$filePath1, 
                                 pattern = "Roll\\d+")
@@ -745,9 +766,8 @@ fill_capture_info_digikam <- function(df){
 #' @return The dataframe with values completed for the captureID
 #' info columns. If no info, it remains NA.
 #' 
-#' @export
 #'
-#' @examples
+#' @noRd
 fill_capture_info_traptagger <- function(df) {
   
   df_res <- df
@@ -763,10 +783,10 @@ fill_capture_info_traptagger <- function(df) {
     location_event <- sapply(capture_split, function(l) l[1])
     
     roll <- sapply(capture_split, function(l) l[2])
-
+    
     # Format location_event to get location and event
     locationID <- gsub(location_event, pattern = "\\d*", 
-                          replacement = "")
+                       replacement = "")
     capture <- gsub(location_event, pattern = "[a-zA-Z]*", 
                     replacement = "")
     
@@ -857,9 +877,8 @@ fill_capture_info_traptagger <- function(df) {
 #' to NAs (if collapse is FALSE). If collapse is TRUE, returns a character
 #' containing the original values that were transformed to NA.
 #' If no NAs were found, returns a vector numeric(0)
-#' @export
 #'
-#' @examples
+#' @noRd
 get_NAs <- function(transformed_data, origin_data, 
                     nmax = 50, collapse = TRUE) {
   
@@ -880,7 +899,5 @@ get_NAs <- function(transformed_data, origin_data,
     res <- NAs_orig
   }
   
-  
   return(res)
 }
-
