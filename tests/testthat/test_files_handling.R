@@ -1,6 +1,6 @@
 library(testthat)
 library(here)
-source(here("code/R/functions/functions_files_handling.R"))
+source(here("R/files_handling.R"))
 
 test_that("Read csv", {
           f <- "/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data/APN/"

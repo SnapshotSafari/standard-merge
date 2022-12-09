@@ -1,8 +1,8 @@
 library(here)
-here::i_am("code/tests/testthat/helper.R")
+here::i_am("tests/testthat/helper.R")
 
 # Get standard
-STANDARD <- read.csv(here("docs/standard.csv"),
+STANDARD <- read.csv(here("scripts_tests/docs/standard.csv"),
                      na.strings = "")
 goal_names <- STANDARD$new[!is.na(STANDARD$new)]
 
