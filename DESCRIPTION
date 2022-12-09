@@ -1,4 +1,4 @@
-Package: standard-merge
+Package: standardizeSnapshot
 Title: Standardize and clean Snapshot data
 Version: 0.0.0.1
 Authors@R: person("Lisa", "Nicvert", email = "lisa.nicvert@univ-lyon1.fr", role = c("aut", "cre"))

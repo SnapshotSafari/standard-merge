@@ -4,8 +4,7 @@ library(lubridate)
 library(stringr)
 library(chron)
 
-here::i_am("code/R/functions/functions_standardize.R") # Set working directory
-
+here::i_am("R/standardize.R") # Set working directory
 
 #' Guess classifier
 #' 
