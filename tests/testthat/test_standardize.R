@@ -113,15 +113,15 @@ test_that("Standardize traptagger on real data",
 
 test_that("Standardize times", {
   expect_equal(standardize_time(c("07:00:00", "05:00:01", "22:00:04")),
-               times(c("07:00:00", "05:00:01", "22:00:04")))
+               chron::times(c("07:00:00", "05:00:01", "22:00:04")))
   expect_equal(standardize_time(c("7:00:00", "5:00:01", "22:00:04")),
-               times(c("07:00:00", "05:00:01", "22:00:04")))
+               chron::times(c("07:00:00", "05:00:01", "22:00:04")))
   expect_equal(standardize_time(c("7:00:00", "15:00:01", "22:00:04")),
-               times(c("07:00:00", "15:00:01", "22:00:04")))
+               chron::times(c("07:00:00", "15:00:01", "22:00:04")))
   expect_equal(standardize_time(c("7:00:00 AM", "3:00:01 PM", "10:00:04 PM")),
-               times(c("07:00:00", "15:00:01", "22:00:04")))
+               chron::times(c("07:00:00", "15:00:01", "22:00:04")))
   expect_equal(standardize_time(c("7:00:00 am", "3:00:01 pm", "10:00:04 pm")),
-               times(c("07:00:00", "15:00:01", "22:00:04")))
+               chron::times(c("07:00:00", "15:00:01", "22:00:04")))
   expect_error(standardize_time(c("7:00:00", "15:00", "22:00:04")),
                "Bad time formatting")
   expect_error(standardize_time(c("7:00:a", "15:00:00 ", "22:K:04")),
@@ -131,13 +131,13 @@ test_that("Standardize times", {
 
 test_that("Standardize dates", {
   dat <- c("2020/12/21", "2020/11/12", "2020/01/11")
-  expect_equal(standardize_date(dat), as_date(c("2020-12-21", "2020-11-12", "2020-01-11")))
+  expect_equal(standardize_date(dat), lubridate::as_date(c("2020-12-21", "2020-11-12", "2020-01-11")))
   
   dat <- c("12/21/2020", "11/12/2020", "01/11/2020")
-  expect_equal(standardize_date(dat), as_date(c("2020-12-21", "2020-11-12", "2020-01-11")))
+  expect_equal(standardize_date(dat), lubridate::as_date(c("2020-12-21", "2020-11-12", "2020-01-11")))
   
   dat <- c("21/12/2020", "12/11/2020", "11/01/2020")
-  expect_equal(standardize_date(dat), as_date(c("2020-12-21", "2020-11-12", "2020-01-11")))
+  expect_equal(standardize_date(dat), lubridate::as_date(c("2020-12-21", "2020-11-12", "2020-01-11")))
   
 })
 
@@ -149,7 +149,7 @@ test_that("Fill capture info digikam", {
                         roll = rep(1, 3),
                         captureID = rep(NA, 3),
                         eventDate = as.Date("2022-10-04", "2022-10-04", "2022-10-04"),
-                        eventTime = times(c("00:00:00", "00:00:00", "00:00:01")),
+                        eventTime = chron::times(c("00:00:00", "00:00:00", "00:00:01")),
                         filePath1 = c("foo/bar/baz_Roll1/foo/bar1.JPG",
                                         "foo/bar/baz_Roll1/foo/bar2.JPG",
                                         "foo/bar/baz_Roll1/foo/bar3.JPG"))

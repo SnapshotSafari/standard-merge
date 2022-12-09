@@ -1,7 +1,5 @@
-library(here)
-
 # Get standard
-STANDARD <- read.csv(here("scripts_tests/docs/standard.csv"),
+STANDARD <- read.csv("/home/lnicvert/Documents/PhD/Code/standardizeSnapshot/scripts_tests/docs/standard.csv",
                      na.strings = "")
 goal_names <- STANDARD$new[!is.na(STANDARD$new)]
 

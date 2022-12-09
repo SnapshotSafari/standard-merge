@@ -18,7 +18,7 @@ test_that("Read csv", {
 
 test_that("Get files and folder (folder input)", {
   f <- "/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data/ATH/"
-  res <- get_files_and_folder(f)
+  res <- get_csv_files_and_folders(f)
   
   folders <- rep("/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data/ATH/", 4)
   files <- list_csv_in_folder(f)
@@ -29,7 +29,7 @@ test_that("Get files and folder (folder input)", {
 
 test_that("Get files and folder (fle input)", {
   f <- "/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data/ATH/ATH_Roll1_Snapshot_UPDATED.csv"
-  res <- get_files_and_folder(f)
+  res <- get_csv_files_and_folders(f)
   
   folders <- "/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data/ATH"
   files <- "ATH_Roll1_Snapshot_UPDATED.csv"
