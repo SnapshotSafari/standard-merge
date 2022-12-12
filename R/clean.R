@@ -17,7 +17,6 @@
 #' 
 #' @export
 #'
-#' @examples
 standardize_species <- function(species){
   
   res <- species
