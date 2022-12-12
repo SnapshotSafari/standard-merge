@@ -100,97 +100,63 @@ write_log_message <- function(message, logger = NA,
 
 # Read Snapshot files -----------------------------------------------------
 
-#' Get files and folder
+
+#' Read Snapshot files
 #' 
-#' Get all csv files from the input character vector. 
-#' If 'input' is a folder, will list all files within input; if 'input'
-#' is a file, will only list this file.
-#' 
+#' Reads files from a vector of folders (and optionnally ignores some file/folders)
+#' into a list of dataframes.
+#'
 #' @param input a character vector of valid paths: can be files or folders, or a mix of both
 #' @param except files to ignore (optional)
 #'
-#' @return A dataframe with columns folder and files, where folder is the 
-#' folder up to a given file and file is the file.
+#' @return A named list of dataframe. Each element of the list is a dataframe containing
+#' the contents of a file read from the files list given in input.
+#' The names of the list are the file names from the root of input:
+#' If the input is a file, it is a filename. 
+#' If input is a folder, it is the relative path 
+#' from input to the file inside input.
 #' 
 #' @export
 #'
-get_csv_files_and_folders <- function(input, except) {
-  # Initialize results
-  folders <- c()
-  files <- c()
+read_snapshot_files <- function(input, except) {
   
-  for(inp in input) { # Iterate through inputs
-    # Guess if input is a file
-    is_file <- grepl("\\..+$", inp)
+  # Get the files names
+  if(missing(except)) {
+    files_df <- get_csv_files_and_folders(input = input)
+  } else {
+    files_df <- get_csv_files_and_folders(input = input, 
+                                          except = except)
+  }
+  
+  # Initialize result
+  df_list <- vector(mode = 'list', 
+                    length = nrow(files_df))
+  
+  # Iterate through file names
+  for(i in 1:nrow(files_df)) {
+    # Get file and folder
+    in_filename <- files_df$files[i]
+    folder <- files_df$folders[i]
     
-    if(!is_file) { # If input is a folder
-      # Set folder to input
-      folder <- inp
-      
-      if(missing(except)) {
-        in_files_list <- list_csv_in_folder(folder)
-      } else {
-        in_files_list <- list_csv_in_folder(folder, 
-                                            except = except)
-      }
-      in_files_list <- sort(in_files_list)
-    } else { 
-      # in_files_list is set to the file (without the path)
-      in_files_list <- basename(inp) 
-
-      # Folder is the rest
-      folder <- dirname(inp)
-    }
+    message(paste("Reading file", in_filename, "---"))
     
-    # Store all folders and files
-    folders <- c(folders, rep(folder, length(in_files_list)))
-    files <- c(files, in_files_list)
+    # Read file
+    dat_in <- read_snapshot_file(in_filename, 
+                                 base_folder = folder)
+    df_list[[i]] <- dat_in
   }
   
-  df <- data.frame(folders, files)
+  # Name list
+  unique_files <- unique(files_df$files)
+  
+  if(length(unique_files) == length(files_df$files)) {
+    names(df_list) <- unique_files
+  } else {
+    message("Could not name list because there were non-unique file names.")
+  }
+  
+  return(df_list)
 }
-
-#' Read a file
-#'
-#' @param filename The name of the file which should exist in base_folder.
-#' starting at the base of the R project.
-#' @param base_folder The folder to look in
-#' @param verbose logical. Display the file name?
-#'
-#' @return A dataframe with the contents of the csv file
-#' @export
-#'
-read_snapshot_file <- function(filename, base_folder, verbose = FALSE){
-  
-  # Set file name
-  in_file <- file.path(base_folder, filename)
-  
-  # Check if file exists
-  if (file.exists(in_file)) {
-    if(verbose) {
-      message("File set to ", in_file)
-    }
-  }else{
-    stop(paste("File", in_file , "does not exist."))
-  }
-  
-  # Issue, empty columns
-  if(grepl(filename, pattern = "MAD_S2_full_report_0-50__agreement_corrected_fin.csv")){
-    dat <- data.table::fread(in_file, select = c(1:26))
-    dat <- as.data.frame(dat)
-  }else{
-    dat <- read.csv(in_file, sep = ",")
-  }
-  
-  if(ncol(dat) == 1){
-    message("Trying ';' as separator in the csv file")
-    dat <- read.csv(in_file, sep = ";")
-  }
-  
-  return(dat)
-}
-
-
 
 # Write Snapshot files ----------------------------------------------------
 
@@ -361,4 +327,94 @@ get_relative_path <- function(f, wd) {
                    rel_path)
   
   return(rel_path)
+}
+
+
+#' Get files and folder
+#' 
+#' Get all csv files from the input character vector. 
+#' If 'input' is a folder, will list all files within input; if 'input'
+#' is a file, will only list this file.
+#' 
+#' @param input a character vector of valid paths: can be files or folders, or a mix of both
+#' @param except files to ignore (optional)
+#'
+#' @return A dataframe with columns folder and files, where folder is the 
+#' folder up to a given file and file is the file.
+#' 
+#' @noRd
+get_csv_files_and_folders <- function(input, except) {
+  # Initialize results
+  folders <- c()
+  files <- c()
+  
+  for(inp in input) { # Iterate through inputs
+    # Guess if input is a file
+    is_file <- grepl("\\..+$", inp)
+    
+    if(!is_file) { # If input is a folder
+      # Set folder to input
+      folder <- inp
+      
+      if(missing(except)) {
+        in_files_list <- list_csv_in_folder(folder)
+      } else {
+        in_files_list <- list_csv_in_folder(folder, 
+                                            except = except)
+      }
+      in_files_list <- sort(in_files_list)
+    } else { 
+      # in_files_list is set to the file (without the path)
+      in_files_list <- basename(inp) 
+      
+      # Folder is the rest
+      folder <- dirname(inp)
+    }
+    
+    # Store all folders and files
+    folders <- c(folders, rep(folder, length(in_files_list)))
+    files <- c(files, in_files_list)
+  }
+  
+  df <- data.frame(folders, files)
+}
+
+#' Read a file
+#'
+#' @param filename The name of the file which should exist in base_folder.
+#' starting at the base of the R project.
+#' @param base_folder The folder to look in
+#' @param verbose logical. Display the file name?
+#'
+#' @return A dataframe with the contents of the csv file
+#'
+#' @noRd
+read_snapshot_file <- function(filename, base_folder, verbose = FALSE){
+  
+  # Set file name
+  in_file <- file.path(base_folder, filename)
+  
+  # Check if file exists
+  if (file.exists(in_file)) {
+    if(verbose) {
+      message("File set to ", in_file)
+    }
+  }else{
+    stop(paste("File", in_file , "does not exist."))
+  }
+  
+  # Issue, empty columns
+  if(grepl(filename, pattern = "MAD_S2_full_report_0-50__agreement_corrected_fin.csv")){
+    dat <- data.table::fread(in_file, select = c(1:26))
+    dat <- as.data.frame(dat)
+  }else{
+    dat <- read.csv(in_file, sep = ",")
+  }
+  
+  if(ncol(dat) == 1){
+    message("Trying ';' as separator in the csv file")
+    dat <- read.csv(in_file, sep = ";")
+  }
+  
+  return(dat)
 }
