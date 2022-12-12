@@ -1,7 +1,4 @@
 library(testthat)
-library(here)
-source(here("R/standardize.R"))
-
 
 test_that("Prepare Digikam", {
   prep <- prepare_digikam(dat_digikam)
@@ -209,4 +206,54 @@ test_that("Change cameraID works well", {
   expect_equal(cameraID, c("MAD_A01", "MAF_A01", "MAD_B01"))
   expect_message(get_cameraID(locationID, camera),
                  "Cameras MAF_A01, MAD_B01 already begin with code_loc: not adding the location.")
+})
+
+test_that("standardize_snapshot_df (Zooniverse)", {
+  dat_std <- standardize_snapshot_df(dat_zooniverse, 
+                                     standard_df = STANDARD)
+  expect_equal(ncol(dat_std), 26)
+  expect_equal(nrow(dat_std), nrow(dat_zooniverse))
+})
+
+test_that("standardize_snapshot_df (Traptagger)", {
+  dat_std <- standardize_snapshot_df(dat_traptagger, 
+                                     standard_df = STANDARD)
+  expect_equal(ncol(dat_std), 26)
+  expect_equal(nrow(dat_std), nrow(dat_traptagger))
+})
+
+test_that("standardize_snapshot_df (Digikam)", {
+  expect_warning(standardize_snapshot_df(dat_digikam, standard_df = STANDARD), 
+                 "Digikam data requires 'locationID_digikam' to be provided: without a it, locationID will be set to NA in the standardized data.")
+  
+  dat_std <- standardize_snapshot_df(dat_digikam, 
+                                     standard_df = STANDARD, 
+                                     locationID = "MOK")
+  
+  expect_equal(ncol(dat_std), 26)
+  expect_equal(nrow(dat_std), nrow(dat_digikam))
+})
+
+test_that("Standardize Snapshot list", {
+  list_test <- list(dat_zooniverse,
+                    dat_digikam,
+                    dat_traptagger)
+  
+  expect_warning(standardize_snapshot_list(list_test, standard_df = STANDARD), 
+                 "Digikam data requires 'locationID_digikam' to be provided: without a it, locationID will be set to NA in the standardized data.")
+  
+  names(list_test) <- c("APN_S1_full_report_0-50__agreement_corrected_fin.csv",
+                        "MOK_record_table_0min_deltaT_2021-05-07.csv",
+                        "ATH_Roll1_Snapshot.csv")
+  
+  std_list <- standardize_snapshot_list(list_test, standard_df = STANDARD)
+  
+  expect_equal(ncol(std_list[[1]]), 26)
+  expect_equal(nrow(std_list[[1]]), nrow(dat_zooniverse))
+  
+  expect_equal(ncol(std_list[[2]]), 26)
+  expect_equal(nrow(std_list[[2]]), nrow(dat_digikam))
+  
+  expect_equal(ncol(std_list[[3]]), 26)
+  expect_equal(nrow(std_list[[3]]), nrow(dat_traptagger))
 })
