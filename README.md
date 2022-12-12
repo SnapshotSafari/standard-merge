@@ -11,11 +11,14 @@ Snapshot Safari data comes in different standards, following the method that was
 ## Installation 
 
 For now, you can install the package by downloading the source code in zip format. Then, in R use:
+```r 
 devtools::install_local("standard-merge-main.zip")
+```
 
 Once the repository will be public: it will be possible to install it via:
+```r 
 devtools::install_github("https://github.com/SnapshotSafari/standard-merge")
-
+```
 
 ## Contents
 
