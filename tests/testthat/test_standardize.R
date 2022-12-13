@@ -93,19 +93,19 @@ test_that("Keep only expected columns", {
 test_that("Standardize zooniverse on real data",
           expect_equal(colnames(standardize_columns(dat_zooniverse, 
                                                     "zooniverse",
-                                                    STANDARD)), 
+                                                    standard)), 
                        goal_names))
 
 test_that("Standardize digikam on real data",
           expect_equal(colnames(standardize_columns(dat_digikam, 
                                                     "digikam",
-                                                    STANDARD)), 
+                                                    standard)), 
                        goal_names))
 
 test_that("Standardize traptagger on real data",
           expect_equal(colnames(standardize_columns(dat_traptagger, 
                                                     "traptagger",
-                                                    STANDARD)), 
+                                                    standard)), 
                        goal_names))
 
 test_that("Standardize times", {
@@ -210,24 +210,24 @@ test_that("Change cameraID works well", {
 
 test_that("standardize_snapshot_df (Zooniverse)", {
   dat_std <- standardize_snapshot_df(dat_zooniverse, 
-                                     standard_df = STANDARD)
+                                     standard_df = standard)
   expect_equal(ncol(dat_std), 26)
   expect_equal(nrow(dat_std), nrow(dat_zooniverse))
 })
 
 test_that("standardize_snapshot_df (Traptagger)", {
   dat_std <- standardize_snapshot_df(dat_traptagger, 
-                                     standard_df = STANDARD)
+                                     standard_df = standard)
   expect_equal(ncol(dat_std), 26)
   expect_equal(nrow(dat_std), nrow(dat_traptagger))
 })
 
 test_that("standardize_snapshot_df (Digikam)", {
-  expect_warning(standardize_snapshot_df(dat_digikam, standard_df = STANDARD), 
+  expect_warning(standardize_snapshot_df(dat_digikam, standard_df = standard), 
                  "Digikam data requires 'locationID_digikam' to be provided: without a it, locationID will be set to NA in the standardized data.")
   
   dat_std <- standardize_snapshot_df(dat_digikam, 
-                                     standard_df = STANDARD, 
+                                     standard_df = standard, 
                                      locationID = "MOK")
   
   expect_equal(ncol(dat_std), 26)
@@ -239,14 +239,14 @@ test_that("Standardize Snapshot list", {
                     dat_digikam,
                     dat_traptagger)
   
-  expect_warning(standardize_snapshot_list(list_test, standard_df = STANDARD), 
+  expect_warning(standardize_snapshot_list(list_test, standard_df = standard), 
                  "Digikam data requires 'locationID_digikam' to be provided: without a it, locationID will be set to NA in the standardized data.")
   
   names(list_test) <- c("APN_S1_full_report_0-50__agreement_corrected_fin.csv",
                         "MOK_record_table_0min_deltaT_2021-05-07.csv",
                         "ATH_Roll1_Snapshot.csv")
   
-  std_list <- standardize_snapshot_list(list_test, standard_df = STANDARD)
+  std_list <- standardize_snapshot_list(list_test, standard_df = standard)
   
   expect_equal(ncol(std_list[[1]]), 26)
   expect_equal(nrow(std_list[[1]]), nrow(dat_zooniverse))

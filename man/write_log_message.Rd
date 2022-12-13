@@ -17,6 +17,6 @@ write_log_message(message, logger = NA, level = "info")
 Either a message or writes a log (with the logger parameters)
 }
 \description{
-Writes a log message. If a logger is provided, writes to that logger; 
+Writes a log message. If a logger is provided, writes to that logger;
 if it is NA, displays a message.
 }

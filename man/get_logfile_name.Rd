@@ -7,7 +7,7 @@
 get_logfile_name()
 }
 \value{
-A string with format "log__YYYY-MM-DD_HH:MM:SS.log" 
+A string with format "log__YYYY-MM-DD_HH:MM:SS.log"
 where YYYY-MM-DD_HH:MM:SS is the current date/time.
 }
 \description{

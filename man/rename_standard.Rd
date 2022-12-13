@@ -17,11 +17,11 @@ rename_standard(
 
 \item{standard_colnames}{A dataframe with 2 columns (at least) named like the classifier
 and 'new'.
-The column named like the classifier contains column names 
+The column named like the classifier contains column names
 that are expected in the initial file. These names will be matched in the column names of df using partial matching (case insensitive and
 removing blanks).
-The column 'new' contains the column names that are expected in the final file. 
-Columns in the classifier column will be renamed following the name of the 
+The column 'new' contains the column names that are expected in the final file.
+Columns in the classifier column will be renamed following the name of the
 corresponding value in 'new'. If no old column corresponds to 'new' (indicated with a NA)
 then the column will be created and filled with NAs.}
 }

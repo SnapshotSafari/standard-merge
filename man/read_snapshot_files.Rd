@@ -4,19 +4,22 @@
 \alias{read_snapshot_files}
 \title{Read Snapshot files}
 \usage{
-read_snapshot_files(input, except)
+read_snapshot_files(input, except, basepath)
 }
 \arguments{
 \item{input}{a character vector of valid paths: can be files or folders, or a mix of both}
 
 \item{except}{files to ignore (optional)}
+
+\item{basepath}{the part of the path that should be ignored when copying final
+files (i.e. absolute path inside one's comupter that should not be copied in final file.)}
 }
 \value{
 A named list of dataframe. Each element of the list is a dataframe containing
 the contents of a file read from the files list given in input.
 The names of the list are the file names from the root of input:
-If the input is a file, it is a filename. 
-If input is a folder, it is the relative path 
+If the input is a file, it is a filename.
+If input is a folder, it is the relative path
 from input to the file inside input.
 }
 \description{

@@ -108,6 +108,8 @@ write_log_message <- function(message, logger = NA,
 #'
 #' @param input a character vector of valid paths: can be files or folders, or a mix of both
 #' @param except files to ignore (optional)
+#' @param basepath the part of the path that should be ignored when copying final
+#' files (i.e. absolute path inside one's comupter that should not be copied in final file.)
 #'
 #' @return A named list of dataframe. Each element of the list is a dataframe containing
 #' the contents of a file read from the files list given in input.
@@ -118,14 +120,17 @@ write_log_message <- function(message, logger = NA,
 #' 
 #' @export
 #'
-read_snapshot_files <- function(input, except) {
+read_snapshot_files <- function(input, except,
+                                basepath) {
   
   # Get the files names
   if(missing(except)) {
-    files_df <- get_csv_files_and_folders(input = input)
+    files_df <- get_csv_files_and_folders(input = input,
+                                          basepath = basepath)
   } else {
     files_df <- get_csv_files_and_folders(input = input, 
-                                          except = except)
+                                          except = except,
+                                          basepath = basepath)
   }
   
   # Initialize result
@@ -210,8 +215,12 @@ write_standardized_file <- function(df, in_filename, to) {
   }
   
   # Get subdir name
-  subdir <- dirname(in_filename)
-  
+  if(missing(in_filename)) {
+    subdir <- "."
+  } else {
+    subdir <- dirname(in_filename)
+  }
+ 
   if (subdir != ".") { # There is a subdirectory structure
     subdir_target <- file.path(to, subdir)
     if(!dir.exists(subdir_target)){
@@ -258,8 +267,15 @@ list_csv_in_folder <- function(folder, except){
     stop(paste("The folder", folder, "does not exist."))
   }
   
+  # --- Clean folder
+  folder_clean <- gsub(pattern = "/$", 
+                       replacement = "",
+                       folder)
+  
   # --- List files
-  in_files_list <- list.files(folder, recursive = TRUE)
+  in_files_list <- list.files(folder_clean, 
+                              recursive = TRUE, 
+                              full.names = TRUE)
   
   # --- Exclude some files
   
@@ -336,14 +352,15 @@ get_relative_path <- function(f, wd) {
 #' If 'input' is a folder, will list all files within input; if 'input'
 #' is a file, will only list this file.
 #' 
-#' @param input a character vector of valid paths: can be files or folders, or a mix of both
-#' @param except files to ignore (optional)
-#'
+#' @inheritParams read_snapshot_files
+#' 
 #' @return A dataframe with columns folder and files, where folder is the 
 #' folder up to a given file and file is the file.
 #' 
 #' @noRd
-get_csv_files_and_folders <- function(input, except) {
+get_csv_files_and_folders <- function(input, 
+                                      except,
+                                      basepath) {
   # Initialize results
   folders <- c()
   files <- c()
@@ -354,25 +371,28 @@ get_csv_files_and_folders <- function(input, except) {
     
     if(!is_file) { # If input is a folder
       # Set folder to input
-      folder <- inp
+      folder_to_read <- inp
       
       if(missing(except)) {
-        in_files_list <- list_csv_in_folder(folder)
+        in_files_list <- list_csv_in_folder(folder_to_read)
       } else {
-        in_files_list <- list_csv_in_folder(folder, 
+        in_files_list <- list_csv_in_folder(folder_to_read, 
                                             except = except)
       }
       in_files_list <- sort(in_files_list)
-    } else { 
+    } else {
       # in_files_list is set to the file (without the path)
-      in_files_list <- basename(inp) 
-      
-      # Folder is the rest
-      folder <- dirname(inp)
+      in_files_list <- inp
     }
     
+    # Get interesting file path and absoulute path
+    in_files_list <- get_relative_path(in_files_list,
+                                       wd = basepath)
+    folder <- basepath
+    
     # Store all folders and files
-    folders <- c(folders, rep(folder, length(in_files_list)))
+    folders <- c(folders, 
+                 rep(folder, length(in_files_list)))
     files <- c(files, in_files_list)
   }
   
