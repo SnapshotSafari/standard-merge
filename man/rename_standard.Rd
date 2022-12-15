@@ -2,7 +2,7 @@
 % Please edit documentation in R/standardize.R
 \name{rename_standard}
 \alias{rename_standard}
-\title{Rename columns according to standard}
+\title{Rename columns to match standard names}
 \usage{
 rename_standard(
   df,
@@ -18,16 +18,17 @@ rename_standard(
 \item{standard_colnames}{A dataframe with 2 columns (at least) named like the classifier
 and 'new'.
 The column named like the classifier contains column names
-that are expected in the initial file. These names will be matched in the column names of df using partial matching (case insensitive and
-removing blanks).
-The column 'new' contains the column names that are expected in the final file.
-Columns in the classifier column will be renamed following the name of the
-corresponding value in 'new'. If no old column corresponds to 'new' (indicated with a NA)
+that are expected in the initial file. These names will be matched in the column names of df
+using partial matching (case insensitive and removing blanks).
+The column 'new' contains the column names for the final file.
+Columns in the classifier column will be renamed as the
+corresponding value in 'new'. If no pre-existing column corresponds to 'new' (indicated with a NA)
 then the column will be created and filled with NAs.}
 }
 \value{
 Returns a dataframe for which the columns have been renamed
 }
 \description{
-This function renames the existing columns in a dataframe to match the standard names.
+This function renames the columns in a dataframe to match the standard names,
+given in the dataframe \code{standard}.
 }

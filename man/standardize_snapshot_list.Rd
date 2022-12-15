@@ -25,3 +25,8 @@ standard_df$new and the rows are ordered by camera, date and time.
 \description{
 Standardizes a list of dataframes to the Snapshot standard.
 }
+\examples{
+df_list <- list(zooniverse, digikam, traptagger)
+names(df_list)[2] <- "MOK_record_table_0min_deltaT_2021-05-07.csv"
+standardize_snapshot_list(df_list, standard)
+}

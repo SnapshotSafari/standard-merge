@@ -28,6 +28,10 @@ in the destination.}
 
 \item{verbose}{Should messages be displayed when creating a folder/file?}
 }
+\value{
+Writes the files to the folder \verb{to/filename1, to/filename2...}.
+Also returns the paths \verb{to/filename1, to/filename2...} if \code{return_path == TRUE}.
+}
 \description{
 Writes a lsit of files to a given location. If \code{to} does not exist, it is
 created, and if \code{filename} is not provided, a default standardized name is chosen.

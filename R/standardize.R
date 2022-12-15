@@ -26,7 +26,10 @@
 #' @return The classifier: either zooniverse, digikam or traptagger.
 #' 
 #' @export
-#'
+#' @examples
+#' guess_classifier(colnames(zooniverse))
+#' guess_classifier(colnames(traptagger))
+#' guess_classifier(colnames(digikam))
 guess_classifier <- function(colnames_df) {
   
   if ("question__species" %in% colnames_df) {
@@ -62,6 +65,11 @@ guess_classifier <- function(colnames_df) {
 #' is filled. Columns are also in the same order as provided in
 #' standard_df$new and the rows are ordered by camera, date and time.
 #' @export
+#' 
+#' @examples 
+#' df_list <- list(zooniverse, digikam, traptagger)
+#' names(df_list)[2] <- "MOK_record_table_0min_deltaT_2021-05-07.csv"
+#' standardize_snapshot_list(df_list, standard)
 standardize_snapshot_list <- function(df_list, standard_df,
                                       classifier) {
   
@@ -164,7 +172,11 @@ standardize_snapshot_list <- function(df_list, standard_df,
 #' standard_df$new and the rows are ordered by camera, date and time.
 #' 
 #' @export
-#'
+#' 
+#' @examples
+#' standardize_snapshot_df(zooniverse, standard)
+#' standardize_snapshot_df(traptagger, standard)
+#' standardize_snapshot_df(digikam, standard, locationID_digikam = "MOK")
 standardize_snapshot_df <- function(df, standard_df,
                                     locationID_digikam, classifier) {
   
@@ -214,50 +226,6 @@ standardize_snapshot_df <- function(df, standard_df,
   return(std_dat)
 }
 
-
-#' Rename columns according to standard
-#'
-#' This function renames the existing columns in a dataframe to match the standard names.
-#'
-#' @param df The dataframe with the columns to rename
-#' @param classifier The classifier used to create the dataframe df. Can be 'zooniverse', 'traptagger', 'digikam'.
-#' @param standard_colnames A dataframe with 2 columns (at least) named like the classifier
-#' and 'new'.
-#' The column named like the classifier contains column names 
-#' that are expected in the initial file. These names will be matched in the column names of df using partial matching (case insensitive and
-#' removing blanks).
-#' The column 'new' contains the column names that are expected in the final file. 
-#' Columns in the classifier column will be renamed following the name of the 
-#' corresponding value in 'new'. If no old column corresponds to 'new' (indicated with a NA)
-#' then the column will be created and filled with NAs.
-#' 
-#' @return Returns a dataframe for which the columns have been renamed
-#' @export
-#'
-rename_standard <- function(df,
-                            classifier = c("zooniverse", "traptagger", "digikam"),
-                            standard_colnames){
-  
-  classifier <- match.arg(classifier)
-  
-  check_standard_colnames(standard_colnames, classifier)
-  
-  # Rename the columns we want into 'classifier'
-  newnames_df <- standard_colnames %>% rename("classifier" = all_of(classifier))
-  
-  # Get only the columns to rename
-  newnames_df <- newnames_df %>% filter(!is.na(classifier)) %>%
-    select(classifier, new)
-  
-  newnames <- as.character(newnames_df$classifier)
-  names(newnames) <- newnames_df$new
-  
-  # Copy df
-  df_res <- df
-  colnames(df_res) <- names(newnames[match(newnames, names(df_res))])
-  
-  return(df_res)
-}
 
 # Helpers -----------------------------------------------------------------
 
@@ -480,6 +448,49 @@ standardize_columns <- function(df,
   return(df_res)
 }
 
+#' Rename columns to match standard names
+#'
+#' This function renames the columns in a dataframe to match the standard names,
+#' given in the dataframe `standard`.
+#'
+#' @param df The dataframe with the columns to rename
+#' @param classifier The classifier used to create the dataframe df. Can be 'zooniverse', 'traptagger', 'digikam'.
+#' @param standard_colnames A dataframe with 2 columns (at least) named like the classifier
+#' and 'new'.
+#' The column named like the classifier contains column names 
+#' that are expected in the initial file. These names will be matched in the column names of df 
+#' using partial matching (case insensitive and removing blanks).
+#' The column 'new' contains the column names for the final file. 
+#' Columns in the classifier column will be renamed as the 
+#' corresponding value in 'new'. If no pre-existing column corresponds to 'new' (indicated with a NA)
+#' then the column will be created and filled with NAs.
+#' 
+#' @return Returns a dataframe for which the columns have been renamed
+#'
+rename_standard <- function(df,
+                            classifier = c("zooniverse", "traptagger", "digikam"),
+                            standard_colnames){
+  
+  classifier <- match.arg(classifier)
+  
+  check_standard_colnames(standard_colnames, classifier)
+  
+  # Rename the columns we want into 'classifier'
+  newnames_df <- standard_colnames %>% rename("classifier" = all_of(classifier))
+  
+  # Get only the columns to rename
+  newnames_df <- newnames_df %>% filter(!is.na(classifier)) %>%
+    select(classifier, new)
+  
+  newnames <- as.character(newnames_df$classifier)
+  names(newnames) <- newnames_df$new
+  
+  # Copy df
+  df_res <- df
+  colnames(df_res) <- names(newnames[match(newnames, names(df_res))])
+  
+  return(df_res)
+}
 
 ## Fill info ----------------------------------------
 #' Fill capture info for Digikam

@@ -23,14 +23,14 @@ A data frame with 100 rows and 24 variables:
 \item{\code{question__count_median}}{character Median count from the volunteers}
 \item{\code{question__count_min}}{character Minimum count from the volunteers}
 \item{\code{question__standing}}{double Proportion of users who declared a standing behavior}
-\item{\code{question__resting}}{double Proportion of users who declared a resting behavior}}
-\item{\code{question__moving}}{double Proportion of users who declared a moving behaviour}}
-\item{\code{question__eating}}{double Proportion of users who declared a eating behaviour}}
-\item{\code{question__interacting}}{double Proportion of users who declared an interacting behaviour}}
-\item{\code{question__young_present}}{double Proportion of users who declared young presents}}
-\item{\code{question__horns_visible}}{double Proportion of users who declared horns on the picture}}
-\item{\code{p_users_identified_this_species}}{double Proportion of users who identified the consensus species}}
-\item{\code{pielous_evenness_index}}{double Pielou evenness index}}
+\item{\code{question__resting}}{double Proportion of users who declared a resting behavior}
+\item{\code{question__moving}}{double Proportion of users who declared a moving behaviour}
+\item{\code{question__eating}}{double Proportion of users who declared a eating behaviour}
+\item{\code{question__interacting}}{double Proportion of users who declared an interacting behaviour}
+\item{\code{question__young_present}}{double Proportion of users who declared young presents}
+\item{\code{question__horns_visible}}{double Proportion of users who declared horns on the picture}
+\item{\code{p_users_identified_this_species}}{double Proportion of users who identified the consensus species}
+\item{\code{pielous_evenness_index}}{double Pielou evenness index}
 }
 }
 \usage{

@@ -29,3 +29,8 @@ standard_df$new and the rows are ordered by camera, date and time.
 \description{
 Standardizes a dataframe to the Snapshot standard.
 }
+\examples{
+standardize_snapshot_df(zooniverse, standard)
+standardize_snapshot_df(traptagger, standard)
+standardize_snapshot_df(digikam, standard, locationID_digikam = "MOK")
+}

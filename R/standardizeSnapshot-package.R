@@ -3,6 +3,8 @@
 #' 
 #' @name standardizeSnapshot 
 #' 
+#' @title Standardize and clean Snapshot data
+#' 
 #' @description standardizeSnapshot is a R package to standardize camera trap records files from 
 #' the Snapshot Safari project.
 #' Snapshot Safari data comes in different standards, following the method that was used 

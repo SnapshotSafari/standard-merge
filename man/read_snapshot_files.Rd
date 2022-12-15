@@ -26,3 +26,10 @@ from input to the file inside input.
 Reads files from a vector of folders (and optionnally ignores some file/folders)
 into a list of dataframes.
 }
+\examples{
+\dontrun{
+read_snapshot_files("/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data/DHP", 
+                    basepath = "/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data", 
+                    except = "DHP/DHP+OVE_same_file/*")
+}
+}

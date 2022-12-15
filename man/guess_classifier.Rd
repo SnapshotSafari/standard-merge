@@ -16,3 +16,8 @@ The classifier: either zooniverse, digikam or traptagger.
 Guesses the classifier used to annotate the data based on the column names
 given in colnames_df.
 }
+\examples{
+guess_classifier(colnames(zooniverse))
+guess_classifier(colnames(traptagger))
+guess_classifier(colnames(digikam))
+}

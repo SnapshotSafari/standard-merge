@@ -17,3 +17,7 @@ in the filename: locationID1-locationID2...
 \description{
 Return the filename from the file columns.
 }
+\examples{
+zooniverse_std <- standardize_snapshot_df(df = zooniverse, standard = standard)
+get_final_filename(zooniverse_std)
+}

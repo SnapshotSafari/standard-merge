@@ -29,7 +29,7 @@ write_standardized_df(
 }
 \value{
 Writes the file to the folder \code{to/filename}.
-Also returns the path \code{to/filename}.
+Also returns the path \code{to/filename} if \code{return_path == TRUE}.
 }
 \description{
 Writes a file to a given location. If \code{to} does not exist, it is

@@ -119,7 +119,12 @@ write_log_message <- function(message, logger = NA,
 #' from input to the file inside input.
 #' 
 #' @export
-#'
+#' @examples 
+#' \dontrun{
+#' read_snapshot_files("/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data/DHP", 
+#'                     basepath = "/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data", 
+#'                     except = "DHP/DHP+OVE_same_file/*")
+#' }
 read_snapshot_files <- function(input, except,
                                 basepath) {
   
@@ -176,7 +181,10 @@ read_snapshot_files <- function(input, except,
 #' in the filename: locationID1-locationID2...
 #' 
 #' @export
-#'
+#' 
+#' @examples
+#' zooniverse_std <- standardize_snapshot_df(df = zooniverse, standard = standard)
+#' get_final_filename(zooniverse_std)
 get_final_filename <- function(df) {
   
   reserve <- unique(df$locationID)
@@ -206,7 +214,7 @@ get_final_filename <- function(df) {
 #' @param verbose Should messages be displayed when creating a folder/file?
 #'
 #' @return Writes the file to the folder `to/filename`.
-#' Also returns the path `to/filename`.
+#' Also returns the path `to/filename` if `return_path == TRUE`.
 #' 
 #' @export
 #'
@@ -267,10 +275,11 @@ write_standardized_df <- function(df, to,
 #' @param return_path Should the path be returned?
 #' @param verbose Should messages be displayed when creating a folder/file?
 #'
-#' @return
+#' @return Writes the files to the folder `to/filename1, to/filename2...`.
+#' Also returns the paths `to/filename1, to/filename2...` if `return_path == TRUE`.
+#' 
 #' @export
 #'
-#' @examples
 write_standardized_list <- function(df_list, 
                                     filenames, to,
                                     write = TRUE,
