@@ -194,50 +194,168 @@ get_final_filename <- function(df) {
 
 #' Write the standardized file
 #'
+#' Writes a file to a given location. If `to` does not exist, it is 
+#' created, and if `filename` is not provided, a default standardized name is chosen.
+#' 
 #' @param df The standardized file
-#' @param in_filename The path to the original file. If it has subfolders,
-#' the subfolder structure is copied in to.
-#' @param to The target folder to copy data in. It must exist.
+#' @param filename The name to give to the file.
+#' @param to The target folder to copy data in. If it does not exist, will be created.
+#' @param write if TRUE (default), will write the `df` in the 
+#' `to` folder, and `df` will be named `filename`.
+#' @param return_path Should the path be returned?
+#' @param verbose Should messages be displayed when creating a folder/file?
 #'
-#' @return Writes the file to the folder to/xxx where xxx is
-#' the subdirectory in which the original file was in.
-#' Also returns the path to the file.
+#' @return Writes the file to the folder `to/filename`.
+#' Also returns the path `to/filename`.
 #' 
 #' @export
 #'
-write_standardized_file <- function(df, in_filename, to) {
+write_standardized_df <- function(df, to,
+                                  filename,
+                                  write = TRUE,
+                                  return_path = ifelse(write, FALSE, TRUE),
+                                  verbose = TRUE) {
   
   # Check if results folder exists
-  if(!dir.exists(to)){
-    message(paste("Creating folder", to))
+  if(!dir.exists(to) & write){
+    if (verbose) {
+      message(paste("Creating folder", to))
+    }
     dir.create(to, recursive = TRUE)
-    # stop(paste("Folder ", to, " does not exist."))
   }
   
-  # Get subdir name
-  if(missing(in_filename)) {
-    subdir <- "."
-  } else {
-    subdir <- dirname(in_filename)
+  # Get default filename if not provided
+  if(missing(filename)) {
+    filename <- get_final_filename(df)
   }
- 
-  if (subdir != ".") { # There is a subdirectory structure
-    subdir_target <- file.path(to, subdir)
-    if(!dir.exists(subdir_target)){
-      dir.create(subdir_target, recursive = TRUE)
+  
+  # Check filename (no /)
+  if(grepl(pattern = "/", filename, fixed = TRUE)) {
+    stop(paste("Filename", filename, "contains a slash: please provide a valid filename."))
+  }
+  
+  # Get full filepath
+  to_clean <- gsub(pattern = "/$", 
+                   replacement = "",
+                   to)
+  filepath <- file.path(to_clean, filename)
+  
+  if(write) {
+    if(verbose) {
+      message(paste("Writing file", filepath))
+    }
+    write.csv(df, filepath, 
+              row.names = FALSE)
+  }
+  if(return_path) {
+    return(filepath)
+  }
+}
+
+#' Write the standardized files
+#'
+#' Writes a lsit of files to a given location. If `to` does not exist, it is 
+#' created, and if `filename` is not provided, a default standardized name is chosen.
+#' 
+#' @param df_list The standardized files list to write. If the list is named,
+#' the subdirectory structure in the names will be used to replicate the subdirectiry structure
+#' in the destination.
+#' 
+#' @param filenames (Optional) vector of customized file names.
+#' @param to Destination folder to write to.
+#' @param write Should the result be written or only the path returned?
+#' @param return_path Should the path be returned?
+#' @param verbose Should messages be displayed when creating a folder/file?
+#'
+#' @return
+#' @export
+#'
+#' @examples
+write_standardized_list <- function(df_list, 
+                                    filenames, to,
+                                    write = TRUE,
+                                    return_path = ifelse(write, FALSE, TRUE),
+                                    verbose = TRUE) {
+  
+  # --- Check arguments
+  if(!inherits(df_list, "list")) {
+    stop(paste("df_list must be a list, you provided an object of class", 
+               paste(class(df_list), collapse = ", ")))
+  }
+  
+  if(!missing(filenames)) {
+    if(length(filenames) != length(df_list)) {
+      stop("If filenames are provided, they should be the same length as df_list.")
     }
   }
   
-  # Get filename
-  filename <- get_final_filename(df)
+  if(length(to) != 1) {
+    stop("Please provide a unique folder in to.")
+  }
   
-  # Get full filepath
-  filepath <- file.path(to, subdir, filename)
+  path_list <- c()
+  for(i in 1:length(df_list)) {
+    
+    df_i <-  df_list[[i]]
+    
+    # --- Check object
+    if(!inherits(df_i, "data.frame")) {
+      stop(paste0(deparse(quote(df_list)),"[[", i, "]] ", 
+                  "must be a dataframe."))
+    }
+    
+    # --- Final filename
+    if(!missing(filenames)) {
+      final_name <- filenames[i]
+    } else {
+      final_name <- get_final_filename(df_i)
+    }
+    
+    # --- Message
+    if(!is.null(names(df_list)[i])) {
+      initial_name <- names(df_list)[i]
+      subdir <- dirname(initial_name)
+    } else {
+      initial_name <- i
+    }
+    
+    if (subdir != ".") { # There is a subdirectory structure
+      subdir_target <- file.path(to, subdir)
+      if(!dir.exists(subdir_target) & write){
+        if (verbose) {
+          message(paste("Creating folder", subdir_target))
+        }
+        dir.create(subdir_target, recursive = TRUE)
+      }
+      final_to <- file.path(to, subdir)
+      final_to <- gsub(pattern = "/$", 
+                       replacement = "",
+                       final_to)
+    } else {
+      final_to <- to
+    }
+    
+    if(verbose & write) {
+      if(subdir != ".") {
+        final_name_message <- file.path(subdir, final_name)
+      } else {
+        final_name_message <- final_name
+      }
+      message(paste("Writing file", initial_name, "->", final_name_message, "---"))
+    }
+    path_i <- write_standardized_df(df_i, 
+                                    filename = final_name, 
+                                    to = final_to,
+                                    write = write,
+                                    verbose = FALSE,
+                                    return_path = TRUE) 
+    path_list <- c(path_list, path_i)
+  }
   
-  write.csv(df, filepath, 
-            row.names = FALSE)
+  if(return_path) {
+    return(path_list)
+  }
   
-  return(filepath)
 }
 
 

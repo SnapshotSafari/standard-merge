@@ -3,13 +3,13 @@ library(testthat)
 test_that("Read csv", {
           f <- "/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data/APN/"
 
-          csv_goal <- c("APN_S1_full_report_0-50__agreement_corrected_fin.csv",
-                        "APN_S2_full_report_0-50__agreement_corrected_fin.csv",
-                        "APN_S3_full_report_0-50__agreement_corrected_fin.csv")
+          csv_goal <- c(paste0(f, "APN_S1_full_report_0-50__agreement_corrected_fin.csv"),
+                        paste0(f, "APN_S2_full_report_0-50__agreement_corrected_fin.csv"),
+                        paste0(f, "APN_S3_full_report_0-50__agreement_corrected_fin.csv"))
           expect_equal(suppressWarnings(list_csv_in_folder(f)), csv_goal)
           
           w <- paste0("File(s) ", 
-                      "APN_S3_full_report_0-50__agreement_corrected_fin.xlsx",
+                      paste0(f, "APN_S3_full_report_0-50__agreement_corrected_fin.xlsx"),
                       " will be ignored (they are not csv).")
           expect_message(list_csv_in_folder(f), w, fixed = TRUE)
 })
@@ -76,4 +76,74 @@ test_that("Get files and folder (file input)", {
   colnames(expected2) <- c("folders", "files")
   
   expect_equal(res2, expected2)
+})
+
+test_that("Write standardized df", {
+  data(zooniverse)
+  zooniverse_std <- standardize_snapshot_df(zooniverse,
+                                            standard)
+  
+  to <- tempdir()
+  path <- write_standardized_df(df = zooniverse_std,
+                                to = to,
+                                write = FALSE,
+                                verbose = FALSE,
+                                return_path = TRUE)
+  expect_equal(path, file.path(to, "APN_S1_R1-2.csv"))
+  
+  expected_message <- paste0("Writing file ", to, "/APN_S1_R1-2.csv")
+  expect_message(write_standardized_df(df = zooniverse_std,
+                                       to = to,
+                                       write = TRUE,
+                                       verbose = TRUE,
+                                       return_path = FALSE),
+                 expected_message)
+  expect_true(file.exists(file.path(to, "APN_S1_R1-2.csv")))
+})
+
+test_that("Write standardized list", {
+  data(zooniverse)
+  data(digikam)
+  
+  dat_list <- list("APN/zooniverse.csv" = zooniverse,
+                   "roaming/MOK.csv" = digikam)
+  
+  list_std <- standardize_snapshot_list(dat_list,
+                                        standard)
+  
+  to <- tempdir()
+  path <- write_standardized_list(df_list = list_std, 
+                                  to = to,
+                                  write = FALSE,
+                                  verbose = FALSE,
+                                  return_path = TRUE)
+  expect_equal(path, c(file.path(to, "APN/APN_S1_R1-2.csv"),
+                       file.path(to, "roaming/MOK_SNA_R1.csv")))
+  
+  messages <- c(paste0("Creating folder ", to, "/APN"),
+                "Writing file APN/zooniverse.csv -> APN/APN_S1_R1-2.csv ---",
+                # paste0("Creating folder ", to, "/roaming"), 
+                # Not tested because creates during the first run 
+                # and can't find a way to test 2 messages...
+                "Writing file roaming/MOK.csv -> roaming/MOK_SNA_R1.csv ---")
+  expect_message(write_standardized_list(df_list = list_std,
+                                         to = to,
+                                         write = TRUE,
+                                         verbose = TRUE,
+                                         return_path = FALSE),
+                 messages[1], fixed = TRUE)
+  expect_message(write_standardized_list(df_list = list_std,
+                                         to = to,
+                                         write = TRUE,
+                                         verbose = TRUE,
+                                         return_path = FALSE),
+                 messages[2], fixed = TRUE)
+  expect_message(write_standardized_list(df_list = list_std,
+                                         to = to,
+                                         write = TRUE,
+                                         verbose = TRUE,
+                                         return_path = FALSE),
+                 messages[3], fixed = TRUE)
+  expect_true(file.exists(file.path(to, "APN/APN_S1_R1-2.csv")))
+  expect_true(file.exists(file.path(to, "roaming/MOK_SNA_R1.csv")))
 })
