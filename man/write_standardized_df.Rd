@@ -35,3 +35,19 @@ Also returns the path \code{to/filename} if \code{return_path == TRUE}.
 Writes a file to a given location. If \code{to} does not exist, it is
 created, and if \code{filename} is not provided, a default standardized name is chosen.
 }
+\examples{
+std_dat <- standardize_snapshot_df(zooniverse, standard)
+
+# Don't write data
+write_standardized_df(std_dat, 
+                      to = "/home/lnicvert/Documents/PhD/Snapshot/data/2_standardized_data", 
+                      write = FALSE)
+# Don't write data and use custom name
+write_standardized_df(std_dat, 
+                      to = "/home/lnicvert/Documents/PhD/Snapshot/data/2_standardized_data",
+                      filename = "myname.csv", 
+                      write = FALSE)
+# Write file to temporary location
+write_standardized_df(std_dat, 
+                      to = tempdir())
+}

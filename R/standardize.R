@@ -66,8 +66,17 @@ guess_classifier <- function(colnames_df) {
 #' standard_df$new and the rows are ordered by camera, date and time.
 #' @export
 #' 
+#' @note If the file name is `Marinmane NR _record_table_0min_deltaT_2021-06-10.csv`, will
+#' apply the location code `MAR`.
+#' 
 #' @examples 
 #' df_list <- list(zooniverse, digikam, traptagger)
+#' 
+#' # Digikam data must be named with at least the locationID code
+#' names(df_list)[2] <- "MOK" 
+#' standardize_snapshot_list(df_list, standard)
+#' 
+#' # The name for Digikam data can also a filename starting with the locationID code
 #' names(df_list)[2] <- "MOK_record_table_0min_deltaT_2021-05-07.csv"
 #' standardize_snapshot_list(df_list, standard)
 standardize_snapshot_list <- function(df_list, standard_df,
@@ -795,84 +804,6 @@ standardize_date <- function(dates){
 }
 
 
-#' Get eventID
-#'
-#' Get the eventID from the capture info. All vectors must be the
-#' same length or they will be recycled.
-#' 
-#' @param locationID character vector of location
-#' @param cameraID character vector of cam_site
-#' @param roll character vector of roll
-#' @param captureID character vector of captureID
-#'
-#' @return A character vector of the same length of the inputs (or the
-#' longest input) with fields formatted as 
-#' season#cam_site#roll#event_no
-#' 
-#' @noRd
-get_eventID <- function(locationID, cameraID, roll, captureID) {
-  
-  eventID <- paste(locationID,
-                   cameraID,
-                   roll, 
-                   captureID,
-                   sep = "#")
-  
-  return(eventID)
-  
-}
-
-#' Get camera ID
-#' 
-#' Returns the complete cameraID as locationID_camera.
-#'
-#' @param locationID the location code vector (usually 3 letters)
-#' @param camera the "old" camera code vector, which is expected not to contain the locationID already.
-#' In case it does, then it will not be added and give a message.
-#' @param classifier The classifier used. If it is traptagger, will not display message
-#' because it is expected that cameraID will already be locationID_camera.
-#' It is optional (if not specified, it will display the message by default)
-#'
-#' @return a vector of same lengths as locationID and camera with pasted
-#' locationID_camera. If camera is already in format locationID_camera, 
-#' then it does not changes and displays a message.
-#' 
-#' @noRd
-get_cameraID <- function(locationID, camera, classifier) {
-  
-  if(missing(classifier)) {
-    classifier <- "placeholder"
-  }
-  
-  # Get unique locationID
-  unique_locationID <- unique(locationID)
-  
-  # Check if camera is already in format locationID_camera.
-  already_loc <- which(grepl(camera, 
-                             pattern = paste0("^", paste0(unique_locationID, collapse = "|"), "_")))
-  
-  if (length(already_loc) != 0) { # if some cameras already begin with code_loc
-    cam_prob <- unique(camera[already_loc])
-    
-    if(classifier != "traptagger") {
-      msg <- paste0("Cameras ",
-                    paste(cam_prob, collapse = ", "),
-                    " already begin with code_loc: not adding the location.")
-      message(msg)
-    }
-    
-    cameraID <- camera
-    cameraID[-already_loc] <- paste(locationID[-already_loc], 
-                                    camera[-already_loc],
-                                    sep = "_")
-  } else {
-    cameraID <- paste(locationID, 
-                      camera,
-                      sep = "_")
-  }
-  return(cameraID)
-}
-
 #' Fill capture info
 #' 
 #' Fills different columns related to capture info.
@@ -917,17 +848,17 @@ fill_capture_info <- function(df,
   }
   
   # --- Modify cameraID to add locationID
-  res <- res %>% mutate(cameraID = get_cameraID(locationID = locationID,
-                                                camera = cameraID, 
-                                                classifier = !!classifier))
+  # res <- res %>% mutate(cameraID = get_cameraID(locationID = locationID,
+  #                                               camera = cameraID, 
+  #                                               classifier = !!classifier))
   
   # --- Add eventID
-  eventID <- get_eventID(locationID = res$locationID,
-                         cameraID = res$cameraID, 
-                         roll = res$roll, 
-                         captureID = res$capture)
-  
-  res$eventID <- eventID
+  # eventID <- get_eventID(locationID = res$locationID,
+  #                        cameraID = res$cameraID, 
+  #                        roll = res$roll, 
+  #                        captureID = res$capture)
+  # 
+  # res$eventID <- eventID
   
   return(res)
 }
@@ -1012,7 +943,7 @@ keep_only_expected_columns <- function(df, expected, verbose, approx) {
 #' is a dataframe with >= 2 columns named like the classifier object and 'new'.
 #' 
 #' @param standard_colnames The dataframe to check
-#' @param classifier The classifier.
+#' @param classifier The classifier
 #'
 #' @return Nothing or stops execution if standard_colnames is not in
 #' compliance with expectations.
@@ -1085,6 +1016,8 @@ get_NAs <- function(transformed_data, origin_data,
 #'
 #' @return The location code (string) as the leading majuscule letters of filename.
 #'
+#' @note If the file name is `Marinmane NR _record_table_0min_deltaT_2021-06-10.csv`, will
+#' return the location code `MAR`.
 #' 
 #'
 #' @noRd

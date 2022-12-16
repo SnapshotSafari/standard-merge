@@ -25,8 +25,18 @@ standard_df$new and the rows are ordered by camera, date and time.
 \description{
 Standardizes a list of dataframes to the Snapshot standard.
 }
+\note{
+If the file name is \verb{Marinmane NR _record_table_0min_deltaT_2021-06-10.csv}, will
+apply the location code \code{MAR}.
+}
 \examples{
 df_list <- list(zooniverse, digikam, traptagger)
+
+# Digikam data must be named with at least the locationID code
+names(df_list)[2] <- "MOK" 
+standardize_snapshot_list(df_list, standard)
+
+# The name for Digikam data can also a filename starting with the locationID code
 names(df_list)[2] <- "MOK_record_table_0min_deltaT_2021-05-07.csv"
 standardize_snapshot_list(df_list, standard)
 }

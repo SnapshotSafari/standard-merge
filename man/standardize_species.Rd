@@ -15,3 +15,8 @@ the vector of species names with names stabdardized
 \description{
 Eliminate species duplicate names (things like 'birdofprey' ans 'birdsofprey')
 }
+\examples{
+species <- c("zebraplains", "zebraburchells", "duiker", 
+             "duikercommon", "aardvark", "lionfemale")
+standardize_species(species)
+}

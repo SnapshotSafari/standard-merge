@@ -17,3 +17,4 @@ digikam <- read.csv("data-raw/digikam.csv")
 usethis::use_data(standard, 
                   zooniverse, traptagger, digikam,
                   overwrite = TRUE)
+# usethis::use_data(DATASET, overwrite = TRUE)

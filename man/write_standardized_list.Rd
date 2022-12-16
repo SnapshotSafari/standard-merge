@@ -36,3 +36,29 @@ Also returns the paths \verb{to/filename1, to/filename2...} if \code{return_path
 Writes a lsit of files to a given location. If \code{to} does not exist, it is
 created, and if \code{filename} is not provided, a default standardized name is chosen.
 }
+\examples{
+# Example with a subdirectory structure (inferred from the filenames)
+df_list <- list(zooniverse, digikam, traptagger)
+names(df_list) <- c("APN/APN.csv", "MOK/MOK.csv", "ATH/ATH.csv")
+std_list <- standardize_snapshot_list(df_list, standard)
+
+# Don't write data
+write_standardized_list(std_list, 
+                        to = "/home/lnicvert/Documents/PhD/Snapshot/data/2_standardized_data", 
+                        write = FALSE)
+# Don't write data and use custom name
+write_standardized_list(std_list, 
+                        to = "/home/lnicvert/Documents/PhD/Snapshot/data/2_standardized_data",
+                        filenames = c("myname1.csv", "myname2.csv", "myname3.csv"),
+                        write = FALSE)
+# Write files to temporary location
+write_standardized_list(std_list, to = tempdir())
+                        
+# Without a subdirectory structure (and without list names)
+df_list <- list(zooniverse, digikam, traptagger)
+names(df_list)[2] <- "MOK"
+std_list <- standardize_snapshot_list(df_list, standard)
+
+# Write files to temporary location
+write_standardized_list(std_list, to = tempdir())
+}

@@ -9,7 +9,8 @@ read_snapshot_files(input, except, basepath)
 \arguments{
 \item{input}{a character vector of valid paths: can be files or folders, or a mix of both}
 
-\item{except}{files to ignore (optional)}
+\item{except}{files to ignore (optional): the path might be an absolute path
+or the relative path from \code{basepath}.}
 
 \item{basepath}{the part of the path that should be ignored when copying final
 files (i.e. absolute path inside one's comupter that should not be copied in final file.)}
@@ -28,8 +29,8 @@ into a list of dataframes.
 }
 \examples{
 \dontrun{
-read_snapshot_files("/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data/DHP", 
-                    basepath = "/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data", 
+read_snapshot_files("path/to/datafolder/DHP", 
+                    basepath = "path/to/datafolder", 
                     except = "DHP/DHP+OVE_same_file/*")
 }
 }

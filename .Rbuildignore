@@ -1,5 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^scripts_tests$
-^standardizeSnapshot\.pdf$
 ^README\.md$
+^data-raw$
+^standardizeSnapshot_0\.0\.0\.1\.pdf$

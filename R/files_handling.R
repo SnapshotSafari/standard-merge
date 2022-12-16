@@ -17,8 +17,7 @@
 #' @return A string with format "log__YYYY-MM-DD_HH:MM:SS.log" 
 #' where YYYY-MM-DD_HH:MM:SS is the current date/time.
 #' 
-#' @export
-#'
+#' @noRd
 get_logfile_name <- function() {
   
   now <- Sys.time()
@@ -39,8 +38,7 @@ get_logfile_name <- function() {
 #' @return Returns a logger and creates a logfile at the given path. If the path given does not
 #' exist, also creates this path.
 #' 
-#' @export
-#'
+#' @noRd
 create_logger <- function(my_logfile) {
   
   logfolder <- dirname(my_logfile)
@@ -73,8 +71,7 @@ create_logger <- function(my_logfile) {
 #'
 #' @return Either a message or writes a log (with the logger parameters)
 #' 
-#' @export
-#'
+#' @noRd
 write_log_message <- function(message, logger = NA,
                               level = "info") {
   
@@ -100,6 +97,78 @@ write_log_message <- function(message, logger = NA,
 
 # Read Snapshot files -----------------------------------------------------
 
+#' Get csv files and folder
+#' 
+#' Get all csv files from the input character vector. 
+#' `input` can be a vector of mixed files and folders.
+#' If an element of `input` is a folder, the function will list
+#' all files within `input`; if he element is a file, 
+#'  the function will only list this file.
+#' 
+#' @inheritParams read_snapshot_files
+#' 
+#' @return A dataframe with columns `folders` and `files`, where `folders` are the 
+#' paths  up to a given file, and `files` are the files paths from `folders`.
+#' 
+#' @export
+#' 
+#' @examples 
+#' \dontrun{
+#' get_csv_files_and_folders(input = c("path/to/datafolder/KGA",
+#'                                     "path/to/datafolder/ATH_Roll1_Snapshot.csv"), 
+#'                                     except = "KGA/KGA-KHO_together/*", 
+#'                                     basepath = "path/to/datafolder")
+#' # Using absolute path for except is alsp valid                                 
+#' get_csv_files_and_folders(input = c("path/to/datafolder/KGA",
+#'                                     "path/to/datafolder/ATH_Roll1_Snapshot.csv"), 
+#'                           except = "path/to/datafolder/KGA/KGA-KHO_together/*", 
+#'                           basepath = "path/to/datafolder")
+#' }
+get_csv_files_and_folders <- function(input, 
+                                      except,
+                                      basepath) {
+  # Initialize results
+  folders <- c()
+  files <- c()
+  
+  for(inp in input) { # Iterate through inputs
+    # Guess if input is a file
+    is_file <- grepl("\\..+$", inp)
+    
+    if(!is_file) { # If input is a folder
+      # Set folder to input
+      folder_to_read <- inp
+      
+      if(missing(except)) {
+        in_files_list <- list_csv_in_folder(folder_to_read)
+      } else {
+        # Get relative path in case path is absolute
+        relexcept <- get_relative_path(except, basepath)
+        # Absolute path
+        except <- file.path(basepath, relexcept)
+        
+        in_files_list <- list_csv_in_folder(folder_to_read, 
+                                            except = except)
+      }
+      in_files_list <- sort(in_files_list)
+    } else {
+      # in_files_list is set to the file (without the path)
+      in_files_list <- inp
+    }
+    
+    # Get interesting file path and absoulute path
+    in_files_list <- get_relative_path(in_files_list,
+                                       wd = basepath)
+    folder <- basepath
+    
+    # Store all folders and files
+    folders <- c(folders, 
+                 rep(folder, length(in_files_list)))
+    files <- c(files, in_files_list)
+  }
+  
+  df <- data.frame(folders, files)
+}
 
 #' Read Snapshot files
 #' 
@@ -107,7 +176,8 @@ write_log_message <- function(message, logger = NA,
 #' into a list of dataframes.
 #'
 #' @param input a character vector of valid paths: can be files or folders, or a mix of both
-#' @param except files to ignore (optional)
+#' @param except files to ignore (optional): the path might be an absolute path
+#' or the relative path from `basepath`.
 #' @param basepath the part of the path that should be ignored when copying final
 #' files (i.e. absolute path inside one's comupter that should not be copied in final file.)
 #'
@@ -121,8 +191,8 @@ write_log_message <- function(message, logger = NA,
 #' @export
 #' @examples 
 #' \dontrun{
-#' read_snapshot_files("/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data/DHP", 
-#'                     basepath = "/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data", 
+#' read_snapshot_files("path/to/datafolder/DHP", 
+#'                     basepath = "path/to/datafolder", 
 #'                     except = "DHP/DHP+OVE_same_file/*")
 #' }
 read_snapshot_files <- function(input, except,
@@ -218,6 +288,21 @@ get_final_filename <- function(df) {
 #' 
 #' @export
 #'
+#' @examples
+#' std_dat <- standardize_snapshot_df(zooniverse, standard)
+#' 
+#' # Don't write data
+#' write_standardized_df(std_dat, 
+#'                       to = "/home/lnicvert/Documents/PhD/Snapshot/data/2_standardized_data", 
+#'                       write = FALSE)
+#' # Don't write data and use custom name
+#' write_standardized_df(std_dat, 
+#'                       to = "/home/lnicvert/Documents/PhD/Snapshot/data/2_standardized_data",
+#'                       filename = "myname.csv", 
+#'                       write = FALSE)
+#' # Write file to temporary location
+#' write_standardized_df(std_dat, 
+#'                       to = tempdir())
 write_standardized_df <- function(df, to,
                                   filename,
                                   write = TRUE,
@@ -280,6 +365,31 @@ write_standardized_df <- function(df, to,
 #' 
 #' @export
 #'
+#' @examples
+#' # Example with a subdirectory structure (inferred from the filenames)
+#' df_list <- list(zooniverse, digikam, traptagger)
+#' names(df_list) <- c("APN/APN.csv", "MOK/MOK.csv", "ATH/ATH.csv")
+#' std_list <- standardize_snapshot_list(df_list, standard)
+#' 
+#' # Don't write data
+#' write_standardized_list(std_list, 
+#'                         to = "/home/lnicvert/Documents/PhD/Snapshot/data/2_standardized_data", 
+#'                         write = FALSE)
+#' # Don't write data and use custom name
+#' write_standardized_list(std_list, 
+#'                         to = "/home/lnicvert/Documents/PhD/Snapshot/data/2_standardized_data",
+#'                         filenames = c("myname1.csv", "myname2.csv", "myname3.csv"),
+#'                         write = FALSE)
+#' # Write files to temporary location
+#' write_standardized_list(std_list, to = tempdir())
+#'                         
+#' # Without a subdirectory structure (and without list names)
+#' df_list <- list(zooniverse, digikam, traptagger)
+#' names(df_list)[2] <- "MOK"
+#' std_list <- standardize_snapshot_list(df_list, standard)
+#' 
+#' # Write files to temporary location
+#' write_standardized_list(std_list, to = tempdir())
 write_standardized_list <- function(df_list, 
                                     filenames, to,
                                     write = TRUE,
@@ -321,11 +431,12 @@ write_standardized_list <- function(df_list,
     }
     
     # --- Message
-    if(!is.null(names(df_list)[i])) {
+    if(!is.null(names(df_list)[i]) & !is.na(names(df_list)[i])) {
       initial_name <- names(df_list)[i]
       subdir <- dirname(initial_name)
     } else {
       initial_name <- i
+      subdir <- "."
     }
     
     if (subdir != ".") { # There is a subdirectory structure
@@ -470,60 +581,6 @@ get_relative_path <- function(f, wd) {
                    rel_path)
   
   return(rel_path)
-}
-
-
-#' Get files and folder
-#' 
-#' Get all csv files from the input character vector. 
-#' If 'input' is a folder, will list all files within input; if 'input'
-#' is a file, will only list this file.
-#' 
-#' @inheritParams read_snapshot_files
-#' 
-#' @return A dataframe with columns folder and files, where folder is the 
-#' folder up to a given file and file is the file.
-#' 
-#' @noRd
-get_csv_files_and_folders <- function(input, 
-                                      except,
-                                      basepath) {
-  # Initialize results
-  folders <- c()
-  files <- c()
-  
-  for(inp in input) { # Iterate through inputs
-    # Guess if input is a file
-    is_file <- grepl("\\..+$", inp)
-    
-    if(!is_file) { # If input is a folder
-      # Set folder to input
-      folder_to_read <- inp
-      
-      if(missing(except)) {
-        in_files_list <- list_csv_in_folder(folder_to_read)
-      } else {
-        in_files_list <- list_csv_in_folder(folder_to_read, 
-                                            except = except)
-      }
-      in_files_list <- sort(in_files_list)
-    } else {
-      # in_files_list is set to the file (without the path)
-      in_files_list <- inp
-    }
-    
-    # Get interesting file path and absoulute path
-    in_files_list <- get_relative_path(in_files_list,
-                                       wd = basepath)
-    folder <- basepath
-    
-    # Store all folders and files
-    folders <- c(folders, 
-                 rep(folder, length(in_files_list)))
-    files <- c(files, in_files_list)
-  }
-  
-  df <- data.frame(folders, files)
 }
 
 #' Read a file

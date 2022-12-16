@@ -7,6 +7,119 @@
 #
 # Script Description: functions to clean data from Snapshot files
 
+
+# Cameras -----------------------------------------------------------------
+
+#' Get camera names
+#'
+#' Subsets the locations IDs from the camera names vector.
+#' 
+#' @param cameras a vector of camera names
+#' @param locations a vector of locations (must me the same length as `cameras`)
+#'
+#' @return A vector of camera names without the location prefix (if it was present)
+#' 
+#' @export
+#' 
+#' @examples get_camnames(c("APN_A01", "MAD_B01"), c("APN", "MAD"))
+get_camnames <- function(cameras, locations) {
+  
+  sapply(1:length(cameras), 
+         function(i) {
+           gsub(pattern = paste0("^", locations[i], "_"), 
+                replacement = "",
+                cameras[i])
+         })
+}
+
+#' Clean locations and cameras
+#'
+#' Cleans locations and cameras for a dataframe
+#' 
+#' @param df a dataframe that must have columns `cameraID`, `locationID` and `classifier`.
+#'
+#' @return The dataframe with cleaned columns `cameraID`, `locationID` and `eventID`.
+#' 
+#' @details 
+#' For column `locationID`:
+#' 
+#' + The location code `DHP` is replaced with `OVE` if the corresponding camera code starts with 'O'.
+#' + The location code `KGA` is replaced with `KHO` if the corresponding camera code starts with 'KHO'.
+#' 
+#' For column `cameraID`:
+#' 
+#' + For TrapTagger data: will remove the leading location code part for all data 
+#' (eg if `location` is `ATH`, will change `cameras` `ATH_A01` -> `A01`).
+#' Also, if the location code is `KHO`, `SAM` or `TSW`: will remove the dash in 
+#' the camera name (e.g `KHO_E_A01` -> `EA01`)
+#' 
+#' + For Zooniverse data: if the location code is `KHO`, will replace 
+#' `KHOG` with `E` and  `KHOL` with `M` in `cameras`.
+#' If the location code is `DHP`, will remove leading `D` in `cameraID`.
+#' If the location code is `OVE`, will remove leading `O` in `cameraID`.
+#' 
+#' + For column `eventID`: the event ID formatted as season#cam_site#roll#event_no.
+#' 
+#' @export
+clean_camera_location_df <- function(df) {
+  
+  clean_df <- df %>%
+    mutate(locationID = clean_locations(cameraID, locationID))
+  clean_df <- clean_df %>%
+    mutate(cameraID = clean_cameras(cameraID, locationID, classifier))
+  
+  clean_df <- clean_df %>%
+    mutate(eventID = get_eventID(locationID, cameraID, roll, captureID))
+  
+  return(clean_df)
+}
+
+#' Clean locations and cameras
+#'
+#' Cleans locations and cameras for a list
+#' 
+#' @param df_list a list of dataframes 
+#' that must have columns `cameraID`, `locationID` and `classifier`.
+#'
+#' @return The list of dataframes 
+#' with cleaned columns `cameraID`, `locationID` and `eventID`.
+#' 
+#' @details 
+#' For column `locationID`:
+#' 
+#' + The location code `DHP` is replaced with `OVE` if the corresponding camera code starts with 'O'.
+#' + The location code `KGA` is replaced with `KHO` if the corresponding camera code starts with 'KHO'.
+#' 
+#' For column `cameraID`:
+#' 
+#' + For TrapTagger data: will remove the leading location code part for all data 
+#' (eg if `location` is `ATH`, will change `cameras` `ATH_A01` -> `A01`).
+#' Also, if the location code is `KHO`, `SAM` or `TSW`: will remove the dash in 
+#' the camera name (e.g `KHO_E_A01` -> `EA01`)
+#' 
+#' + For Zooniverse data: if the location code is `KHO`, will replace 
+#' `KHOG` with `E` and  `KHOL` with `M` in `cameras`.
+#' If the location code is `DHP`, will remove leading `D` in `cameraID`.
+#' If the location code is `OVE`, will remove leading `O` in `cameraID`.
+#' 
+#' + For column `eventID`: the event ID formatted as season#cam_site#roll#event_no.
+#' 
+#' @export
+#'
+clean_camera_location_list <- function(df_list) {
+  
+  # --- Check arguments
+  if(!inherits(df_list, "list")) {
+    stop(paste("df_list must be a list, you provided an object of class", 
+               paste(class(df_list), collapse = ", ")))
+  }
+  
+  res <- lapply(df_list, clean_camera_location_df)
+  return(res)
+}
+
+# Species -----------------------------------------------------------------
+
 #' Standardize species
 #'
 #' Eliminate species duplicate names (things like 'birdofprey' ans 'birdsofprey')
@@ -16,7 +129,11 @@
 #' @return the vector of species names with names stabdardized
 #' 
 #' @export
-#'
+#' 
+#' @examples
+#' species <- c("zebraplains", "zebraburchells", "duiker", 
+#'              "duikercommon", "aardvark", "lionfemale")
+#' standardize_species(species)
 standardize_species <- function(species){
   
   res <- species
@@ -145,4 +262,252 @@ standardize_species <- function(species){
   # "zebramountain" = "zebramountaincape"?
   
   return(res)
+}
+
+
+
+# Helpers -----------------------------------------------------------------
+
+## Clean camera/location -------------------
+
+
+#' Clean cameras
+#' 
+#' Standardize cameras names
+#'
+#' 
+#' @param cameras Cameras vector
+#' @param locations locations vector
+#' @param classifiers Classifier vector
+#'
+#' @return a character vector of locations with the same length as input.
+#' 
+#' @details 
+#' For TrapTagger data: 
+#' + will remove the leading location code part for all data (eg if `location` is `ATH`, will change `cameras` `ATH_A01` -> `A01`)
+#' + if the location code is `KHO`: will remove the dash in the camera name (e.g `KHO_E_A01` -> `EA01`)
+#' + if the location code is `SAM`: will remove the dash in the camera name (e.g `SAM_B_A01` -> `BA01`)
+#' + if the location code is `SAM`: will remove the dash in the camera name (e.g `TSW_L_A01` -> `LA01`)
+#' 
+#' For Zooniverse data:
+#' 
+#' + if the location code is `KHO`, will replace `KHOG` with `E` and  `KHOL` with `M` in `cameras`.
+#' + if the location code is `DHP`, will remove leading `D` in `cameras`.
+#' + if the location code is `OVE`, will remove leading `O` in `cameras`.
+#' 
+#' The code `KGA` is replaced with `KHO` if the corresponding camera code starts with 'KHO'.
+#'
+#' @examples
+#' cameras <- c("KHO_E_A01", "OCO2")
+#' locations <- c("KHO", "OVE")
+#' classifiers <- c("traptagger", "zooniverse")
+#' clean_cameras(cameras, locations, classifiers)
+#' 
+#' @noRd
+clean_cameras <- function(cameras, locations, 
+                          classifiers) {
+  
+  cameras_final <- sapply(1:length(cameras), 
+                          function(i) {
+                            clean_camera(cameras[i], 
+                                         location = locations[i],
+                                         classifier = classifiers[i])
+                          })
+  
+  return(cameras_final)
+}
+
+#' Clean location
+#' 
+#' Corrects potentially incorrect locations based on the content of cameras.
+#' Indeed, for Zooniverse data, cameras in OVE have the locationID DHP and 
+#' cameras in KHO have the locationID KGA.
+#'
+#' @param cameras characgter vector of cameras
+#' @param locations character vector of locations (same length)
+#'
+#' @return a character vector of locations with the same length as input.
+#' 
+#' @details
+#' The code `DHP` is replaced with `OVE` if the corresponding camera code starts with 'O'.
+#' The code `KGA` is replaced with `KHO` if the corresponding camera code starts with 'KHO'.
+#' 
+#' @examples
+#' clean_locations(c("OA01", "KHOGA01"), c("DHP", "KGA"))
+#' 
+#' @noRd
+clean_locations <- function(cameras, locations) {
+  
+  locations_final <- sapply(1:length(cameras), 
+                            function(i) {
+                              clean_location(cameras[i], locations[i])
+                            })
+  return(locations_final)
+}
+
+#' Clean one camera
+#' 
+#' Standardize a camera name
+#'
+#' @param classifier Classifier vector
+#' @param camera A camera
+#' @param location A location
+#'
+#' @return a cleaned camera name
+#' 
+#' @details 
+#' See clean_cameras
+#' 
+#' @examples
+#' clean_camera("KHO_E_A01", "KHO", "traptagger")
+#' 
+#' @noRd
+clean_camera <- function(camera, location, 
+                         classifier = c("zooniverse", "traptagger", "digikam")) {
+  
+  classifier <- match.arg(classifier)
+  
+  if(length(camera) != 1) {
+    stop("Provide a camera vector of length 1")
+  }
+  if(length(location) != 1) {
+    stop("Provide a location vector of length 1")
+  }
+  
+  camname <- get_camnames(camera, location)
+  
+  if(classifier == "traptagger") {
+    if (grepl(pattern = "^KHO$|^SAM$|^TSW$", location)) {
+      # Subset the dash in camera name
+      camname <- gsub("_", "", camname)
+    }
+  } else if (classifier == "zooniverse") {
+    if (grepl(pattern = "^KHO$", location)) {
+      camname <-  gsub("^KHOG", "E", camname)
+      camname <-  gsub("^KHOL", "M", camname)
+    } else if (grepl(pattern = "^DHP$", location)){
+      camname <- gsub("^^D", "", camname)
+    } else if (grepl(pattern = "^OVE$", location)){
+      camname <- gsub("^O", "", camname)
+    }
+  }
+  return(camname)
+}
+
+#' Clean a unique location
+#' 
+#' Corrects potentially incorrect locations based on the content of cameras.
+#' Indeed, for Zooniverse data, cameras in OVE have the locationID DHP and 
+#' cameras in KHO have the locationID KGA.
+#'
+#' @param camera camera
+#' @param location location
+#'
+#' @return a character vector of locations with the same length as input.
+#' 
+#' @details
+#' See clean_locations
+#' 
+#' @noRd
+clean_location <- function(camera, location) {
+  
+  # Remove leading locationID (if it is present)
+  camname <- get_camnames(camera, location)
+  
+  new_location <- location
+  
+  # In Zooniverse, some sites codes are merged whereas they are different in TrapTagger:
+  # KHO is assimilated to KGA
+  # OVE is assimilated to DHP
+  if(location == "KGA") {
+    if (grepl(pattern = "^KHO", camname)) {
+      new_location <- "KHO"
+    }
+  } else if (location == "DHP") {
+    # If OVE pattern detected
+    if (grepl(pattern = "^O", camname)) {
+      new_location <- "OVE"
+    }
+  }
+  return(new_location)
+}
+
+## Adapt columns -------------------
+
+#' Get camera ID
+#' 
+#' Returns the complete cameraID as locationID_camera.
+#'
+#' @param locationID the location code vector (usually 3 letters)
+#' @param camera the "old" camera code vector, which is expected not to contain the locationID already.
+#' In case it does, then it will not be added and give a message.
+#' @param classifier The classifier used. If it is traptagger, will not display message
+#' because it is expected that cameraID will already be locationID_camera.
+#' It is optional (if not specified, it will display the message by default)
+#'
+#' @return a vector of same lengths as locationID and camera with pasted
+#' locationID_camera. If camera is already in format locationID_camera, 
+#' then it does not changes and displays a message.
+#' 
+#' @noRd
+get_cameraID <- function(locationID, camera, classifier) {
+  
+  if(missing(classifier)) {
+    classifier <- "placeholder"
+  }
+  
+  # Get unique locationID
+  unique_locationID <- unique(locationID)
+  
+  # Check if camera is already in format locationID_camera.
+  already_loc <- which(grepl(camera, 
+                             pattern = paste0("^", paste0(unique_locationID, collapse = "|"), "_")))
+  
+  if (length(already_loc) != 0) { # if some cameras already begin with code_loc
+    cam_prob <- unique(camera[already_loc])
+    
+    if(classifier != "traptagger") {
+      msg <- paste0("Cameras ",
+                    paste(cam_prob, collapse = ", "),
+                    " already begin with code_loc: not adding the location.")
+      message(msg)
+    }
+    
+    cameraID <- camera
+    cameraID[-already_loc] <- paste(locationID[-already_loc], 
+                                    camera[-already_loc],
+                                    sep = "_")
+  } else {
+    cameraID <- paste(locationID, 
+                      camera,
+                      sep = "_")
+  }
+  return(cameraID)
+}
+
+#' Get eventID
+#'
+#' Get the eventID from the capture info. All vectors must be the
+#' same length or they will be recycled.
+#' 
+#' @param locationID character vector of location
+#' @param cameraID character vector of cam_site
+#' @param roll character vector of roll
+#' @param captureID character vector of captureID
+#'
+#' @return A character vector of the same length of the inputs (or the
+#' longest input) with fields formatted as 
+#' season#cam_site#roll#event_no
+#' 
+#' @noRd
+get_eventID <- function(locationID, cameraID, roll, captureID) {
+  
+  eventID <- paste(locationID,
+                   cameraID,
+                   roll, 
+                   captureID,
+                   sep = "#")
+  
+  return(eventID)
+  
 }

@@ -1,0 +1,24 @@
+library(testthat)
+
+test_that("Test clean cameras", {
+  # A vector with all combinations possible
+  cam <- c("KHO_E_B03", "KHO_M_A02", "M_A01", "C02", "OA03")
+  cloc <- c("KHO", "KHO", "APN", "MOK", "OVE")
+  classifier <- c("traptagger", "traptagger", "traptagger", "digikam", "zooniverse")
+  
+  res <- clean_cameras(cam, cloc, classifier)
+  expected <- c("EB03", "MA02", "M_A01", "C02", "A03")
+  expect_equal(res, expected)
+})
+
+test_that("Get camera names", {
+  res <- get_camnames(c("APN_A01", "MAD_B01", "EVF_A01"), 
+                      locations = c("APN", "MAD", "MAD"))
+  expect_equal(res, c("A01", "B01", "EVF_A01"))
+})
+
+test_that("Clean location", {
+  res <- clean_locations(c("OA01", "KHOGA01", "KHOGA01", "DA01"), 
+                         c("DHP", "KGA", "APN", "DHP"))
+  expect_equal(res, c("OVE", "KHO", "APN", "DHP"))
+})
