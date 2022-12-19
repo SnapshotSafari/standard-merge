@@ -10,10 +10,11 @@ clean_species(species)
 \item{species}{vector of species names}
 }
 \value{
-the vector of species names with names stabdardized
+the vector of species names with standardized names, according to the
+species names that have already been encountered in the past datasets.
 }
 \description{
-Eliminate species duplicate names (things like 'birdofprey' ans 'birdsofprey')
+Eliminate species duplicate names (things like \code{birdofprey} and \code{birdsofprey})
 }
 \examples{
 species <- c("zebraplains", "zebraburchells", "duiker", 

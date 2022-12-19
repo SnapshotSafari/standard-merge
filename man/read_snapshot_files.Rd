@@ -7,7 +7,7 @@
 read_snapshot_files(input, except, basepath)
 }
 \arguments{
-\item{input}{a character vector of valid paths: can be files or folders, or a mix of both}
+\item{input}{a character vector of valid paths: can be files and/or folders}
 
 \item{except}{files to ignore (optional): the path might be an absolute path
 or the relative path from \code{basepath}.}
@@ -16,16 +16,21 @@ or the relative path from \code{basepath}.}
 files (i.e. absolute path inside one's comupter that should not be copied in final file.)}
 }
 \value{
-A named list of dataframe. Each element of the list is a dataframe containing
+A named list of dataframes. Each element of the list is a dataframe with
 the contents of a file read from the files list given in input.
 The names of the list are the file names from the root of input:
-If the input is a file, it is a filename.
-If input is a folder, it is the relative path
-from input to the file inside input.
+If the element from \code{input} is a file, it is a filename.
+If the element from \code{input} is a folder, it is the relative path
+from \code{basepath} to the file.
 }
 \description{
-Reads files from a vector of folders (and optionnally ignores some file/folders)
+Reads files from a vector of files and/or folders
 into a list of dataframes.
+}
+\details{
+The files are assumed to be comma or semicolon-separated CSV.
+If the filename is \verb{MAD_S2_full_report_0-50__agreement_corrected_fin.csv},
+the function only reads the first 26 columns as this file has empty columns.
 }
 \examples{
 \dontrun{

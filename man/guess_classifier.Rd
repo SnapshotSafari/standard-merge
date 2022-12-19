@@ -10,11 +10,11 @@ guess_classifier(colnames_df)
 \item{colnames_df}{A character vector of column names.}
 }
 \value{
-The classifier: either zooniverse, digikam or traptagger.
+The classifier: either \code{zooniverse}, \code{digikam} or \code{traptagger}.
 }
 \description{
 Guesses the classifier used to annotate the data based on the column names
-given in colnames_df.
+given in \code{colnames_df}.
 }
 \examples{
 guess_classifier(colnames(zooniverse))

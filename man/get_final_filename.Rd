@@ -7,12 +7,12 @@
 get_final_filename(df)
 }
 \arguments{
-\item{df}{The dataframe to be copied. Must have columns locationID, season, roll.}
+\item{df}{The dataframe to be copied. Must have columns \code{locationID}, \code{season}, \code{roll}.}
 }
 \value{
-The filename for this file in the format locationID_Sseason_Rroll.csv
-It there are several locationID, seasons or rolls, they are separated by a dash
-in the filename: locationID1-locationID2...
+The filename for this file in the format \code{locationID_Sseason_Rroll.csv}
+It there are several values in \code{locationID}, \code{season} or \code{roll}, they are separated by a dash
+in the filename: \code{locationID1-locationID2}...
 }
 \description{
 Return the filename from the file columns.

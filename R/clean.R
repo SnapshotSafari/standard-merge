@@ -14,9 +14,9 @@
 #'
 #' Subsets the locations IDs from the camera names vector.
 #' 
-#' @param cameras a vector of camera names
-#' @param locations a vector of locations (must me the same length as `cameras`)
-#' @param silence_warning Print a warning if some locations are NA?
+#' @param cameras a character vector of camera names
+#' @param locations a character vector of locations (must be the same length as `cameras`)
+#' @param silence_warning print a warning if some locations are `NA`?
 #'
 #' @return A vector of camera names without the location prefix (if it was present)
 #' 
@@ -69,7 +69,7 @@ get_camnames <- function(cameras, locations, silence_warning = FALSE) {
 #' 
 #' + For column `eventID`: the event ID formatted as season#cam_site#roll#event_no.
 #' 
-#' @export
+#' @noRd
 clean_camera_location <- function(df, camera = TRUE, 
                                   location = TRUE) {
   
@@ -95,11 +95,12 @@ clean_camera_location <- function(df, camera = TRUE,
 
 #' Standardize species
 #'
-#' Eliminate species duplicate names (things like 'birdofprey' ans 'birdsofprey')
+#' Eliminate species duplicate names (things like `birdofprey` and `birdsofprey`)
 #' 
 #' @param species vector of species names
 #'
-#' @return the vector of species names with names stabdardized
+#' @return the vector of species names with standardized names, according to the
+#' species names that have already been encountered in the past datasets.
 #' 
 #' @export
 #' 

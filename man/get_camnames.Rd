@@ -7,11 +7,11 @@
 get_camnames(cameras, locations, silence_warning = FALSE)
 }
 \arguments{
-\item{cameras}{a vector of camera names}
+\item{cameras}{a character vector of camera names}
 
-\item{locations}{a vector of locations (must me the same length as \code{cameras})}
+\item{locations}{a character vector of locations (must be the same length as \code{cameras})}
 
-\item{silence_warning}{Print a warning if some locations are NA?}
+\item{silence_warning}{print a warning if some locations are \code{NA}?}
 }
 \value{
 A vector of camera names without the location prefix (if it was present)

@@ -10,20 +10,45 @@ standardize_snapshot_list(df_list, standard_df, classifier)
 \item{df_list}{a list of dataframes.}
 
 \item{standard_df}{The standard dataframe to match column names to the new standard.
-A dataframe with >= 2 columns, one of which must be named 'zooniverse', 'digikam' or 'traptagger' and another one
-must be named 'new'.}
+A dataframe with >= 2 columns, one of which must be named \code{zooniverse}, \code{digikam} or \code{traptagger}
+and another one must be named \code{new}.}
 
 \item{classifier}{Optional character or vector of characters for the classifier.}
 }
 \value{
-The list of standardized dataframes: each dataframe has the same columns as specified in
-standard_df$new, dates and times are standardized to "YYYY-MM-DD" and "HH:MM:SS",
-capture info (locationID, cameraID, roll, capture and season if classifier is zooniverse)
-is filled. Columns are also in the same order as provided in
-standard_df$new and the rows are ordered by camera, date and time.
+The list of standardized dataframes: they have the same columns as specified in
+\code{standard_df$new}, dates and times are standardized and some columns regarding
+information on the capture are filled. Species names (\code{snapshotName}) and \code{cameraID} and \code{locationID}
+are standardized (see details).
+Columns are in the same order as provided in \code{standard_df$new}
+and the rows are ordered by ascending camera, date and time.
 }
 \description{
 Standardizes a list of dataframes to the Snapshot standard.
+}
+\details{
+Dates and times are standardized to \code{YYYY-MM-DD} and \code{HH:MM:SS}.
+The columns \code{locationID}, \code{cameraID}, \code{roll}, \code{capture}
+and \code{season} (if classifier is \code{zooniverse}) are filled with meaningful information.
+Species names (\code{snapshotName}) are standardized to match the existing, known species names.
+For column \code{locationID}:
+\itemize{
+\item The location code \code{DHP} is replaced with \code{OVE} if the corresponding camera code starts with 'O'.
+\item The location code \code{KGA} is replaced with \code{KHO} if the corresponding camera code starts with 'KHO'.
+}
+
+For column \code{cameraID}:
+\itemize{
+\item For TrapTagger data: will remove the leading location code part for all data
+(eg if \code{location} is \code{ATH}, will change \code{cameras} \code{ATH_A01} -> \code{A01}).
+Also, if the location code is \code{KHO}, \code{SAM} or \code{TSW}: will remove the dash in
+the camera name (e.g \code{KHO_E_A01} -> \code{EA01})
+\item For Zooniverse data: if the location code is \code{KHO}, will replace
+\code{KHOG} with \code{E} and  \code{KHOL} with \code{M} in \code{cameras}.
+If the location code is \code{DHP}, will remove leading \code{D} in \code{cameraID}.
+If the location code is \code{OVE}, will remove leading \code{O} in \code{cameraID}.
+\item For column \code{eventID}: the event ID formatted as season#cam_site#roll#event_no.
+}
 }
 \note{
 If the file name is \verb{Marinmane NR _record_table_0min_deltaT_2021-06-10.csv}, will

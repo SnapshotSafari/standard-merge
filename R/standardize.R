@@ -19,11 +19,11 @@
 #' Guess classifier
 #' 
 #' Guesses the classifier used to annotate the data based on the column names
-#' given in colnames_df.
+#' given in `colnames_df`.
 #'
 #' @param colnames_df A character vector of column names.
 #'
-#' @return The classifier: either zooniverse, digikam or traptagger.
+#' @return The classifier: either `zooniverse`, `digikam` or `traptagger`.
 #' 
 #' @export
 #' @examples
@@ -55,15 +55,41 @@ guess_classifier <- function(colnames_df) {
 #'
 #' @param df_list a list of dataframes.
 #' @param standard_df The standard dataframe to match column names to the new standard.
-#' A dataframe with >= 2 columns, one of which must be named 'zooniverse', 'digikam' or 'traptagger' and another one
-#' must be named 'new'.
+#' A dataframe with >= 2 columns, one of which must be named `zooniverse`, `digikam` or `traptagger` 
+#' and another one must be named `new`.
 #' @param classifier Optional character or vector of characters for the classifier.
 #'
-#' @return The list of standardized dataframes: each dataframe has the same columns as specified in
-#' standard_df$new, dates and times are standardized to "YYYY-MM-DD" and "HH:MM:SS",
-#' capture info (locationID, cameraID, roll, capture and season if classifier is zooniverse)
-#' is filled. Columns are also in the same order as provided in
-#' standard_df$new and the rows are ordered by camera, date and time.
+#' @return The list of standardized dataframes: they have the same columns as specified in
+#' `standard_df$new`, dates and times are standardized and some columns regarding
+#' information on the capture are filled. Species names (`snapshotName`) and `cameraID` and `locationID`
+#' are standardized (see details).
+#' Columns are in the same order as provided in `standard_df$new`
+#' and the rows are ordered by ascending camera, date and time.
+#' 
+#' @details 
+#' Dates and times are standardized to `YYYY-MM-DD` and `HH:MM:SS`.
+#' The columns `locationID`, `cameraID`, `roll`, `capture` 
+#' and `season` (if classifier is `zooniverse`) are filled with meaningful information. 
+#' Species names (`snapshotName`) are standardized to match the existing, known species names.
+#' For column `locationID`:
+#' 
+#' + The location code `DHP` is replaced with `OVE` if the corresponding camera code starts with 'O'.
+#' + The location code `KGA` is replaced with `KHO` if the corresponding camera code starts with 'KHO'.
+#' 
+#' For column `cameraID`:
+#' 
+#' + For TrapTagger data: will remove the leading location code part for all data 
+#' (eg if `location` is `ATH`, will change `cameras` `ATH_A01` -> `A01`).
+#' Also, if the location code is `KHO`, `SAM` or `TSW`: will remove the dash in 
+#' the camera name (e.g `KHO_E_A01` -> `EA01`)
+#' 
+#' + For Zooniverse data: if the location code is `KHO`, will replace 
+#' `KHOG` with `E` and  `KHOL` with `M` in `cameras`.
+#' If the location code is `DHP`, will remove leading `D` in `cameraID`.
+#' If the location code is `OVE`, will remove leading `O` in `cameraID`.
+#' 
+#' + For column `eventID`: the event ID formatted as season#cam_site#roll#event_no.
+#' 
 #' @export
 #' 
 #' @note If the file name is `Marinmane NR _record_table_0min_deltaT_2021-06-10.csv`, will
@@ -168,22 +194,26 @@ standardize_snapshot_list <- function(df_list, standard_df,
 #' @param df The dataframe to standardize. It is expected to match the data format for either
 #' Zooniverse, TrapTagger or Digikam processed data (i.e. have column names defined in standard_df).
 #' @param standard_df The standard dataframe to match column names to the new standard.
-#' A dataframe with >= 2 columns, one of which must be named 'zooniverse', 'digikam' or 'traptagger' and another one
-#' must be named 'new'.
-#' @param locationID_digikam Optional locationID to be used for Digikam data
-#' (will display a warning if not provided for Digikam data.)
+#' A dataframe with >= 2 columns, one of which must be named `zooniverse`, `digikam` or `traptagger` 
+#' and another one must be named `new`.
+#' @param locationID_digikam Optional character `locationID` to use for Digikam data
+#' (will display a warning if not provided for Digikam data.) Indeed, for Digikam data,
+#' the `locationID` cannot be inferred from other columns.
+#' 
 #' @param classifier Optional character for the classifier.
 #'
 #' @return The standardized dataframe: it has the same columns as specified in
-#' standard_df$new, dates and times are standardized to "YYYY-MM-DD" and "HH:MM:SS",
-#' capture info (locationID, cameraID, roll, capture and season if classifier is zooniverse)
-#' is filled. 
-#' Species names are standardized to match the existing, known species names
-#' and the camera location and names are standardized (see details).
-#' Columns are also in the same order as provided in
-#' standard_df$new and the rows are ordered by camera, date and time.
+#' `standard_df$new`, dates and times are standardized and some columns regarding
+#' information on the capture are filled. Species names (`snapshotName`) and `cameraID` and `locationID`
+#' are standardized (see details).
+#' Columns are in the same order as provided in `standard_df$new`
+#' and the rows are ordered by ascending camera, date and time.
 #' 
 #' @details 
+#' Dates and times are standardized to `YYYY-MM-DD` and `HH:MM:SS`.
+#' The columns `locationID`, `cameraID`, `roll`, `capture` 
+#' and `season` (if classifier is `zooniverse`) are filled with meaningful information. 
+#' Species names (`snapshotName`) are standardized to match the existing, known species names.
 #' For column `locationID`:
 #' 
 #' + The location code `DHP` is replaced with `OVE` if the corresponding camera code starts with 'O'.
@@ -495,33 +525,40 @@ standardize_columns <- function(df,
 
 #' Rename columns to match standard names
 #'
-#' This function renames the columns in a dataframe to match the standard names,
-#' given in the dataframe `standard`.
+#' Renames the columns in a dataframe to match the standard names
+#' given in `standard_df`.
 #'
 #' @param df The dataframe with the columns to rename
-#' @param classifier The classifier used to create the dataframe df. Can be 'zooniverse', 'traptagger', 'digikam'.
-#' @param standard_colnames A dataframe with 2 columns (at least) named like the classifier
-#' and 'new'.
-#' The column named like the classifier contains column names 
-#' that are expected in the initial file. These names will be matched in the column names of df 
-#' using partial matching (case insensitive and removing blanks).
-#' The column 'new' contains the column names for the final file. 
-#' Columns in the classifier column will be renamed as the 
-#' corresponding value in 'new'. If no pre-existing column corresponds to 'new' (indicated with a NA)
-#' then the column will be created and filled with NAs.
+#' @param standard_df A dataframe with 2 columns (at least). The columns must be named like `classifier` 
+#' (either `zooniverse`, `traptagger` or `digikam`) and `new`.
+#' @param classifier (optional) the classifier used to create the dataframe `df`. 
+#' Can be `zooniverse`, `traptagger` or `digikam`. If it is not given, will be guessed from `df` column names.
 #' 
-#' @return Returns a dataframe for which the columns have been renamed
+#' @return A dataframe for which the columns have been renamed/added.
 #'
+#' @details 
+#' The column named like the classifier in `standard_df` are the column names 
+#' that are expected in the initial file, which will be matched in the column names of `df` 
+#' using partial matching (case insensitive and removing blanks).
+#' Columns in the classifier column will be renamed as the 
+#' corresponding value in `new`. If no pre-existing column corresponds to `new` (indicated with a `NA`)
+#' then the column will be created and filled with `NA`.
+#' 
+#' @noRd
 rename_standard <- function(df,
-                            classifier = c("zooniverse", "traptagger", "digikam"),
-                            standard_colnames){
+                            standard_df,
+                            classifier = c("zooniverse", "traptagger", "digikam")){
+  
+  if (missing(classifier)) {
+    classifier <- guess_classifier(colnames(df))
+  }
   
   classifier <- match.arg(classifier)
   
-  check_standard_colnames(standard_colnames, classifier)
+  check_standard_colnames(standard_df, classifier)
   
   # Rename the columns we want into 'classifier'
-  newnames_df <- standard_colnames %>% rename("classifier" = all_of(classifier))
+  newnames_df <- standard_df %>% rename("classifier" = all_of(classifier))
   
   # Get only the columns to rename
   newnames_df <- newnames_df %>% filter(!is.na(classifier)) %>%
@@ -532,7 +569,7 @@ rename_standard <- function(df,
   
   # Copy df
   df_res <- df
-  colnames(df_res) <- names(newnames[match(newnames, names(df_res))])
+  colnames(df_res) <- names(newnames[match(newnames, colnames(df_res))])
   
   return(df_res)
 }

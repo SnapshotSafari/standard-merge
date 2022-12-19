@@ -11,28 +11,31 @@ standardize_snapshot_df(df, standard_df, locationID_digikam, classifier)
 Zooniverse, TrapTagger or Digikam processed data (i.e. have column names defined in standard_df).}
 
 \item{standard_df}{The standard dataframe to match column names to the new standard.
-A dataframe with >= 2 columns, one of which must be named 'zooniverse', 'digikam' or 'traptagger' and another one
-must be named 'new'.}
+A dataframe with >= 2 columns, one of which must be named \code{zooniverse}, \code{digikam} or \code{traptagger}
+and another one must be named \code{new}.}
 
-\item{locationID_digikam}{Optional locationID to be used for Digikam data
-(will display a warning if not provided for Digikam data.)}
+\item{locationID_digikam}{Optional character \code{locationID} to use for Digikam data
+(will display a warning if not provided for Digikam data.) Indeed, for Digikam data,
+the \code{locationID} cannot be inferred from other columns.}
 
 \item{classifier}{Optional character for the classifier.}
 }
 \value{
 The standardized dataframe: it has the same columns as specified in
-standard_df$new, dates and times are standardized to "YYYY-MM-DD" and "HH:MM:SS",
-capture info (locationID, cameraID, roll, capture and season if classifier is zooniverse)
-is filled.
-Species names are standardized to match the existing, known species names
-and the camera location and names are standardized (see details).
-Columns are also in the same order as provided in
-standard_df$new and the rows are ordered by camera, date and time.
+\code{standard_df$new}, dates and times are standardized and some columns regarding
+information on the capture are filled. Species names (\code{snapshotName}) and \code{cameraID} and \code{locationID}
+are standardized (see details).
+Columns are in the same order as provided in \code{standard_df$new}
+and the rows are ordered by ascending camera, date and time.
 }
 \description{
 Standardizes a dataframe to the Snapshot standard.
 }
 \details{
+Dates and times are standardized to \code{YYYY-MM-DD} and \code{HH:MM:SS}.
+The columns \code{locationID}, \code{cameraID}, \code{roll}, \code{capture}
+and \code{season} (if classifier is \code{zooniverse}) are filled with meaningful information.
+Species names (\code{snapshotName}) are standardized to match the existing, known species names.
 For column \code{locationID}:
 \itemize{
 \item The location code \code{DHP} is replaced with \code{OVE} if the corresponding camera code starts with 'O'.
