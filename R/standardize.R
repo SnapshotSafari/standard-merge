@@ -166,7 +166,7 @@ standardize_snapshot_list <- function(df_list, standard_df,
 #' Standardizes a dataframe to the Snapshot standard.
 #' 
 #' @param df The dataframe to standardize. It is expected to match the data format for either
-#' Zooniverse, TrapTagger or Digikam processed data (i.e. have column names defined in standfard_df).
+#' Zooniverse, TrapTagger or Digikam processed data (i.e. have column names defined in standard_df).
 #' @param standard_df The standard dataframe to match column names to the new standard.
 #' A dataframe with >= 2 columns, one of which must be named 'zooniverse', 'digikam' or 'traptagger' and another one
 #' must be named 'new'.
@@ -177,8 +177,31 @@ standardize_snapshot_list <- function(df_list, standard_df,
 #' @return The standardized dataframe: it has the same columns as specified in
 #' standard_df$new, dates and times are standardized to "YYYY-MM-DD" and "HH:MM:SS",
 #' capture info (locationID, cameraID, roll, capture and season if classifier is zooniverse)
-#' is filled. Columns are also in the same order as provided in
+#' is filled. 
+#' Species names are standardized to match the existing, known species names
+#' and the camera location and names are standardized (see details).
+#' Columns are also in the same order as provided in
 #' standard_df$new and the rows are ordered by camera, date and time.
+#' 
+#' @details 
+#' For column `locationID`:
+#' 
+#' + The location code `DHP` is replaced with `OVE` if the corresponding camera code starts with 'O'.
+#' + The location code `KGA` is replaced with `KHO` if the corresponding camera code starts with 'KHO'.
+#' 
+#' For column `cameraID`:
+#' 
+#' + For TrapTagger data: will remove the leading location code part for all data 
+#' (eg if `location` is `ATH`, will change `cameras` `ATH_A01` -> `A01`).
+#' Also, if the location code is `KHO`, `SAM` or `TSW`: will remove the dash in 
+#' the camera name (e.g `KHO_E_A01` -> `EA01`)
+#' 
+#' + For Zooniverse data: if the location code is `KHO`, will replace 
+#' `KHOG` with `E` and  `KHOL` with `M` in `cameras`.
+#' If the location code is `DHP`, will remove leading `D` in `cameraID`.
+#' If the location code is `OVE`, will remove leading `O` in `cameraID`.
+#' 
+#' + For column `eventID`: the event ID formatted as season#cam_site#roll#event_no.
 #' 
 #' @export
 #' 
@@ -228,6 +251,13 @@ standardize_snapshot_df <- function(df, standard_df,
   
   # Remove capture column
   std_dat <- std_dat %>% select(-capture)
+  
+  # Clean location/camera
+  std_dat <- clean_camera_location_df(std_dat)
+  
+  # Clean species
+  std_dat <- std_dat %>% 
+    mutate(snapshotName = clean_species(snapshotName))
   
   # Reorder data (rows)
   std_dat <- std_dat %>% arrange(cameraID, eventDate, eventTime)

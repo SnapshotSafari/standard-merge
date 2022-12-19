@@ -37,8 +37,12 @@ get_camnames <- function(cameras, locations) {
 #' Cleans locations and cameras for a dataframe
 #' 
 #' @param df a dataframe that must have columns `cameraID`, `locationID` and `classifier`.
+#' @param camera should `cameraID` column be cleaned?
+#' @param location should `locationID` column be cleaned?
 #'
-#' @return The dataframe with cleaned columns `cameraID`, `locationID` and `eventID`.
+#' @return The dataframe with cleaned columns `cameraID` and/or `locationID`
+#' (depending whether `camera` and `location` are `TRUE`) and `eventID`
+#' refactored to match new `cameraID`/`locationID`.
 #' 
 #' @details 
 #' For column `locationID`:
@@ -61,61 +65,23 @@ get_camnames <- function(cameras, locations) {
 #' + For column `eventID`: the event ID formatted as season#cam_site#roll#event_no.
 #' 
 #' @export
-clean_camera_location_df <- function(df) {
+clean_camera_location_df <- function(df, camera = TRUE, 
+                                     location = TRUE) {
   
+  
+  if (location) {
   clean_df <- df %>%
     mutate(locationID = clean_locations(cameraID, locationID))
-  clean_df <- clean_df %>%
-    mutate(cameraID = clean_cameras(cameraID, locationID, classifier))
+  } 
+  if (camera) {
+    clean_df <- clean_df %>%
+      mutate(cameraID = clean_cameras(cameraID, locationID, classifier))
+  }
   
   clean_df <- clean_df %>%
     mutate(eventID = get_eventID(locationID, cameraID, roll, captureID))
   
   return(clean_df)
-}
-
-#' Clean locations and cameras
-#'
-#' Cleans locations and cameras for a list
-#' 
-#' @param df_list a list of dataframes 
-#' that must have columns `cameraID`, `locationID` and `classifier`.
-#'
-#' @return The list of dataframes 
-#' with cleaned columns `cameraID`, `locationID` and `eventID`.
-#' 
-#' @details 
-#' For column `locationID`:
-#' 
-#' + The location code `DHP` is replaced with `OVE` if the corresponding camera code starts with 'O'.
-#' + The location code `KGA` is replaced with `KHO` if the corresponding camera code starts with 'KHO'.
-#' 
-#' For column `cameraID`:
-#' 
-#' + For TrapTagger data: will remove the leading location code part for all data 
-#' (eg if `location` is `ATH`, will change `cameras` `ATH_A01` -> `A01`).
-#' Also, if the location code is `KHO`, `SAM` or `TSW`: will remove the dash in 
-#' the camera name (e.g `KHO_E_A01` -> `EA01`)
-#' 
-#' + For Zooniverse data: if the location code is `KHO`, will replace 
-#' `KHOG` with `E` and  `KHOL` with `M` in `cameras`.
-#' If the location code is `DHP`, will remove leading `D` in `cameraID`.
-#' If the location code is `OVE`, will remove leading `O` in `cameraID`.
-#' 
-#' + For column `eventID`: the event ID formatted as season#cam_site#roll#event_no.
-#' 
-#' @export
-#'
-clean_camera_location_list <- function(df_list) {
-  
-  # --- Check arguments
-  if(!inherits(df_list, "list")) {
-    stop(paste("df_list must be a list, you provided an object of class", 
-               paste(class(df_list), collapse = ", ")))
-  }
-  
-  res <- lapply(df_list, clean_camera_location_df)
-  return(res)
 }
 
 # Species -----------------------------------------------------------------
@@ -133,8 +99,8 @@ clean_camera_location_list <- function(df_list) {
 #' @examples
 #' species <- c("zebraplains", "zebraburchells", "duiker", 
 #'              "duikercommon", "aardvark", "lionfemale")
-#' standardize_species(species)
-standardize_species <- function(species){
+#' clean_species(species)
+clean_species <- function(species){
   
   res <- species
   
@@ -263,7 +229,6 @@ standardize_species <- function(species){
   
   return(res)
 }
-
 
 
 # Helpers -----------------------------------------------------------------

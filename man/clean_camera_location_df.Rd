@@ -4,13 +4,19 @@
 \alias{clean_camera_location_df}
 \title{Clean locations and cameras}
 \usage{
-clean_camera_location_df(df)
+clean_camera_location_df(df, camera = TRUE, location = TRUE)
 }
 \arguments{
 \item{df}{a dataframe that must have columns \code{cameraID}, \code{locationID} and \code{classifier}.}
+
+\item{camera}{should \code{cameraID} column be cleaned?}
+
+\item{location}{should \code{locationID} column be cleaned?}
 }
 \value{
-The dataframe with cleaned columns \code{cameraID}, \code{locationID} and \code{eventID}.
+The dataframe with cleaned columns \code{cameraID} and/or \code{locationID}
+(depending whether \code{camera} and \code{location} are \code{TRUE}) and \code{eventID}
+refactored to match new \code{cameraID}/\code{locationID}.
 }
 \description{
 Cleans locations and cameras for a dataframe

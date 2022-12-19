@@ -8,7 +8,7 @@ standardize_snapshot_df(df, standard_df, locationID_digikam, classifier)
 }
 \arguments{
 \item{df}{The dataframe to standardize. It is expected to match the data format for either
-Zooniverse, TrapTagger or Digikam processed data (i.e. have column names defined in standfard_df).}
+Zooniverse, TrapTagger or Digikam processed data (i.e. have column names defined in standard_df).}
 
 \item{standard_df}{The standard dataframe to match column names to the new standard.
 A dataframe with >= 2 columns, one of which must be named 'zooniverse', 'digikam' or 'traptagger' and another one
@@ -23,11 +23,34 @@ must be named 'new'.}
 The standardized dataframe: it has the same columns as specified in
 standard_df$new, dates and times are standardized to "YYYY-MM-DD" and "HH:MM:SS",
 capture info (locationID, cameraID, roll, capture and season if classifier is zooniverse)
-is filled. Columns are also in the same order as provided in
+is filled.
+Species names are standardized to match the existing, known species names
+and the camera location and names are standardized (see details).
+Columns are also in the same order as provided in
 standard_df$new and the rows are ordered by camera, date and time.
 }
 \description{
 Standardizes a dataframe to the Snapshot standard.
+}
+\details{
+For column \code{locationID}:
+\itemize{
+\item The location code \code{DHP} is replaced with \code{OVE} if the corresponding camera code starts with 'O'.
+\item The location code \code{KGA} is replaced with \code{KHO} if the corresponding camera code starts with 'KHO'.
+}
+
+For column \code{cameraID}:
+\itemize{
+\item For TrapTagger data: will remove the leading location code part for all data
+(eg if \code{location} is \code{ATH}, will change \code{cameras} \code{ATH_A01} -> \code{A01}).
+Also, if the location code is \code{KHO}, \code{SAM} or \code{TSW}: will remove the dash in
+the camera name (e.g \code{KHO_E_A01} -> \code{EA01})
+\item For Zooniverse data: if the location code is \code{KHO}, will replace
+\code{KHOG} with \code{E} and  \code{KHOL} with \code{M} in \code{cameras}.
+If the location code is \code{DHP}, will remove leading \code{D} in \code{cameraID}.
+If the location code is \code{OVE}, will remove leading \code{O} in \code{cameraID}.
+\item For column \code{eventID}: the event ID formatted as season#cam_site#roll#event_no.
+}
 }
 \examples{
 standardize_snapshot_df(zooniverse, standard)
