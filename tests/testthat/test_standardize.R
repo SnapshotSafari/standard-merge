@@ -223,8 +223,12 @@ test_that("standardize_snapshot_df (Traptagger)", {
 })
 
 test_that("standardize_snapshot_df (Digikam)", {
-  expect_warning(standardize_snapshot_df(dat_digikam, standard_df = standard), 
+  
+  expect_warning(standardize_snapshot_df(dat_digikam, standard_df = standard),
                  "Digikam data requires 'locationID_digikam' to be provided: without a it, locationID will be set to NA in the standardized data.")
+  
+  expect_warning(standardize_snapshot_df(dat_digikam, standard_df = standard),
+                 "NA present in locationID: will not clean locationID.")
   
   dat_std <- standardize_snapshot_df(dat_digikam, 
                                      standard_df = standard, 
@@ -239,7 +243,8 @@ test_that("Standardize Snapshot list", {
                     dat_digikam,
                     dat_traptagger)
   
-  expect_warning(standardize_snapshot_list(list_test, standard_df = standard), 
+  expect_warning(standardize_snapshot_list(list_test, 
+                                           standard_df = standard), 
                  "Digikam data requires 'locationID_digikam' to be provided: without a it, locationID will be set to NA in the standardized data.")
   
   names(list_test) <- c("APN_S1_full_report_0-50__agreement_corrected_fin.csv",

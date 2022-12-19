@@ -253,7 +253,13 @@ standardize_snapshot_df <- function(df, standard_df,
   std_dat <- std_dat %>% select(-capture)
   
   # Clean location/camera
-  std_dat <- clean_camera_location_df(std_dat)
+  if(any(is.na(std_dat$locationID))) {
+    warning("NA present in locationID: will not clean locationID.")
+    std_dat <- clean_camera_location(std_dat, 
+                                     location = FALSE)
+  } else {
+    std_dat <- clean_camera_location(std_dat)
+  }
   
   # Clean species
   std_dat <- std_dat %>% 

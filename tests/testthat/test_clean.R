@@ -15,10 +15,18 @@ test_that("Get camera names", {
   res <- get_camnames(c("APN_A01", "MAD_B01", "EVF_A01"), 
                       locations = c("APN", "MAD", "MAD"))
   expect_equal(res, c("A01", "B01", "EVF_A01"))
+  
+  expect_warning(get_camnames("MAD_A01", NA),
+                 "Some locations are NA, so camnames might be incorrect if they contain an underscore")
+  
 })
 
 test_that("Clean location", {
   res <- clean_locations(c("OA01", "KHOGA01", "KHOGA01", "DA01"), 
                          c("DHP", "KGA", "APN", "DHP"))
   expect_equal(res, c("OVE", "KHO", "APN", "DHP"))
+  
+  res <- suppressWarnings(clean_locations(c(NA, "A01", NA),
+                                          c("DHP", NA, NA)))
+  expect_equal(res, c("DHP", NA, NA))
 })

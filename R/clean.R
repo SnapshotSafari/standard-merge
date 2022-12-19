@@ -16,19 +16,24 @@
 #' 
 #' @param cameras a vector of camera names
 #' @param locations a vector of locations (must me the same length as `cameras`)
+#' @param silence_warning Print a warning if some locations are NA?
 #'
 #' @return A vector of camera names without the location prefix (if it was present)
 #' 
 #' @export
 #' 
 #' @examples get_camnames(c("APN_A01", "MAD_B01"), c("APN", "MAD"))
-get_camnames <- function(cameras, locations) {
+get_camnames <- function(cameras, locations, silence_warning = FALSE) {
+  
+  if ( any(is.na(locations))) {
+    if (!silence_warning) {
+      warning("Some locations are NA, so camnames might be incorrect if they contain an underscore")
+    }
+  }
   
   sapply(1:length(cameras), 
          function(i) {
-           gsub(pattern = paste0("^", locations[i], "_"), 
-                replacement = "",
-                cameras[i])
+           get_camname(cameras[i], locations[i])
          })
 }
 
@@ -65,12 +70,14 @@ get_camnames <- function(cameras, locations) {
 #' + For column `eventID`: the event ID formatted as season#cam_site#roll#event_no.
 #' 
 #' @export
-clean_camera_location_df <- function(df, camera = TRUE, 
-                                     location = TRUE) {
+clean_camera_location <- function(df, camera = TRUE, 
+                                  location = TRUE) {
   
+  # Initialize result
+  clean_df <- df
   
   if (location) {
-  clean_df <- df %>%
+  clean_df <- clean_df %>%
     mutate(locationID = clean_locations(cameraID, locationID))
   } 
   if (camera) {
@@ -339,6 +346,11 @@ clean_camera <- function(camera, location,
     stop("Provide a location vector of length 1")
   }
   
+  if (is.na(camera)) {
+    # Don't do anything and return NA
+    return(camera)
+  }
+  
   camname <- get_camnames(camera, location)
   
   if(classifier == "traptagger") {
@@ -384,16 +396,19 @@ clean_location <- function(camera, location) {
   # In Zooniverse, some sites codes are merged whereas they are different in TrapTagger:
   # KHO is assimilated to KGA
   # OVE is assimilated to DHP
-  if(location == "KGA") {
-    if (grepl(pattern = "^KHO", camname)) {
-      new_location <- "KHO"
-    }
-  } else if (location == "DHP") {
-    # If OVE pattern detected
-    if (grepl(pattern = "^O", camname)) {
-      new_location <- "OVE"
+  if (!is.na(location)) {
+    if(location == "KGA") {
+      if (grepl(pattern = "^KHO", camname)) {
+        new_location <- "KHO"
+      }
+    } else if (location == "DHP") {
+      # If OVE pattern detected
+      if (grepl(pattern = "^O", camname)) {
+        new_location <- "OVE"
+      }
     }
   }
+  
   return(new_location)
 }
 
@@ -475,4 +490,37 @@ get_eventID <- function(locationID, cameraID, roll, captureID) {
   
   return(eventID)
   
+}
+
+#' Get camera name
+#'
+#' Subsets the locations IDs from the camera names vector.
+#' 
+#' @param camera camera name (character)
+#' @param location location (character)
+#'
+#' @return A camera name without the location prefix (if it was present)
+#' 
+#' 
+#' @examples get_camname("APN_A01", "APN")
+#' 
+#' @noRd
+get_camname <- function(camera, location) {
+  
+  if (is.na(camera)) {
+    return(camera)
+  }
+  
+  if (is.na(location)) {
+    res <- gsub(pattern = paste0("^.*_"), 
+                replacement = "", 
+                camera)
+  } else {
+    res <- gsub(pattern = paste0("^", location, "_"), 
+                replacement = "", 
+                camera)
+  }
+  
+  return(res)
+
 }

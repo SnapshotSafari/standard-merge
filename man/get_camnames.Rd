@@ -4,12 +4,14 @@
 \alias{get_camnames}
 \title{Get camera names}
 \usage{
-get_camnames(cameras, locations)
+get_camnames(cameras, locations, silence_warning = FALSE)
 }
 \arguments{
 \item{cameras}{a vector of camera names}
 
 \item{locations}{a vector of locations (must me the same length as \code{cameras})}
+
+\item{silence_warning}{Print a warning if some locations are NA?}
 }
 \value{
 A vector of camera names without the location prefix (if it was present)
