@@ -59,7 +59,7 @@ guess_classifier <- function(colnames_df) {
 #' and another one must be named `new`.
 #' @param classifier Optional character or vector of characters for the classifier.
 #'
-#' @return The list of standardized dataframes: they have the same columns as specified in
+#' @return The list of standardized dataframes: they the same columns as specified in
 #' `standard_df$new`, dates and times are standardized and some columns regarding
 #' information on the capture are filled. Species names (`snapshotName`) and `cameraID` and `locationID`
 #' are standardized (see details).
@@ -509,7 +509,7 @@ standardize_columns <- function(df,
                                        verbose = verbose, approx = TRUE)
   
   # --- Rename according to new standard
-  df_res <- rename_standard(df_res, classifier, standard_colnames)
+  df_res <- rename_standard(df_res, standard_colnames, classifier)
   
   # --- Keep only standard columns
   std_cols <- standard_colnames$new[!is.na(standard_colnames$new)]

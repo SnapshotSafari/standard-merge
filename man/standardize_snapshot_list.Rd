@@ -16,7 +16,7 @@ and another one must be named \code{new}.}
 \item{classifier}{Optional character or vector of characters for the classifier.}
 }
 \value{
-The list of standardized dataframes: they have the same columns as specified in
+The list of standardized dataframes: they the same columns as specified in
 \code{standard_df$new}, dates and times are standardized and some columns regarding
 information on the capture are filled. Species names (\code{snapshotName}) and \code{cameraID} and \code{locationID}
 are standardized (see details).

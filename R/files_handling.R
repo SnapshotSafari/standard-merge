@@ -292,8 +292,8 @@ write_standardized_df <- function(df, to,
 #' @param return_path Should the path be returned?
 #' @param verbose Should messages be displayed when creating a folder/file?
 #'
-#' @return Writes the files to the folder `to/filename1, to/filename2`...
-#' Also returns the paths `to/filename1, to/filename2`... if `return_path == TRUE`.
+#' @return Writes the files `to/filename1`, `to/filename2`...
+#' Also returns the paths `to/filename1`, `to/filename2`... if `return_path == TRUE`.
 #' 
 #' @export
 #'
