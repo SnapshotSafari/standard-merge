@@ -57,12 +57,13 @@ data(standard)
 
 
 # Logging -----------------------------------------------------------------
-logger_file <- create_logger(logfile)
+logger <- create_logger(logfile, console = TRUE)
 
 # Read files --------------------------------------------------------------
 std_list <- read_snapshot_files(input = input,
                                 except = to_ignore,
-                                basepath = IN_DATADIR)
+                                basepath = IN_DATADIR,
+                                logger = logger)
 std_df <- read.csv(input_file)
 
 # Standardize files -------------------------------------------------------

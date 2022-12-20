@@ -7,6 +7,7 @@
 #
 # Script Description: functions to help read and write files to standardize Snapshot data.
 
+
 # Read Snapshot files -----------------------------------------------------
 
 #' Get csv files and folder
@@ -25,7 +26,9 @@
 #' If an element of `input` is a folder, the function will list
 #' all files within `input`; if the element is a file, 
 #' the function will only list this file.
-#'
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`. 
+#' 
 #' @export
 #' 
 #' @examples 
@@ -37,7 +40,8 @@
 #' }
 get_csv_files_and_folders <- function(input, 
                                       except,
-                                      basepath) {
+                                      basepath,
+                                      logger = NA) {
   # Initialize results
   folders <- c()
   files <- c()
@@ -51,11 +55,12 @@ get_csv_files_and_folders <- function(input,
       folder_to_read <- inp
       
       if(missing(except)) {
-        in_files_list <- list_csv_in_folder(folder_to_read)
+        in_files_list <- list_csv_in_folder(folder_to_read, logger = logger)
       } else {
         in_files_list <- list_csv_in_folder(folder_to_read, 
                                             except = except,
-                                            basepath = basepath)
+                                            basepath = basepath,
+                                            logger = logger)
       }
       in_files_list <- sort(in_files_list)
     } else {
@@ -88,7 +93,9 @@ get_csv_files_and_folders <- function(input,
 #' the exact expression in `except` will be ignored.
 #' @param basepath the part of the path that should be ignored when copying final
 #' files (i.e. absolute path inside one's comupter that should not be copied in final file.)
-#'
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`. 
+#' 
 #' @return A named list of dataframes. Each element of the list is a dataframe with
 #' the contents of a file read from the files list given in input.
 #' The names of the list are the file names from the root of input:
@@ -109,7 +116,7 @@ get_csv_files_and_folders <- function(input,
 #'                     except = "DHP/DHP+OVE_same_file/*")
 #' }
 read_snapshot_files <- function(input, except,
-                                basepath) {
+                                basepath, logger = NA) {
   
   # Get the files names
   if(missing(except)) {
@@ -131,7 +138,9 @@ read_snapshot_files <- function(input, except,
     in_filename <- files_df$files[i]
     folder <- files_df$folders[i]
     
-    message(paste("Reading file", in_filename, "---"))
+    msg <- paste("Reading file", in_filename, "---")
+    write_log_message(msg, logger = logger, level = "info")
+    message(msg)
     
     # Read file
     dat_in <- read_snapshot_file(in_filename, 
@@ -145,7 +154,9 @@ read_snapshot_files <- function(input, except,
   if(length(unique_files) == length(files_df$files)) {
     names(df_list) <- unique_files
   } else {
-    message("Could not name list because there were non-unique file names.")
+    msg <- "Could not name list because there were non-unique file names."
+    write_log_message(msg, logger = logger, level = "info")
+    message(msg)
   }
   
   return(df_list)
@@ -404,19 +415,25 @@ write_standardized_list <- function(df_list,
 #' the exact expression in `except` will be ignored.
 #' @param basepath (optional) the part of the path that should not be displayed in
 #' warning message for ignored files.
-#'
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`. 
+#' 
 #' @return A character vector with relative paths of all files in the folder 'folder',
 #' except the files that are indicated by 'except'.
 #' 
 #'
 #' @noRd
-list_csv_in_folder <- function(folder, except, basepath){
+list_csv_in_folder <- function(folder, except, basepath, logger){
   
   if(length(folder) > 1){
-    stop(paste("Only give one folder in 'folder' please."))
+    msg <- paste("Only give one folder in 'folder' please.")
+    write_log_message(msg, logger = logger, level = "error")
+    stop(msg)
   }
   if(!dir.exists(folder)){
-    stop(paste("The folder", folder, "does not exist."))
+    msg <- paste("The folder", folder, "does not exist.")
+    write_log_message(msg, logger = logger, level = "error")
+    stop(msg)
   }
   
   # --- Clean folder
@@ -449,9 +466,11 @@ list_csv_in_folder <- function(folder, except, basepath){
       } else {
         discarded_files <- in_files_list[discarded]
       }
-      message("Files:\n", 
-              paste(discarded_files, collapse = "\n"),
-              "\nwill be ignored (they are in 'except').")
+      msg <- paste0("Files:\n", 
+                   paste(discarded_files, collapse = "\n"),
+                   "\nwill be ignored (they are in 'except').")
+      write_log_message(msg, logger = logger, level = "info")
+      message(msg)
       in_files_list <- in_files_list[-discarded]
     }
   }
@@ -464,9 +483,11 @@ list_csv_in_folder <- function(folder, except, basepath){
   
   # --- Keep only csv
   if(length(not_csv) != 0) {
-    message(paste0("File(s) ", 
-                   paste(not_csv, collapse = ", "),
-                   " will be ignored (they are not csv)."))
+    msg <- paste0("File(s) ", 
+                  paste(not_csv, collapse = ", "),
+                  " will be ignored (they are not csv).")
+    write_log_message(msg, logger = logger, level = "info")
+    message(msg)
   }
   
   return(csv_files)
@@ -504,11 +525,13 @@ get_relative_path <- function(f, wd) {
 #' starting at the base of the R project.
 #' @param base_folder The folder to look in
 #' @param verbose logical. Display the file name?
-#'
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`. 
+#' 
 #' @return A dataframe with the contents of the csv file
 #'
 #' @noRd
-read_snapshot_file <- function(filename, base_folder, verbose = FALSE){
+read_snapshot_file <- function(filename, base_folder, verbose = FALSE, logger = NA){
   
   # Set file name
   in_file <- file.path(base_folder, filename)
@@ -516,10 +539,14 @@ read_snapshot_file <- function(filename, base_folder, verbose = FALSE){
   # Check if file exists
   if (file.exists(in_file)) {
     if(verbose) {
-      message("File set to ", in_file)
+      msg <- paste("File set to", in_file)
+      write_log_message(msg, logger = logger, level = "info")
+      message(msg)
     }
   }else{
-    stop(paste("File", in_file , "does not exist."))
+    msg <- paste("File", in_file , "does not exist.")
+    write_log_message(msg, logger = logger, level = "error")
+    stop(msg)
   }
   
   # Issue, empty columns
@@ -531,7 +558,9 @@ read_snapshot_file <- function(filename, base_folder, verbose = FALSE){
   }
   
   if(ncol(dat) == 1){
-    message("Trying ';' as separator in the csv file")
+    msg <- "Trying ';' as separator in the csv file"
+    write_log_message(msg, logger = logger, level = "info")
+    message(msg)
     dat <- read.csv(in_file, sep = ";")
   }
   

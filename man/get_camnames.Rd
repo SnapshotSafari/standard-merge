@@ -4,7 +4,7 @@
 \alias{get_camnames}
 \title{Get camera names}
 \usage{
-get_camnames(cameras, locations, silence_warning = FALSE)
+get_camnames(cameras, locations, silence_warning = FALSE, logger = NA)
 }
 \arguments{
 \item{cameras}{a character vector of camera names}
@@ -12,6 +12,9 @@ get_camnames(cameras, locations, silence_warning = FALSE)
 \item{locations}{a character vector of locations (must be the same length as \code{cameras})}
 
 \item{silence_warning}{print a warning if some locations are \code{NA}?}
+
+\item{logger}{a \code{log4r} \code{logger} object if you want logging (can be created with \code{create_logger}),
+else \code{NA}.}
 }
 \value{
 A vector of camera names without the location prefix (if it was present)

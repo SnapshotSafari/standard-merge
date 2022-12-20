@@ -4,7 +4,11 @@
 \alias{write_log_message}
 \title{Write log message}
 \usage{
-write_log_message(message, logger = NA, level = "info")
+write_log_message(
+  message,
+  logger = NA,
+  level = c("info", "warn", "error", "debug")
+)
 }
 \arguments{
 \item{message}{The message to display/write to the logger}
@@ -15,7 +19,7 @@ write_log_message(message, logger = NA, level = "info")
 }
 \value{
 Will either write the message specified in \code{message} to the logger or
-returns a print, message, warning or stop depending on \code{level} (see details).
+do nothing if logger is \code{NA}.
 }
 \description{
 Writes a log message. If a logger is provided, writes to that logger;
@@ -24,27 +28,13 @@ if it is NA, displays a message.
 \details{
 \itemize{
 \item if \code{logger} is not \code{NA}, writes a message to the logger file with the specified level.
-\item if \code{logger} is \code{NA}, the output depends on \code{level}. If \code{level} is \code{info}
-returns a \code{message()}, if it is \code{warn} returns a \code{warning()},
-if \code{error} returns an \code{error()} and if \code{debug} returns a \code{print}.
+\item else, doesn't do anything.
 }
 }
 \examples{
-# With no logger
-write_log_message("Test", level = "debug")
-write_log_message("Test", level = "info")
-\dontrun{
-write_log_message("Test", level = "warn") # Returns a warning
-write_log_message("Test", level = "error") # Returns an error
-}
-# With a logger
 logger <- create_logger(tempfile()) # Create a logger
 write_log_message("Test", level = "debug", logger = logger)
 write_log_message("Test", level = "info", logger = logger)
-\dontrun{
-write_log_message("Test", level = "warn", 
-                  logger = logger) # Writes the log mesage and returns a warning
-write_log_message("Test", level = "error", 
-                  logger = logger) # Writes the log message and returns an error
-}
+write_log_message("Test", level = "warn", logger = logger) 
+write_log_message("Test", level = "error", logger = logger) 
 }

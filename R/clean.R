@@ -17,17 +17,21 @@
 #' @param cameras a character vector of camera names
 #' @param locations a character vector of locations (must be the same length as `cameras`)
 #' @param silence_warning print a warning if some locations are `NA`?
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`. 
 #'
 #' @return A vector of camera names without the location prefix (if it was present)
 #' 
 #' @export
 #' 
 #' @examples get_camnames(c("APN_A01", "MAD_B01"), c("APN", "MAD"))
-get_camnames <- function(cameras, locations, silence_warning = FALSE) {
+get_camnames <- function(cameras, locations, silence_warning = FALSE, logger = NA) {
   
   if ( any(is.na(locations))) {
     if (!silence_warning) {
-      warning("Some locations are NA, so camnames might be incorrect if they contain an underscore")
+      msg <- "Some locations are NA, so camnames might be incorrect if they contain an underscore"
+      write_log_message(msg, logger = logger, level = "warn")
+      warning(msg)
     }
   }
   

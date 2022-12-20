@@ -6,7 +6,8 @@
 \usage{
 create_logger(
   my_logfile,
-  threshold = c("INFO", "DEBUG", "WARNING", "ERROR", "FATAL")
+  threshold = c("INFO", "DEBUG", "WARNING", "ERROR", "FATAL"),
+  console = FALSE
 )
 }
 \arguments{
@@ -14,6 +15,8 @@ create_logger(
 
 \item{threshold}{logging levels to write to the logger (see \code{loglevel} documentation in \code{log4r}).
 Defalts to \code{INFO}.}
+
+\item{console}{Write log messages to console?}
 }
 \value{
 Returns a logger and creates a logfile at the given path. If the path given does not
