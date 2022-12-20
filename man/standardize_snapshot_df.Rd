@@ -4,7 +4,13 @@
 \alias{standardize_snapshot_df}
 \title{Standardize dataframe}
 \usage{
-standardize_snapshot_df(df, standard_df, locationID_digikam, classifier)
+standardize_snapshot_df(
+  df,
+  standard_df,
+  locationID_digikam,
+  classifier,
+  logger = NA
+)
 }
 \arguments{
 \item{df}{The dataframe to standardize. It is expected to match the data format for either
@@ -19,6 +25,9 @@ and another one must be named \code{new}.}
 the \code{locationID} cannot be inferred from other columns.}
 
 \item{classifier}{Optional character for the classifier.}
+
+\item{logger}{a \code{log4r} \code{logger} object if you want logging (can be created with \code{create_logger}),
+else \code{NA}.}
 }
 \value{
 The standardized dataframe: it has the same columns as specified in

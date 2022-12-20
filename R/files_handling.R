@@ -206,7 +206,9 @@ get_final_filename <- function(df) {
 #' `to` folder, and `df` will be named `filename`.
 #' @param return_path Should the path be returned?
 #' @param verbose Should messages be displayed when creating a folder/file?
-#'
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`.
+#' 
 #' @return Writes the file to the folder `to/filename`.
 #' Also returns the path `to/filename` if `return_path == TRUE`.
 #' 
@@ -231,12 +233,15 @@ write_standardized_df <- function(df, to,
                                   filename,
                                   write = TRUE,
                                   return_path = ifelse(write, FALSE, TRUE),
-                                  verbose = TRUE) {
+                                  verbose = TRUE,
+                                  logger = NA) {
   
   # Check if results folder exists
   if(!dir.exists(to) & write){
     if (verbose) {
-      message(paste("Creating folder", to))
+      msg <- paste("Creating folder", to)
+      write_log_message(msg, logger = logger, level = "info")
+      message(msg)
     }
     dir.create(to, recursive = TRUE)
   }
@@ -248,7 +253,11 @@ write_standardized_df <- function(df, to,
   
   # Check filename (no /)
   if(grepl(pattern = "/", filename, fixed = TRUE)) {
-    stop(paste("Filename", filename, "contains a slash: please provide a valid filename."))
+    msg <- paste("Filename", 
+                 filename, 
+                 "contains a slash: please provide a valid filename.")
+    write_log_message(msg, logger = logger, level = "error")
+    stop(msg)
   }
   
   # Get full filepath
@@ -259,7 +268,9 @@ write_standardized_df <- function(df, to,
   
   if(write) {
     if(verbose) {
-      message(paste("Writing file", filepath))
+      msg <- paste("Writing file", filepath)
+      write_log_message(msg, logger = logger, level = "info")
+      message(msg)
     }
     write.csv(df, filepath, 
               row.names = FALSE)
@@ -283,7 +294,9 @@ write_standardized_df <- function(df, to,
 #' @param write Should the result be written or only the path returned?
 #' @param return_path Should the path be returned?
 #' @param verbose Should messages be displayed when creating a folder/file?
-#'
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`.
+#' 
 #' @return Writes the files `to/filename1`, `to/filename2`...
 #' Also returns the paths `to/filename1`, `to/filename2`... if `return_path == TRUE`.
 #' 
@@ -318,22 +331,29 @@ write_standardized_list <- function(df_list,
                                     filenames, to,
                                     write = TRUE,
                                     return_path = ifelse(write, FALSE, TRUE),
-                                    verbose = TRUE) {
+                                    verbose = TRUE,
+                                    logger = NA) {
   
   # --- Check arguments
   if(!inherits(df_list, "list")) {
-    stop(paste("df_list must be a list, you provided an object of class", 
-               paste(class(df_list), collapse = ", ")))
+    msg <- paste("df_list must be a list, you provided an object of class", 
+                 paste(class(df_list), collapse = ", "))
+    write_log_message(msg, logger = logger, level = "error")
+    stop(msg)
   }
   
   if(!missing(filenames)) {
     if(length(filenames) != length(df_list)) {
-      stop("If filenames are provided, they should be the same length as df_list.")
+      msg <- "If filenames are provided, they should be the same length as df_list."
+      write_log_message(msg, logger = logger, level = "error")
+      stop(msg)
     }
   }
   
   if(length(to) != 1) {
-    stop("Please provide a unique folder in to.")
+    msg <- "Please provide a unique folder in to."
+    write_log_message(msg, logger = logger, level = "error")
+    stop(msg)
   }
   
   path_list <- c()
@@ -343,8 +363,10 @@ write_standardized_list <- function(df_list,
     
     # --- Check object
     if(!inherits(df_i, "data.frame")) {
-      stop(paste0(deparse(quote(df_list)),"[[", i, "]] ", 
-                  "must be a dataframe."))
+      msg <- paste0(deparse(quote(df_list)),"[[", i, "]] ", 
+                    "must be a dataframe.")
+      write_log_message(msg, logger = logger, level = "error")
+      stop(msg)
     }
     
     # --- Final filename
@@ -367,7 +389,9 @@ write_standardized_list <- function(df_list,
       subdir_target <- file.path(to, subdir)
       if(!dir.exists(subdir_target) & write){
         if (verbose) {
-          message(paste("Creating folder", subdir_target))
+          msg <- paste("Creating folder", subdir_target)
+          write_log_message(msg, logger = logger, level = "info")
+          message(msg)
         }
         dir.create(subdir_target, recursive = TRUE)
       }
@@ -385,14 +409,17 @@ write_standardized_list <- function(df_list,
       } else {
         final_name_message <- final_name
       }
-      message(paste("Writing file", initial_name, "->", final_name_message, "---"))
+      msg <- paste("Writing file", initial_name, "->", final_name_message, "---")
+      write_log_message(msg, logger = logger, level = "info")
+      message(msg)
     }
     path_i <- write_standardized_df(df_i, 
                                     filename = final_name, 
                                     to = final_to,
                                     write = write,
                                     verbose = FALSE,
-                                    return_path = TRUE) 
+                                    return_path = TRUE,
+                                    logger = logger) 
     path_list <- c(path_list, path_i)
   }
   
@@ -423,7 +450,7 @@ write_standardized_list <- function(df_list,
 #' 
 #'
 #' @noRd
-list_csv_in_folder <- function(folder, except, basepath, logger){
+list_csv_in_folder <- function(folder, except, basepath, logger = NA){
   
   if(length(folder) > 1){
     msg <- paste("Only give one folder in 'folder' please.")

@@ -22,7 +22,9 @@
 #' given in `colnames_df`.
 #'
 #' @param colnames_df A character vector of column names.
-#'
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`. 
+#' 
 #' @return The classifier: either `zooniverse`, `digikam` or `traptagger`.
 #' 
 #' @export
@@ -30,7 +32,7 @@
 #' guess_classifier(colnames(zooniverse))
 #' guess_classifier(colnames(traptagger))
 #' guess_classifier(colnames(digikam))
-guess_classifier <- function(colnames_df) {
+guess_classifier <- function(colnames_df, logger = NA) {
   
   if ("question__species" %in% colnames_df) {
     classifier <- "zooniverse"
@@ -39,7 +41,9 @@ guess_classifier <- function(colnames_df) {
   } else if ("timestamp" %in% colnames_df) {
     classifier <- "traptagger"
   } else {
-    stop("Could not set classifier from column names: column names do not contain 'question__species', 'HierarchicalSubject' or 'timestamp'\n")
+    msg <- "Could not set classifier from column names: column names do not contain 'question__species', 'HierarchicalSubject' or 'timestamp'\n"
+    write_log_message(msg, logger = logger, level = "error")
+    stop(msg)
   }
   return(classifier)
 }
@@ -58,7 +62,9 @@ guess_classifier <- function(colnames_df) {
 #' A dataframe with >= 2 columns, one of which must be named `zooniverse`, `digikam` or `traptagger` 
 #' and another one must be named `new`.
 #' @param classifier Optional character or vector of characters for the classifier.
-#'
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`. 
+#' 
 #' @return The list of standardized dataframes: they the same columns as specified in
 #' `standard_df$new`, dates and times are standardized and some columns regarding
 #' information on the capture are filled. Species names (`snapshotName`) and `cameraID` and `locationID`
@@ -106,18 +112,23 @@ guess_classifier <- function(colnames_df) {
 #' names(df_list)[2] <- "MOK_record_table_0min_deltaT_2021-05-07.csv"
 #' standardize_snapshot_list(df_list, standard)
 standardize_snapshot_list <- function(df_list, standard_df,
-                                      classifier) {
+                                      classifier,
+                                      logger = NA) {
   
   # --- Check arguments
   if(!inherits(df_list, "list")) {
-    stop(paste("df_list must be a list, you provided an object of class", 
-               paste(class(df_list), collapse = ", ")))
+    msg <- paste("df_list must be a list, you provided an object of class", 
+                 paste(class(df_list), collapse = ", "))
+    write_log_message(msg, logger = logger, level = "error")
+    stop(msg)
   }
   
   if(!missing(classifier)) {
     if((length(classifier)) != 1 | (length(classifier) != length(df_list))) {
-      stop(paste("classifier must be of length 1 or", length(df_list),
-                 "it is of length", length(classifier)))
+      msg <- paste("classifier must be of length 1 or", length(df_list),
+                   "it is of length", length(classifier))
+      write_log_message(msg, logger = logger, level = "error")
+      stop(msg)
     }
   }
   
@@ -134,19 +145,23 @@ standardize_snapshot_list <- function(df_list, standard_df,
     } else {
       iter <- i
     }
-    message(paste("Standardizing file", iter, "---"))
+    msg <- paste("Standardizing file", iter, "---")
+    write_log_message(msg, logger = logger, level = "info")
+    message(msg)
     
     df_i <- df_list[[i]]
     
     # Check object
     if(!inherits(df_i, "data.frame")) {
-      stop(paste0(deparse(quote(df_list)),"[[", i, "]] ", 
-                     "must be a dataframe."))
+      msg <- paste0(deparse(quote(df_list)),"[[", i, "]] ", 
+                    "must be a dataframe.")
+      write_log_message(msg, logger = logger, level = "error")
+      stop(msg)
     }
     
     # --- Get classifier
     if(missing(classifier)) {
-      classifier_i <- guess_classifier(colnames(df_i))
+      classifier_i <- guess_classifier(colnames(df_i), logger = logger)
     } else {
       if (length(classifier) != 1) {
         classifier_i <- classifier[i]
@@ -159,25 +174,30 @@ standardize_snapshot_list <- function(df_list, standard_df,
     if(classifier_i == "digikam") {
       if(!is.null(names(df_list)[i])) {
         df_name <- names(df_list)[i]
-        locationID <- locationID_from_filename(df_name)
+        locationID <- locationID_from_filename(df_name, logger = logger)
         
         std_dat_i <- standardize_snapshot_df(df_i, 
                                              standard_df = standard_df,
                                              locationID_digikam = locationID,
-                                             classifier = classifier_i)
+                                             classifier = classifier_i,
+                                             logger = logger)
       } else {
-        message(paste0(deparse(quote(df_list)),"[", i, "] ", 
-                       "is not named and it is Digikam: provide a named list if you want to fill locationID."))
+        msg <- paste0(deparse(quote(df_list)),"[", i, "] ", 
+                      "is not named and it is Digikam: provide a named list if you want to fill locationID.")
+        write_log_message(msg, logger = logger, level = "info")
+        message(msg)
         # --- Standardize (Digikam with no locationID)
         std_dat_i <- standardize_snapshot_df(df_i, 
                                              standard_df = standard_df,
-                                             classifier = classifier_i)
+                                             classifier = classifier_i,
+                                             logger = logger)
       }
     } else {
       # --- Standardize (not Digikam)
       std_dat_i <- standardize_snapshot_df(df_i, 
                                            standard_df = standard_df,
-                                           classifier = classifier_i)
+                                           classifier = classifier_i,
+                                           logger = logger)
     }
     
     # --- Add df to list
@@ -199,9 +219,10 @@ standardize_snapshot_list <- function(df_list, standard_df,
 #' @param locationID_digikam Optional character `locationID` to use for Digikam data
 #' (will display a warning if not provided for Digikam data.) Indeed, for Digikam data,
 #' the `locationID` cannot be inferred from other columns.
-#' 
 #' @param classifier Optional character for the classifier.
-#'
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`. 
+#' 
 #' @return The standardized dataframe: it has the same columns as specified in
 #' `standard_df$new`, dates and times are standardized and some columns regarding
 #' information on the capture are filled. Species names (`snapshotName`) and `cameraID` and `locationID`
@@ -240,28 +261,34 @@ standardize_snapshot_list <- function(df_list, standard_df,
 #' standardize_snapshot_df(traptagger, standard)
 #' standardize_snapshot_df(digikam, standard, locationID_digikam = "MOK")
 standardize_snapshot_df <- function(df, standard_df,
-                                    locationID_digikam, classifier) {
+                                    locationID_digikam, classifier,
+                                    logger = NA) {
   
   if(missing(classifier)) {
     # Guess classifier
     colnames_df <- colnames(df)
-    classifier <- guess_classifier(colnames_df)
+    classifier <- guess_classifier(colnames_df, logger = logger)
   }
   
   # Standardize columns
   std_dat <- standardize_columns(df, 
                                  classifier = classifier,
-                                 standard_colnames = standard_df)
+                                 standard_colnames = standard_df,
+                                 logger = logger)
   
   # Standardize date/times 
-  std_dat <- std_dat %>% mutate(eventDate = standardize_date(eventDate))
-  std_dat <- std_dat %>% mutate(eventTime = standardize_time(eventTime))
+  std_dat <- std_dat %>% mutate(eventDate = standardize_date(eventDate,
+                                                             logger = logger))
+  std_dat <- std_dat %>% mutate(eventTime = standardize_time(eventTime,
+                                                             logger = logger))
   
   # Get location code (Digikam)
   if(classifier == "digikam") { # Get locationID from filename
     
     if(missing(locationID_digikam)) {
-      warning("Digikam data requires 'locationID_digikam' to be provided: without a it, locationID will be set to NA in the standardized data.")
+      msg <- "Digikam data requires 'locationID_digikam' to be provided: without a it, locationID will be set to NA in the standardized data."
+      write_log_message(msg, logger = logger, level = "warn")
+      warning(msg)
       std_dat$locationID <- NA
     } else {
       # Add location code
@@ -270,7 +297,7 @@ standardize_snapshot_df <- function(df, standard_df,
   }
   
   # Fill capture info
-  std_dat <- fill_capture_info(std_dat, classifier)
+  std_dat <- fill_capture_info(std_dat, classifier, logger = logger)
   
   # Add classifier 
   std_dat$classifier <- classifier
@@ -284,11 +311,15 @@ standardize_snapshot_df <- function(df, standard_df,
   
   # Clean location/camera
   if(any(is.na(std_dat$locationID))) {
-    warning("NA present in locationID: will not clean locationID.")
+    msg <- "NA present in locationID: will not clean locationID."
+    write_log_message(msg, logger = logger, level = "warn")
+    warning(msg)
     std_dat <- clean_camera_location(std_dat, 
-                                     location = FALSE)
+                                     location = FALSE,
+                                     logger = logger)
   } else {
-    std_dat <- clean_camera_location(std_dat)
+    std_dat <- clean_camera_location(std_dat,
+                                     logger = logger)
   }
   
   # Clean species
@@ -313,11 +344,13 @@ standardize_snapshot_df <- function(df, standard_df,
 #' 
 #' @param df The dataframe to standardize (must have columns starting with capture_label
 #' and column timestamp)
-#'
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`. 
+#' 
 #' @return Returns the dataframe with 2 additional columns date and time, minus the timestamp column, and with merged capture_label
 #' @noRd
 #'
-prepare_traptagger <- function(df){
+prepare_traptagger <- function(df, logger = NA){
   
   # --- Copy data
   df_res <- df
@@ -328,7 +361,9 @@ prepare_traptagger <- function(df){
   unique_length <- unique(sapply(date_time, length))
   
   if(unique_length != 2) {
-    warning("Some dates/times may be ill-parsed")
+    msg <- "Some dates/times may be ill-parsed"
+    write_log_message(msg, logger = logger, level = "warn")
+    warning(msg)
   }
   
   df_res$date <- sapply(date_time, function(l) l[1])
@@ -348,6 +383,8 @@ prepare_traptagger <- function(df){
 #' recodes 'metadata_young_present' into 0 and 1.
 #' 
 #' @param df Dataframe to standardize (must have columns 'metadata_Behaviour' and 'metadata_young_present').
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`.
 #' 
 #' @return Returns the dataframe without 'X' column, 'Directory' and 'Filename' merged
 #' into 'file_path_1' column, 'metadata_Behaviour' splitted into up to 6 columns
@@ -356,7 +393,7 @@ prepare_traptagger <- function(df){
 #' so that 'Yes'/'No' becomes 0/1.
 #' 
 #' @noRd
-prepare_digikam <- function(df){
+prepare_digikam <- function(df, logger = NA){
   
   df_res <- df
   
@@ -370,11 +407,14 @@ prepare_digikam <- function(df){
     df_res$file_path_1 <- file.path(df_res$Directory, df_res$FileName)
     df_res <- df_res %>% select(-c(Directory, FileName)) # Remove merged columns
   }else{
-    warning("Could not create column file_path_1: missing columns 'Directory' and 'FileName'")
+    msg <- "Could not create column file_path_1: missing columns 'Directory' and 'FileName'"
+    write_log_message(msg, logger = logger, "warn")
+    warning(msg)
   }
   
   # --- Format behaviors
-  behaviors <- recode_behavior_digikam(df_res$metadata_Behaviour) 
+  behaviors <- recode_behavior_digikam(df_res$metadata_Behaviour,
+                                       logger = logger) 
   
   # Add rows to df_res
   df_res <- df_res %>% select(-metadata_Behaviour)
@@ -396,12 +436,14 @@ prepare_digikam <- function(df){
 #' Recode a behavior column
 #'
 #' @param behaviors a character vector of behaviors, expected to be separated by a '_&_'
-#'
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`.
+#' 
 #' @return A dataframe with one column per behavior initially present, with
 #' 1 if the behavior was present and 0 otherwise.
 #' 
 #' @noRd
-recode_behavior_digikam <- function(behaviors) {
+recode_behavior_digikam <- function(behaviors, logger = NA) {
   
   # Split according to separator
   res <- str_split(behaviors, pattern = "_&_")
@@ -417,10 +459,13 @@ recode_behavior_digikam <- function(behaviors) {
       unexpected <- unique(new_behaviors[!(new_behaviors %in% expected_behaviors)])
       msg <- paste("Unexpected behavior(s) detected:", 
                    paste(unexpected, collapse = ", "))
+      write_log_message(msg, logger = logger, level = "warn")
       warning(msg)
     }
   } else {
-    warning("All behaviors are NA.")
+    msg <- "All behaviors are NA."
+    write_log_message(msg, logger = logger, level = "warn")
+    warning(msg)
     return(data.frame())
   }
   
@@ -461,6 +506,7 @@ recode_behavior_digikam <- function(behaviors) {
   
   return(res)
 }
+
 ## Standardize columns ----------------------------------
 #' Standardize data
 #'
@@ -480,24 +526,27 @@ recode_behavior_digikam <- function(behaviors) {
 #' Columns in the classifier column will be renamed following the name of the 
 #' corresponding value in 'new'. If no old column corresponds to 'new' (indicated with a NA)
 #' then the column will be created and filled with NAs.
-#'
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`.
+#' 
 #' @return A dataframe with 25 columns with the standardized names
 #'
 #' @noRd
 standardize_columns <- function(df, 
                                 classifier = c("zooniverse", "traptagger", "digikam"), 
                                 standard_colnames,
-                                verbose = FALSE){
+                                verbose = FALSE,
+                                logger = NA){
   
   classifier <- match.arg(classifier)
   
-  check_standard_colnames(standard_colnames, classifier)
+  check_standard_colnames(standard_colnames, classifier, logger = logger)
   
   # --- Prepare data
   if(classifier == "traptagger") {
-    df_res <- prepare_traptagger(df)
+    df_res <- prepare_traptagger(df, logger = logger)
   } else if (classifier == "digikam") {
-    df_res <- prepare_digikam(df)
+    df_res <- prepare_digikam(df, logger = logger)
   } else if (classifier == "zooniverse") {
     df_res <- df
   }
@@ -506,16 +555,19 @@ standardize_columns <- function(df,
   cols <- standard_colnames[classifier][!is.na(standard_colnames[classifier])]
   
   df_res <- keep_only_expected_columns(df_res, expected = cols, 
-                                       verbose = verbose, approx = TRUE)
+                                       verbose = verbose, approx = TRUE,
+                                       logger = logger)
   
   # --- Rename according to new standard
-  df_res <- rename_standard(df_res, standard_colnames, classifier)
+  df_res <- rename_standard(df_res, standard_colnames, classifier,
+                            logger = logger)
   
   # --- Keep only standard columns
   std_cols <- standard_colnames$new[!is.na(standard_colnames$new)]
   
   df_res <- keep_only_expected_columns(df_res, expected = std_cols, 
-                                       verbose = verbose, approx = FALSE)
+                                       verbose = verbose, approx = FALSE,
+                                       logger = logger)
   
   # --- Reorder
   df_res <- df_res %>% select(all_of(std_cols))
@@ -533,6 +585,8 @@ standardize_columns <- function(df,
 #' (either `zooniverse`, `traptagger` or `digikam`) and `new`.
 #' @param classifier (optional) the classifier used to create the dataframe `df`. 
 #' Can be `zooniverse`, `traptagger` or `digikam`. If it is not given, will be guessed from `df` column names.
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`. 
 #' 
 #' @return A dataframe for which the columns have been renamed/added.
 #'
@@ -547,15 +601,17 @@ standardize_columns <- function(df,
 #' @noRd
 rename_standard <- function(df,
                             standard_df,
-                            classifier = c("zooniverse", "traptagger", "digikam")){
+                            classifier = c("zooniverse", "traptagger", "digikam"),
+                            logger = NA){
   
   if (missing(classifier)) {
-    classifier <- guess_classifier(colnames(df))
+    classifier <- guess_classifier(colnames(df),
+                                   logger = logger)
   }
   
   classifier <- match.arg(classifier)
   
-  check_standard_colnames(standard_df, classifier)
+  check_standard_colnames(standard_df, classifier, logger = logger)
   
   # Rename the columns we want into 'classifier'
   newnames_df <- standard_df %>% rename("classifier" = all_of(classifier))
@@ -624,13 +680,15 @@ fill_capture_info_digikam <- function(df){
 #' adds column season (NA). These columns are character.
 #' 
 #' @param df The dataframe to complete
-#'
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`.
+#' 
 #' @return The dataframe with values completed for the captureID
 #' info columns. If no info, it remains NA.
 #' 
 #'
 #' @noRd
-fill_capture_info_traptagger <- function(df) {
+fill_capture_info_traptagger <- function(df, logger = NA) {
   
   df_res <- df
   
@@ -640,7 +698,9 @@ fill_capture_info_traptagger <- function(df) {
   nfields <- unique(sapply(capture_split, length))
   
   if(length(nfields) != 1) {
-    warning("All eventID fields don't have the same length...")
+    msg <- "All eventID fields don't have the same length..."
+    write_log_message(msg, logger = logger, level = "warn")
+    warning(msg)
   } else if (nfields == 3) { # First format
     location_event <- sapply(capture_split, function(l) l[1])
     
@@ -675,8 +735,10 @@ fill_capture_info_traptagger <- function(df) {
   
   unique_location <- unique(locationID)
   if(length(unique_location) != 1) {
-    message(paste("Non-unique location name:",
-                  paste(unique_location, collapse = ", ")))
+    msg <- paste("Non-unique location name:",
+                 paste(unique_location, collapse = ", "))
+    write_log_message(msg, logger = logger, level = "info")
+    message(msg)
   }
   
   # --- Sanity check
@@ -687,9 +749,11 @@ fill_capture_info_traptagger <- function(df) {
   if(length(check_locationID) != length(locationID)) { # problem, is maybe a numeric
     head_locationID <- locationID[1:min(10, length(locationID))]
     head_locationID <- paste(head_locationID, collapse = ", ")
-    warning(paste("locationID might be incorrect: all values are corecible to integer.",
-                  "Here are some data:",
-                  head_locationID))
+    msg <- paste("locationID might be incorrect: all values are corecible to integer.",
+                 "Here are some data:",
+                 head_locationID)
+    write_log_message(msg, logger = logger, level = "warn")
+    warning(msg)
   }
   
   check_roll <- get_NAs(transformed_data = suppressWarnings(as.integer(roll)), 
@@ -699,9 +763,11 @@ fill_capture_info_traptagger <- function(df) {
   if(length(check_roll) == length(roll)) { # problem, is maybe a character
     head_roll <- roll[1:min(10, length(roll))]
     head_roll <- paste(head_roll, collapse = ", ")
-    warning(paste("roll might be incorrect: values not coercible to integer.",
-                  "Here are some data:",
-                  head_roll))
+    msg <- paste("roll might be incorrect: values not coercible to integer.",
+                 "Here are some data:",
+                 head_roll)
+    write_log_message(msg, logger = logger, level = "warn")
+    warning(msg)
   }
   
   check_capture <- get_NAs(transformed_data = suppressWarnings(as.integer(capture)), 
@@ -711,9 +777,11 @@ fill_capture_info_traptagger <- function(df) {
   if(length(check_capture) == length(capture)) { # problem, is maybe a character
     head_capture <- capture[1:min(10, length(capture))]
     head_capture <- paste(head_capture, collapse = ", ")
-    warning(paste("roll might be incorrect: values not coercible to integer.",
-                  "Here are some data:",
-                  head_capture))
+    msg <- paste("roll might be incorrect: values not coercible to integer.",
+                 "Here are some data:",
+                 head_capture)
+    write_log_message(msg, logger = logger, level = "warn")
+    warning(msg)
   }
   
   # --- Fill in info
@@ -733,11 +801,13 @@ fill_capture_info_traptagger <- function(df) {
 #'
 #' @param times A times vector (character). Will work if the times are
 #' already "HH:MM:SS" or "HH:MM:SS AM/PM"
-#'
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`.
+#' 
 #' @return The vector standardized in the format "HH:MM:SS"
 #' 
 #' @noRd
-standardize_time <- function(times){
+standardize_time <- function(times, logger = NA){
   
   # Copy
   tim <- times
@@ -776,7 +846,9 @@ standardize_time <- function(times){
   cnt <- unique(cnt)
   
   if(length(cnt) > 1){
-    stop("Bad time formatting")
+    msg <- "Bad time formatting"
+    write_log_message(msg, logger = logger, level = "error")
+    stop(msg)
   }else{
     if(cnt == 2){
       timsplit <- lapply(timsplit, function(l) c(l, "00"))
@@ -794,7 +866,10 @@ standardize_time <- function(times){
         
         NAs <- get_NAs(transformed_data = tim_numeric_NAs, 
                        origin_data = times)
-        stop(paste("Could not cast times", NAs, "to numeric."))
+        
+        msg <- paste("Could not cast times", NAs, "to numeric.")
+        write_log_message(msg, logger = logger, level = "error")
+        stop(msg)
       }
     )
     
@@ -821,7 +896,9 @@ standardize_time <- function(times){
                    origin_data = times)
     
     if(length(NAs) != 0) {
-      message("Times ", NAs, " could not be transformed to times.")
+      msg <- paste("Times", NAs, "could not be transformed to times.")
+      write_log_message(msg, logger = logger, level = "info")
+      message(msg)
     }
     
   }
@@ -834,11 +911,13 @@ standardize_time <- function(times){
 #' 
 #' @param dates A dates vector (character). Accepts all formats coercible to date
 #' with lubridate::as_date, else will look for "\%d-\%m-\%Y" or "\%m-\%d-\%Y".
-#'
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`.
+#' 
 #' @return A vector of dates in the format "YYYY-MM-DD".
 #'
 #' @noRd
-standardize_date <- function(dates){
+standardize_date <- function(dates, logger = NA){
   
   # Copy
   dat <- dates
@@ -869,8 +948,10 @@ standardize_date <- function(dates){
   
   NAs <- get_NAs(transformed_data = dat, origin_data = dates)
   if(length(NAs) != 0) {
-    warning(paste("Date format failed to parse for values:\n",
-                  NAs, "..."))
+    msg <- paste("Date format failed to parse for values:\n",
+                 NAs, "...")
+    write_log_message(msg, logger = logger, level = "warn")
+    warning(msg)
   }
   
   return(dat)
@@ -883,13 +964,16 @@ standardize_date <- function(dates){
 #'
 #' @param df a dataframe for which columns should be filled. 
 #' @param classifier The classifier
-#'
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`.
+#' 
 #' @return A dataframe with values filled for locationID, cameraID,
 #' roll and capture. Also fills season if Zooniverse.
 #' 
 #' @noRd
 fill_capture_info <- function(df,
-                              classifier = c("zooniverse", "traptagger", "digikam")) {
+                              classifier = c("zooniverse", "traptagger", "digikam"),
+                              logger = NA) {
   
   classifier <- match.arg(classifier)
   
@@ -904,8 +988,10 @@ fill_capture_info <- function(df,
     unique_locationID <- unique(locationID)
     
     if(length(unique_locationID) != 1) {
-      warning(paste("Location extracted from eventID is not unique: ", 
-                    paste(locationID, collapse = ", ")))
+      msg <- paste("Location extracted from eventID is not unique: ", 
+                   paste(locationID, collapse = ", "))
+      write_log_message(msg, logger = logger, level = "warn")
+      warning(msg)
     }
     
     res$locationID <- locationID
@@ -915,23 +1001,10 @@ fill_capture_info <- function(df,
     res$season <- season
     
   } else if (classifier == "traptagger") {
-    res <- fill_capture_info_traptagger(df)
+    res <- fill_capture_info_traptagger(df, logger = logger)
   } else if (classifier == "digikam") {
     res <- fill_capture_info_digikam(df)
   }
-  
-  # --- Modify cameraID to add locationID
-  # res <- res %>% mutate(cameraID = get_cameraID(locationID = locationID,
-  #                                               camera = cameraID, 
-  #                                               classifier = !!classifier))
-  
-  # --- Add eventID
-  # eventID <- get_eventID(locationID = res$locationID,
-  #                        cameraID = res$cameraID, 
-  #                        roll = res$roll, 
-  #                        captureID = res$capture)
-  # 
-  # res$eventID <- eventID
   
   return(res)
 }
@@ -943,11 +1016,13 @@ fill_capture_info <- function(df,
 #' 
 #' @param data the dataframe to add columns to
 #' @param cname a character vector with names that should be added (these names can be present in the data already)
-#'
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`.
+#' 
 #' @return The dataframe with all original columns + those that are in 'cname' 
 #'
 #' @noRd
-fncols <- function(data, cname, approx = FALSE) {
+fncols <- function(data, cname, approx = FALSE, logger = NA) {
   res <- data
   
   # First check if the name we wanna add is "almost" in data
@@ -957,15 +1032,20 @@ fncols <- function(data, cname, approx = FALSE) {
                     x = names(data), ignore.case = TRUE)
       if(length(match) == 1) {
         if(names(data)[match] != cn){ # If match but different
-          message("Match found in column names: renaming column ", 
-                  names(data)[match],
-                  " into ", cn)
+          msg <- paste("Match found in column names: renaming column", 
+                       names(data)[match],
+                       "into", cn)
+          write_log_message(msg, logger = logger, level = "info")
+          message(msg)
+          
           names(res)[match] <- cn
         }
       } else if (length(match) > 1) {
-        message("Multiple matches for ", cn, " in column names: ", 
-                paste(names(data)[match], collapse = ", "),
-                ", not renaming.")
+        msg <- paste0("Multiple matches for ", cn, " in column names: ", 
+                     paste(names(data)[match], collapse = ", "),
+                     ", not renaming.")
+        write_log_message(msg, logger = logger, level = "info")
+        message(msg)
       }
     }
   }
@@ -984,24 +1064,29 @@ fncols <- function(data, cname, approx = FALSE) {
 #' @param expected Character vector of expected column names.
 #' @param verbose Should a message be displayed if some columns are deleted?
 #' @param approx Should partial name matching be used to match expected columns?
-#'
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`.
+#' 
 #' @return The dataframe with all columns in expected, and no others.
 #' If a column was not originally there, then it is filled with NAs.
 #' 
 #'
 #' @noRd
-keep_only_expected_columns <- function(df, expected, verbose, approx) {
+keep_only_expected_columns <- function(df, expected, verbose, approx,
+                                       logger = NA) {
   
   # --- Create columns that don't exist 
-  df_res <- fncols(df, expected, approx = approx)
+  df_res <- fncols(df, expected, approx = approx, logger = logger)
   
   # --- Discard all columns not in the standard (and reorder)
   discarded <- colnames(df_res)[!(colnames(df_res) %in% expected)]
   
   if(verbose) {
     if(length(discarded) != 0) {
-      message(paste0("Column(s) ", paste(discarded, collapse = ", "),
-                     " will be discarded."))
+      msg <- paste0("Column(s) ", paste(discarded, collapse = ", "),
+                    " will be discarded.")
+      write_log_message(msg, logger = logger, level = "info")
+      message(msg)
     }
   }
   
@@ -1017,26 +1102,35 @@ keep_only_expected_columns <- function(df, expected, verbose, approx) {
 #' 
 #' @param standard_colnames The dataframe to check
 #' @param classifier The classifier
-#'
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`.
+#' 
 #' @return Nothing or stops execution if standard_colnames is not in
 #' compliance with expectations.
 #' 
 #'
 #' @noRd
 check_standard_colnames <- function(standard_colnames, 
-                                    classifier = c("zooniverse", "traptagger", "digikam")) {
+                                    classifier = c("zooniverse", "traptagger", "digikam"),
+                                    logger = NA) {
   
   classifier <- match.arg(classifier)
   
   if(!is.data.frame(standard_colnames)) {
-    stop("standard_colnames must be a dataframe")
+    msg <- "standard_colnames must be a dataframe"
+    write_log_message(msg, logger = logger, level = "error")
+    stop(msg)
   } else if (ncol(standard_colnames) < 2) { # if it is a df but has less than 2 columns
-    stop("standard_colnames must have 2 columns at least")
+    msg <- "standard_colnames must have 2 columns at least"
+    write_log_message(msg, logger = logger, level = "error")
+    stop(msg)
   } else { # a df with >= 2 columns
     cond <- all(c(classifier, 'new') %in% colnames(standard_colnames))
     if(!cond) {
-      stop(paste("2 columns in standard_colnames must be named",
-                 paste(c(classifier, 'new'), sep = ", ")))
+      msg <- paste("2 columns in standard_colnames must be named",
+                   paste(c(classifier, 'new'), sep = ", "))
+      write_log_message(msg, logger = logger, level = "error")
+      stop(msg)
     }
   }
 }
@@ -1086,7 +1180,9 @@ get_NAs <- function(transformed_data, origin_data,
 #' be majuscule letters leading filename.
 #' 
 #' @param filename A string of filename. If it does not begin with majuscule letters, NA will be returned.
-#'
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`.
+#' 
 #' @return The location code (string) as the leading majuscule letters of filename.
 #'
 #' @note If the file name is `Marinmane NR _record_table_0min_deltaT_2021-06-10.csv`, will
@@ -1094,14 +1190,16 @@ get_NAs <- function(transformed_data, origin_data,
 #' 
 #'
 #' @noRd
-locationID_from_filename <- function(filename) {
+locationID_from_filename <- function(filename, logger = NA) {
   
   fname <- basename(filename)
   
   if(fname == "Marinmane NR _record_table_0min_deltaT_2021-06-10.csv") {
     # Manually set location
     locationID <- "MAR"
-    message("Manually setting location code for Marinmane.")
+    msg <- "Manually setting location code for Marinmane."
+    write_log_message(msg, logger = logger, level = "info")
+    message(msg)
   } else {
     locationID <- str_extract(fname, "^[A-Z]+")
   }

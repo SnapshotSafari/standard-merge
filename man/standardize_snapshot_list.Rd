@@ -4,7 +4,7 @@
 \alias{standardize_snapshot_list}
 \title{Standardize a list of dataframes}
 \usage{
-standardize_snapshot_list(df_list, standard_df, classifier)
+standardize_snapshot_list(df_list, standard_df, classifier, logger = NA)
 }
 \arguments{
 \item{df_list}{a list of dataframes.}
@@ -14,6 +14,9 @@ A dataframe with >= 2 columns, one of which must be named \code{zooniverse}, \co
 and another one must be named \code{new}.}
 
 \item{classifier}{Optional character or vector of characters for the classifier.}
+
+\item{logger}{a \code{log4r} \code{logger} object if you want logging (can be created with \code{create_logger}),
+else \code{NA}.}
 }
 \value{
 The list of standardized dataframes: they the same columns as specified in

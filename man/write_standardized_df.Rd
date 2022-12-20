@@ -10,7 +10,8 @@ write_standardized_df(
   filename,
   write = TRUE,
   return_path = ifelse(write, FALSE, TRUE),
-  verbose = TRUE
+  verbose = TRUE,
+  logger = NA
 )
 }
 \arguments{
@@ -26,6 +27,9 @@ write_standardized_df(
 \item{return_path}{Should the path be returned?}
 
 \item{verbose}{Should messages be displayed when creating a folder/file?}
+
+\item{logger}{a \code{log4r} \code{logger} object if you want logging (can be created with \code{create_logger}),
+else \code{NA}.}
 }
 \value{
 Writes the file to the folder \code{to/filename}.

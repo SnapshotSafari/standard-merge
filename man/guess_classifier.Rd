@@ -4,10 +4,13 @@
 \alias{guess_classifier}
 \title{Guess classifier}
 \usage{
-guess_classifier(colnames_df)
+guess_classifier(colnames_df, logger = NA)
 }
 \arguments{
 \item{colnames_df}{A character vector of column names.}
+
+\item{logger}{a \code{log4r} \code{logger} object if you want logging (can be created with \code{create_logger}),
+else \code{NA}.}
 }
 \value{
 The classifier: either \code{zooniverse}, \code{digikam} or \code{traptagger}.

@@ -25,7 +25,8 @@
 #' @export
 #' 
 #' @examples get_camnames(c("APN_A01", "MAD_B01"), c("APN", "MAD"))
-get_camnames <- function(cameras, locations, silence_warning = FALSE, logger = NA) {
+get_camnames <- function(cameras, locations, 
+                         silence_warning = FALSE, logger = NA) {
   
   if ( any(is.na(locations))) {
     if (!silence_warning) {
@@ -48,7 +49,9 @@ get_camnames <- function(cameras, locations, silence_warning = FALSE, logger = N
 #' @param df a dataframe that must have columns `cameraID`, `locationID` and `classifier`.
 #' @param camera should `cameraID` column be cleaned?
 #' @param location should `locationID` column be cleaned?
-#'
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`. 
+#' 
 #' @return The dataframe with cleaned columns `cameraID` and/or `locationID`
 #' (depending whether `camera` and `location` are `TRUE`) and `eventID`
 #' refactored to match new `cameraID`/`locationID`.
@@ -75,18 +78,21 @@ get_camnames <- function(cameras, locations, silence_warning = FALSE, logger = N
 #' 
 #' @noRd
 clean_camera_location <- function(df, camera = TRUE, 
-                                  location = TRUE) {
+                                  location = TRUE,
+                                  logger = NA) {
   
   # Initialize result
   clean_df <- df
   
   if (location) {
   clean_df <- clean_df %>%
-    mutate(locationID = clean_locations(cameraID, locationID))
+    mutate(locationID = clean_locations(cameraID, locationID,
+                                        logger = logger))
   } 
   if (camera) {
     clean_df <- clean_df %>%
-      mutate(cameraID = clean_cameras(cameraID, locationID, classifier))
+      mutate(cameraID = clean_cameras(cameraID, locationID, classifier,
+                                      logger = logger))
   }
   
   clean_df <- clean_df %>%
@@ -256,7 +262,9 @@ clean_species <- function(species){
 #' @param cameras Cameras vector
 #' @param locations locations vector
 #' @param classifiers Classifier vector
-#'
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`. 
+#' 
 #' @return a character vector of locations with the same length as input.
 #' 
 #' @details 
@@ -282,7 +290,8 @@ clean_species <- function(species){
 #' 
 #' @noRd
 clean_cameras <- function(cameras, locations, 
-                          classifiers) {
+                          classifiers,
+                          logger = NA) {
   
   cameras_final <- sapply(1:length(cameras), 
                           function(i) {
@@ -302,7 +311,9 @@ clean_cameras <- function(cameras, locations,
 #'
 #' @param cameras characgter vector of cameras
 #' @param locations character vector of locations (same length)
-#'
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`. 
+#' 
 #' @return a character vector of locations with the same length as input.
 #' 
 #' @details
@@ -313,7 +324,7 @@ clean_cameras <- function(cameras, locations,
 #' clean_locations(c("OA01", "KHOGA01"), c("DHP", "KGA"))
 #' 
 #' @noRd
-clean_locations <- function(cameras, locations) {
+clean_locations <- function(cameras, locations, logger = NA) {
   
   locations_final <- sapply(1:length(cameras), 
                             function(i) {
@@ -329,7 +340,9 @@ clean_locations <- function(cameras, locations) {
 #' @param classifier Classifier vector
 #' @param camera A camera
 #' @param location A location
-#'
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`. 
+#' 
 #' @return a cleaned camera name
 #' 
 #' @details 
@@ -340,7 +353,8 @@ clean_locations <- function(cameras, locations) {
 #' 
 #' @noRd
 clean_camera <- function(camera, location, 
-                         classifier = c("zooniverse", "traptagger", "digikam")) {
+                         classifier = c("zooniverse", "traptagger", "digikam"),
+                         logger = NA) {
   
   classifier <- match.arg(classifier)
   
@@ -356,7 +370,7 @@ clean_camera <- function(camera, location,
     return(camera)
   }
   
-  camname <- get_camnames(camera, location)
+  camname <- get_camnames(camera, location, logger = logger)
   
   if(classifier == "traptagger") {
     if (grepl(pattern = "^KHO$|^SAM$|^TSW$", location)) {
@@ -384,17 +398,19 @@ clean_camera <- function(camera, location,
 #'
 #' @param camera camera
 #' @param location location
-#'
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`. 
+#' 
 #' @return a character vector of locations with the same length as input.
 #' 
 #' @details
 #' See clean_locations
 #' 
 #' @noRd
-clean_location <- function(camera, location) {
+clean_location <- function(camera, location, logger = NA) {
   
   # Remove leading locationID (if it is present)
-  camname <- get_camnames(camera, location)
+  camname <- get_camnames(camera, location, logger = logger)
   
   new_location <- location
   
@@ -429,13 +445,15 @@ clean_location <- function(camera, location) {
 #' @param classifier The classifier used. If it is traptagger, will not display message
 #' because it is expected that cameraID will already be locationID_camera.
 #' It is optional (if not specified, it will display the message by default)
-#'
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`. 
+#' 
 #' @return a vector of same lengths as locationID and camera with pasted
 #' locationID_camera. If camera is already in format locationID_camera, 
 #' then it does not changes and displays a message.
 #' 
 #' @noRd
-get_cameraID <- function(locationID, camera, classifier) {
+get_cameraID <- function(locationID, camera, classifier, logger = NA) {
   
   if(missing(classifier)) {
     classifier <- "placeholder"
@@ -455,6 +473,7 @@ get_cameraID <- function(locationID, camera, classifier) {
       msg <- paste0("Cameras ",
                     paste(cam_prob, collapse = ", "),
                     " already begin with code_loc: not adding the location.")
+      write_log_message(msg, logger = logger, level = "info")
       message(msg)
     }
     
