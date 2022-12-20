@@ -49,9 +49,15 @@ to_ignore <- c("reports_FBIP_format_all_recs",
                "DHP/DHP+OVE_same_file",
                "KGA/KGA-KHO_together")
 
+logfile <- here("scripts_tests/log/log_test.log")
+
 # Read standard column names ----------------------------------------------
 # Read the  file
 data(standard)
+
+
+# Logging -----------------------------------------------------------------
+logger_file <- create_logger(logfile)
 
 # Read files --------------------------------------------------------------
 std_list <- read_snapshot_files(input = input,
