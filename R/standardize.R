@@ -64,6 +64,7 @@ guess_classifier <- function(colnames_df, logger = NA) {
 #' @param classifier Optional character or vector of characters for the classifier.
 #' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
 #' else `NA`. 
+#' @param verbose Should a lot of details be given when executing function?
 #' 
 #' @return The list of standardized dataframes: they the same columns as specified in
 #' `standard_df$new`, dates and times are standardized and some columns regarding
@@ -113,7 +114,8 @@ guess_classifier <- function(colnames_df, logger = NA) {
 #' standardize_snapshot_list(df_list, standard)
 standardize_snapshot_list <- function(df_list, standard_df,
                                       classifier,
-                                      logger = NA) {
+                                      logger = NA,
+                                      verbose = TRUE) {
   
   # --- Check arguments
   if(!inherits(df_list, "list")) {
@@ -180,7 +182,8 @@ standardize_snapshot_list <- function(df_list, standard_df,
                                              standard_df = standard_df,
                                              locationID_digikam = locationID,
                                              classifier = classifier_i,
-                                             logger = logger)
+                                             logger = logger,
+                                             verbose = verbose)
       } else {
         msg <- paste0(deparse(quote(df_list)),"[", i, "] ", 
                       "is not named and it is Digikam: provide a named list if you want to fill locationID.")
@@ -190,14 +193,16 @@ standardize_snapshot_list <- function(df_list, standard_df,
         std_dat_i <- standardize_snapshot_df(df_i, 
                                              standard_df = standard_df,
                                              classifier = classifier_i,
-                                             logger = logger)
+                                             logger = logger,
+                                             verbose = verbose)
       }
     } else {
       # --- Standardize (not Digikam)
       std_dat_i <- standardize_snapshot_df(df_i, 
                                            standard_df = standard_df,
                                            classifier = classifier_i,
-                                           logger = logger)
+                                           logger = logger,
+                                           verbose = verbose)
     }
     
     # --- Add df to list
@@ -222,6 +227,7 @@ standardize_snapshot_list <- function(df_list, standard_df,
 #' @param classifier Optional character for the classifier.
 #' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
 #' else `NA`. 
+#' @param verbose Should a lot of details be given when executing function?
 #' 
 #' @return The standardized dataframe: it has the same columns as specified in
 #' `standard_df$new`, dates and times are standardized and some columns regarding
@@ -262,8 +268,16 @@ standardize_snapshot_list <- function(df_list, standard_df,
 #' standardize_snapshot_df(digikam, standard, locationID_digikam = "MOK")
 standardize_snapshot_df <- function(df, standard_df,
                                     locationID_digikam, classifier,
-                                    logger = NA) {
-  
+                                    logger = NA,
+                                    verbose = TRUE) {
+
+  if (verbose) {
+    ncol <- ncol(df)
+    nrow <- nrow(df)
+    msg <- paste("Initial file:", ncol, "columns, ", nrow, "rows.")
+    write_log_message(msg, logger = logger, level = "info")
+    message(msg)
+  }
   if(missing(classifier)) {
     # Guess classifier
     colnames_df <- colnames(df)
@@ -271,12 +285,22 @@ standardize_snapshot_df <- function(df, standard_df,
   }
   
   # Standardize columns
+  if (verbose) {
+    msg <- "Standardizing columns"
+    write_log_message(msg, logger = logger, level = "info")
+    message(msg)
+  }
   std_dat <- standardize_columns(df, 
                                  classifier = classifier,
                                  standard_colnames = standard_df,
                                  logger = logger)
   
   # Standardize date/times 
+  if (verbose) {
+    msg <- "Standardizing dates/times"
+    write_log_message(msg, logger = logger, level = "info")
+    message(msg)
+  }
   std_dat <- std_dat %>% mutate(eventDate = standardize_date(eventDate,
                                                              logger = logger))
   std_dat <- std_dat %>% mutate(eventTime = standardize_time(eventTime,
@@ -284,7 +308,11 @@ standardize_snapshot_df <- function(df, standard_df,
   
   # Get location code (Digikam)
   if(classifier == "digikam") { # Get locationID from filename
-    
+    if (verbose) {
+      msg <- "Getting location code for Digikam data"
+      write_log_message(msg, logger = logger, level = "info")
+      message(msg)
+    }
     if(missing(locationID_digikam)) {
       msg <- "Digikam data requires 'locationID_digikam' to be provided: without a it, locationID will be set to NA in the standardized data."
       write_log_message(msg, logger = logger, level = "warn")
@@ -297,6 +325,11 @@ standardize_snapshot_df <- function(df, standard_df,
   }
   
   # Fill capture info
+  if (verbose) {
+    msg <- "Fill capture info"
+    write_log_message(msg, logger = logger, level = "info")
+    message(msg)
+  }
   std_dat <- fill_capture_info(std_dat, classifier, logger = logger)
   
   # Add classifier 
@@ -310,6 +343,11 @@ standardize_snapshot_df <- function(df, standard_df,
   std_dat <- std_dat %>% select(-capture)
   
   # Clean location/camera
+  if (verbose) {
+    msg <- "Cleaning location, camera and species"
+    write_log_message(msg, logger = logger, level = "info")
+    message(msg)
+  }
   if(any(is.na(std_dat$locationID))) {
     msg <- "NA present in locationID: will not clean locationID."
     write_log_message(msg, logger = logger, level = "warn")
@@ -328,6 +366,26 @@ standardize_snapshot_df <- function(df, standard_df,
   
   # Reorder data (rows)
   std_dat <- std_dat %>% arrange(cameraID, eventDate, eventTime)
+  
+  if (verbose) {
+    ncol <- ncol(std_dat)
+    nrow <- nrow(std_dat)
+    msg <- paste("Final file:", ncol, "columns, ", nrow, "rows.")
+    write_log_message(msg, logger = logger, level = "info")
+    message(msg)
+    
+    # Get first 8 columns and 5 rows
+    msg <- head(std_dat[,1:8], 5)
+    
+    if (!all(is.na(logger))) {
+      file_con <- file(logger$logfile, open = "a")
+      write.table(msg, file = file_con,
+                  row.names = FALSE)
+      writeLines("", file_con)
+      close(file_con)
+    }
+    print(msg)
+  }
   
   return(std_dat)
 }

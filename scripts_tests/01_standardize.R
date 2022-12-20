@@ -24,9 +24,9 @@ IN_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data"
 
 # --- Where wou want to copy data
 # Where do you want to copy your files?
-# OUT_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/2_standardized_data"
+OUT_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/2_standardized_data"
 OUT_DATADIR_FILE <- "/home/lnicvert/Documents/PhD/Snapshot/data/test_file"
-OUT_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/test_clean"
+# OUT_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/test_clean"
 
 # --- Data to standardize
 # File or folder you actually want to copy, within IN_DATADIR and to OUT_DATADIR.
@@ -65,7 +65,8 @@ loggerf <- create_logger(logfile_file, console = FALSE)
 std_list <- read_snapshot_files(input = input,
                                 except = to_ignore,
                                 basepath = IN_DATADIR,
-                                logger = logger)
+                                logger = logger,
+                                verbose = FALSE)
 std_df <- read.csv(input_file)
 
 # Standardize files -------------------------------------------------------
@@ -75,11 +76,6 @@ std_list <- standardize_snapshot_list(std_list,
 std_df <- standardize_snapshot_df(std_df,
                                   standard,
                                   logger = loggerf)
-
-
-# Print head --------------------------------------------------------------
-lapply(std_list, function(df) head(df[,1:8]))
-head(std_df[,1:8])
 
 # Write files -------------------------------------------------------------
 write_standardized_list(df_list = std_list,
@@ -92,4 +88,3 @@ write_standardized_df(df = std_df,
                       write = TRUE,
                       to = OUT_DATADIR_FILE,
                       logger = loggerf)
-

@@ -4,7 +4,7 @@
 \alias{read_snapshot_files}
 \title{Read Snapshot files}
 \usage{
-read_snapshot_files(input, except, basepath, logger = NA)
+read_snapshot_files(input, except, basepath, verbose = TRUE, logger = NA)
 }
 \arguments{
 \item{input}{a character vector of valid paths: can be files and/or folders}
@@ -14,6 +14,8 @@ the exact expression in \code{except} will be ignored.}
 
 \item{basepath}{the part of the path that should be ignored when copying final
 files (i.e. absolute path inside one's comupter that should not be copied in final file.)}
+
+\item{verbose}{Should messages be displayed when reading a folder/file?}
 
 \item{logger}{a \code{log4r} \code{logger} object if you want logging (can be created with \code{create_logger}),
 else \code{NA}.}

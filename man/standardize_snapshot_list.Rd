@@ -4,7 +4,13 @@
 \alias{standardize_snapshot_list}
 \title{Standardize a list of dataframes}
 \usage{
-standardize_snapshot_list(df_list, standard_df, classifier, logger = NA)
+standardize_snapshot_list(
+  df_list,
+  standard_df,
+  classifier,
+  logger = NA,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{df_list}{a list of dataframes.}
@@ -17,6 +23,8 @@ and another one must be named \code{new}.}
 
 \item{logger}{a \code{log4r} \code{logger} object if you want logging (can be created with \code{create_logger}),
 else \code{NA}.}
+
+\item{verbose}{Should a lot of details be given when executing function?}
 }
 \value{
 The list of standardized dataframes: they the same columns as specified in

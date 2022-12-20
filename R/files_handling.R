@@ -93,6 +93,7 @@ get_csv_files_and_folders <- function(input,
 #' the exact expression in `except` will be ignored.
 #' @param basepath the part of the path that should be ignored when copying final
 #' files (i.e. absolute path inside one's comupter that should not be copied in final file.)
+#' @param verbose Should messages be displayed when reading a folder/file?
 #' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
 #' else `NA`. 
 #' 
@@ -116,16 +117,20 @@ get_csv_files_and_folders <- function(input,
 #'                     except = "DHP/DHP+OVE_same_file/*")
 #' }
 read_snapshot_files <- function(input, except,
-                                basepath, logger = NA) {
+                                basepath, 
+                                verbose = TRUE,
+                                logger = NA) {
   
   # Get the files names
   if(missing(except)) {
     files_df <- get_csv_files_and_folders(input = input,
-                                          basepath = basepath)
+                                          basepath = basepath,
+                                          logger = logger)
   } else {
     files_df <- get_csv_files_and_folders(input = input, 
                                           except = except,
-                                          basepath = basepath)
+                                          basepath = basepath,
+                                          logger = logger)
   }
   
   # Initialize result
@@ -138,13 +143,16 @@ read_snapshot_files <- function(input, except,
     in_filename <- files_df$files[i]
     folder <- files_df$folders[i]
     
-    msg <- paste("Reading file", in_filename, "---")
-    write_log_message(msg, logger = logger, level = "info")
-    message(msg)
+    if(verbose) {
+      msg <- paste("Reading file", in_filename, "---")
+      write_log_message(msg, logger = logger, level = "info")
+      message(msg)
+    }
     
     # Read file
     dat_in <- read_snapshot_file(in_filename, 
-                                 base_folder = folder)
+                                 base_folder = folder,
+                                 verbose = verbose)
     df_list[[i]] <- dat_in
   }
   

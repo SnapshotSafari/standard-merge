@@ -51,6 +51,11 @@ create_logger <- function(my_logfile,
                                appenders = my_file_appender)
   }
   
+  # Adding logfile argument
+  my_logger$logfile <- my_logfile
+  # Setting class
+  class(my_logger) <- c("snapshot_logger", class(my_logger))
+  
   msg <- paste("Create logger", my_logfile)
   write_log_message(msg, 
                     level = "info", logger = my_logger)

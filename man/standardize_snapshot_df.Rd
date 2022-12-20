@@ -9,7 +9,8 @@ standardize_snapshot_df(
   standard_df,
   locationID_digikam,
   classifier,
-  logger = NA
+  logger = NA,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ the \code{locationID} cannot be inferred from other columns.}
 
 \item{logger}{a \code{log4r} \code{logger} object if you want logging (can be created with \code{create_logger}),
 else \code{NA}.}
+
+\item{verbose}{Should a lot of details be given when executing function?}
 }
 \value{
 The standardized dataframe: it has the same columns as specified in
