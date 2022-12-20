@@ -9,8 +9,8 @@ read_snapshot_files(input, except, basepath)
 \arguments{
 \item{input}{a character vector of valid paths: can be files and/or folders}
 
-\item{except}{files to ignore (optional): the path might be an absolute path
-or the relative path from \code{basepath}.}
+\item{except}{files to ignore (optional): all paths for (a part of) which match
+the exact expression in \code{except} will be ignored.}
 
 \item{basepath}{the part of the path that should be ignored when copying final
 files (i.e. absolute path inside one's comupter that should not be copied in final file.)}

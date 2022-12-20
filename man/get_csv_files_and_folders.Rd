@@ -9,8 +9,8 @@ get_csv_files_and_folders(input, except, basepath)
 \arguments{
 \item{input}{a character vector of valid paths: can be files and/or folders}
 
-\item{except}{files to ignore (optional): the path might be an absolute path
-or the relative path from \code{basepath}.}
+\item{except}{files to ignore (optional): all paths for (a part of) which match
+the exact expression in \code{except} will be ignored.}
 
 \item{basepath}{the part of the path that should be ignored when copying final
 files (i.e. absolute path inside one's comupter that should not be copied in final file.)}
@@ -21,9 +21,19 @@ paths up to a given file (corresponding to the relative path to the file from \c
 and \code{files} are the files paths from \code{folders}.
 }
 \description{
-Get all csv files from the input character vector.
+Get the names of all csv files from the input character vector.
+}
+\details{
 \code{input} can be a vector of files and/or folders.
 If an element of \code{input} is a folder, the function will list
 all files within \code{input}; if the element is a file,
 the function will only list this file.
+}
+\examples{
+\dontrun{
+get_csv_files_and_folders(input = c("path/to/datafolder/KGA",
+                                    "path/to/datafolder/ATH_Roll1_Snapshot.csv"), 
+                                    except = "KGA/KGA-KHO_together", 
+                                    basepath = "path/to/datafolder")
+}
 }
