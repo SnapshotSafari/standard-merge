@@ -19,6 +19,15 @@ Once the repository will be public: it will be possible to install it via:
 ```r 
 devtools::install_github("https://github.com/SnapshotSafari/standard-merge")
 ```
+## Vignettes
+
+There is one vignette showing the typical workflow for the package.
+
+The vignette `standardize-file` shows the workflow to standardize one single file:
+```r 
+vignette("standardize-file")
+```
+
 
 ## Contents
 

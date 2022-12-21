@@ -1,0 +1,111 @@
+---
+title: "Standardize one file"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Standardize one file}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+
+This vignette shows the typical workflow to standardize a Snapshot Safari file.
+
+
+```{r setup}
+library(standardizeSnapshot)
+```
+
+## Setup a logger
+
+This is an optional but recommended step. If you want not only to print messages to the console, but also to save them in a file, you can use a logger.
+
+The function `create_logger` allows to create a file in the specified location and setup the logging:
+
+```{r}
+logfile <- file.path(tempdir(), "logger.log") # create the logfile
+logfile
+
+logger <- create_logger(my_logfile = logfile, 
+                        console = FALSE)
+```
+
+## Read the files
+
+First, we need to read the data. Here, we will use the `digikam` dataframe, which represents Digikam-like data:
+
+```{r}
+data("digikam")
+head(digikam, 3)
+```
+
+We cound also use a simple `read.csv`.
+```{r, eval=FALSE}
+# Not run
+digikam <- read.csv("path/to/file")
+```
+
+## Standardize the file
+
+Then, we standardize the file. The function `standardize_snapshot_df` allows to standardize a single dataframe.
+
+This function has a number of options, but the only ones that are mandatory are:
+
++ `df`: the dataframe to standardize
++ `standard_df`: the reference dataframe telling the function how to rename the columns.
+
+```{r}
+std_df <- standardize_snapshot_df(df = digikam, 
+                                  standard_df = standard,
+                                  locationID_digikam = "MOK",
+                                  logger = logger)
+```
+
+Here, we also use 2 optional arguments:
+
++ `locationID_digikam`: a location code, only useful if the data was processed with Digikam: indeed, the location (reserve) cannot be determined from the dataframe alone.
++ `logger`: a logger created with `create_logger`
+
+
+By default, if the argument `verbose` is `TRUE`, the function displays the head of the first 8 rows of the file. 
+
+## Write files
+
+The last step is to write the standardized files to a destination. For this, we use the function `write_standardized_df`.
+
+This function has only 2 mandatory arguments:
+
++ `df`: the file to write
++ `to`: the folder in which the file should be copied.
+
+```{r}
+final_folder <- file.path(tempdir(), "data") # the folder in which to copy the file
+final_folder
+
+write_standardized_df(df = std_df,
+                      to = final_folder,
+                      logger = logger)
+```
+
+Here, we also use the `logger` argument, which is a logger created with `create_logger`.
+
+
+The file is now written in the destination.
+```{r}
+list.files(final_folder)
+```
+
+
+We can check that the logger was filled:
+
+```{r}
+readLines(logfile)
+```
+
