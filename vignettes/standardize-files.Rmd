@@ -1,0 +1,153 @@
+---
+title: "Standardize multiple files"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Standardize multiple files}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+
+This vignette shows the typical workflow to standardize multiple Snapshot Safari files.
+
+
+```{r setup}
+library(standardizeSnapshot)
+```
+
+## Setup a logger
+
+This is an optional but recommended step. If you want not only to print messages to the console, but also to save them in a file, you can use a logger.
+
+The function `create_logger` allows to create a file in the specified location and setup the logging:
+
+```{r}
+logfile <- file.path(tempdir(), "logger.log") # create the logfile
+logfile
+
+logger <- create_logger(my_logfile = logfile, 
+                        console = FALSE)
+```
+
+## Read the files
+
+First, we need to read the data. Here, we will use three built-in datasets: `digikam`, `traptagger` and `zooniverse` (which are respectively Digikam-, TrapTagger- and Zooniverse-like data).
+
+```{r load_digikam}
+data("digikam")
+head(digikam, 3)
+```
+
+```{r load_traptagger}
+data("traptagger")
+head(traptagger, 3)
+```
+
+```{r load_zooniverse}
+data("zooniverse")
+head(zooniverse, 3)
+```
+
+## Format data manually
+
+The data need to be formatted as a list (which must be named for Digikam data, if we want the `locationID` to work properly).
+
+```{r}
+dat_list <- list("MOK" = digikam,
+                 "ATH" = traptagger,
+                 "APN" = zooniverse)
+```
+
+**Warning: this structure of "lists of dataframes" can take-up a lot of space. Therefore, it is better to copy the standardized results to the same list to overwrite older results and save space.**
+
+
+## Automated formatting 
+
+There is a built-in function to read multiple files into a list in the package: the `read_snapshot_files` function. 
+
+The 2 mandatory arguments to this function are:
+
++ `input`: a vector of valid paths, that can be files and/or folders
++ `basepath`: the part of the path that should be ignored when copying final files (which will be used to name the list).
+
+```{r, eval=FALSE}
+# Not run
+dat_list <- read_snapshot_files(input = c("path/to/data/dat1.csv",
+                                          "path/to/data/dat2.csv",
+                                          "path/to/data/dat3.csv")
+                                basepath = "path/to/data/")
+```
+
+Another useful argument is `except`, which is a vector of files that should be ignored. This is useful if some of the folder(s) in `input` contains files that should be ignored. A typical content of `except` could be:
+
+```{r}
+except <- c("reports_FBIP_format_all_recs",
+            "README_FILES_for_TEAMS.txt",
+            "Special Projects /*",
+            "DHP/DHP+OVE_same_file",
+            "KGA/KGA-KHO_together")
+```
+
+A logger can also be passed-on to this function with the argument `logger` (to copy messages to a logfile).
+
+
+## Standardize the files
+
+Then, we standardize the file. The function `standardize_snapshot_list` allows to standardize a list of dataframes.
+
+This function has a number of options, but the only ones that are mandatory are:
+
++ `df_list`: the list of dataframes to standardize
++ `standard_df`: the reference dataframe telling the function how to rename the columns.
+
+```{r}
+dat_list <- standardize_snapshot_list(df_list = dat_list,
+                                      standard_df = standard,
+                                      logger = logger)
+```
+
+Here, we also use the optional argument `logger`, which is a logger created with `create_logger`.
+
+
+By default, the function displays the head of the first 8 columns of each file along with numerous messages. 
+
+## Write files
+
+The last step is to write the standardized files to a destination. For this, we use the function `write_standardized_list`.
+
+This function has only 2 mandatory arguments:
+
++ `df_list`: the list of files to write
++ `to`: the folder in which the file should be copied.
+
+```{r}
+final_folder <- file.path(tempdir(), "data") # the folder in which to copy the file
+final_folder
+
+write_standardized_list(df_list = dat_list,
+                        to = final_folder,
+                        logger = logger)
+```
+
+Here, we also use the `logger` argument, which is a logger created with `create_logger`.
+
+
+The files are now written in the destination.
+```{r}
+list.files(final_folder)
+```
+
+
+We can check that the logger was filled:
+
+```{r}
+readLines(logfile)
+```

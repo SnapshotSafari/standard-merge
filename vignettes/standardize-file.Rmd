@@ -37,7 +37,7 @@ logger <- create_logger(my_logfile = logfile,
                         console = FALSE)
 ```
 
-## Read the files
+## Read the file
 
 First, we need to read the data. Here, we will use the `digikam` dataframe, which represents Digikam-like data:
 
@@ -46,7 +46,7 @@ data("digikam")
 head(digikam, 3)
 ```
 
-We cound also use a simple `read.csv`.
+We could also use a simple `read.csv`.
 ```{r, eval=FALSE}
 # Not run
 digikam <- read.csv("path/to/file")
@@ -74,11 +74,11 @@ Here, we also use 2 optional arguments:
 + `logger`: a logger created with `create_logger`
 
 
-By default, if the argument `verbose` is `TRUE`, the function displays the head of the first 8 rows of the file. 
+By default, the function displays the head of the first 8 columns of the file along with numerous messages. 
 
-## Write files
+## Write the file
 
-The last step is to write the standardized files to a destination. For this, we use the function `write_standardized_df`.
+The last step is to write the standardized file to a destination. For this, we use the function `write_standardized_df`.
 
 This function has only 2 mandatory arguments:
 
@@ -108,4 +108,3 @@ We can check that the logger was filled:
 ```{r}
 readLines(logfile)
 ```
-

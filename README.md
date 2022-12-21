@@ -21,13 +21,17 @@ devtools::install_github("https://github.com/SnapshotSafari/standard-merge")
 ```
 ## Vignettes
 
-There is one vignette showing the typical workflow for the package.
+There are 2 vignette showing the typical workflow for the package.
 
-The vignette `standardize-file` shows the workflow to standardize one single file:
+The vignette `standardize-file` shows the workflow to standardize one single file. To view the vignette, launch the following command in the R console:
 ```r 
 vignette("standardize-file")
 ```
 
+The vignette `standardize-files` shows the workflow to standardize multiple files:
+```r 
+vignette("standardize-files")
+```
 
 ## Contents
 
