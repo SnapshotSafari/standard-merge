@@ -49,8 +49,8 @@ to_ignore <- c("reports_FBIP_format_all_recs",
                "DHP/DHP+OVE_same_file",
                "KGA/KGA-KHO_together")
 
-logfile_folder <- here("scripts_tests/log/log_test_folder.log")
-logfile_file <- here("scripts_tests/log/log_test_file.log")
+logfile_folder <- here("scripts_tests/log/log_folder.log")
+logfile_file <- here("scripts_tests/log/log_file.log")
 
 # Read standard column names ----------------------------------------------
 # Read the  file

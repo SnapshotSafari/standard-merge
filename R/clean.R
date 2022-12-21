@@ -96,7 +96,7 @@ clean_camera_location <- function(df, camera = TRUE,
   }
   
   clean_df <- clean_df %>%
-    mutate(eventID = get_eventID(locationID, cameraID, roll, captureID))
+    mutate(eventID = get_eventID(locationID, cameraID, roll, capture))
   
   return(clean_df)
 }
@@ -497,19 +497,19 @@ get_cameraID <- function(locationID, camera, classifier, logger = NA) {
 #' @param locationID character vector of location
 #' @param cameraID character vector of cam_site
 #' @param roll character vector of roll
-#' @param captureID character vector of captureID
+#' @param capture character vector of capture
 #'
 #' @return A character vector of the same length of the inputs (or the
 #' longest input) with fields formatted as 
 #' season#cam_site#roll#event_no
 #' 
 #' @noRd
-get_eventID <- function(locationID, cameraID, roll, captureID) {
+get_eventID <- function(locationID, cameraID, roll, capture) {
   
   eventID <- paste(locationID,
                    cameraID,
                    roll, 
-                   captureID,
+                   capture,
                    sep = "#")
   
   return(eventID)

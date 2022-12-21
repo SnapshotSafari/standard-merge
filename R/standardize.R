@@ -339,9 +339,6 @@ standardize_snapshot_df <- function(df, standard_df,
   to_reorder <- standard_df$new[!is.na(standard_df$new)]
   std_dat <- std_dat %>% select(all_of(to_reorder))
   
-  # Remove capture column
-  std_dat <- std_dat %>% select(-capture)
-  
   # Clean location/camera
   if (verbose) {
     msg <- "Cleaning location, camera and species"
@@ -366,6 +363,9 @@ standardize_snapshot_df <- function(df, standard_df,
   
   # Reorder data (rows)
   std_dat <- std_dat %>% arrange(cameraID, eventDate, eventTime)
+  
+  # Remove capture column
+  # std_dat <- std_dat %>% select(-capture)
   
   if (verbose) {
     ncol <- ncol(std_dat)
@@ -689,6 +689,58 @@ rename_standard <- function(df,
 }
 
 ## Fill info ----------------------------------------
+
+#' Fill capture info
+#' 
+#' Fills different columns related to capture info.
+#'
+#' @param df a dataframe for which columns should be filled. 
+#' @param classifier The classifier
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`.
+#' 
+#' @return A dataframe with values filled for locationID, cameraID,
+#' roll and capture. Also fills season if Zooniverse.
+#' 
+#' @noRd
+fill_capture_info <- function(df,
+                              classifier = c("zooniverse", "traptagger", "digikam"),
+                              logger = NA) {
+  
+  classifier <- match.arg(classifier)
+  
+  if (classifier == "zooniverse") {
+    # Copy df
+    res <- df
+    
+    # --- Location code
+    # Set location to first set of majuscules letters in eventID
+    locationID <- str_extract(res$eventID, "^[A-Z]+")
+    
+    unique_locationID <- unique(locationID)
+    
+    if(length(unique_locationID) != 1) {
+      msg <- paste("Location extracted from eventID is not unique: ", 
+                   paste(locationID, collapse = ", "))
+      write_log_message(msg, logger = logger, level = "warn")
+      warning(msg)
+    }
+    
+    res$locationID <- locationID
+    
+    # --- Season
+    season <- str_match(res$season, "^.*_S(.*)$")[,2] # Get second match
+    res$season <- season
+    
+  } else if (classifier == "traptagger") {
+    res <- fill_capture_info_traptagger(df, logger = logger)
+  } else if (classifier == "digikam") {
+    res <- fill_capture_info_digikam(df)
+  }
+  
+  return(res)
+}
+
 #' Fill capture info for Digikam
 #'
 #' Fills some data on capture event for Digikam-format data.
@@ -727,6 +779,10 @@ fill_capture_info_digikam <- function(df){
                                 pattern = "\\d+")
   
   df_res$roll <- extracted_roll
+  
+  # --- Ungroup and cast as df
+  df_res <- df_res %>% ungroup() %>%
+    as.data.frame()
   
   return(df_res)
 }
@@ -1013,58 +1069,6 @@ standardize_date <- function(dates, logger = NA){
   }
   
   return(dat)
-}
-
-
-#' Fill capture info
-#' 
-#' Fills different columns related to capture info.
-#'
-#' @param df a dataframe for which columns should be filled. 
-#' @param classifier The classifier
-#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
-#' else `NA`.
-#' 
-#' @return A dataframe with values filled for locationID, cameraID,
-#' roll and capture. Also fills season if Zooniverse.
-#' 
-#' @noRd
-fill_capture_info <- function(df,
-                              classifier = c("zooniverse", "traptagger", "digikam"),
-                              logger = NA) {
-  
-  classifier <- match.arg(classifier)
-  
-  if (classifier == "zooniverse") {
-    # Copy df
-    res <- df
-    
-    # --- Location code
-    # Set location to first set of majuscules letters in eventID
-    locationID <- str_extract(res$eventID, "^[A-Z]+")
-    
-    unique_locationID <- unique(locationID)
-    
-    if(length(unique_locationID) != 1) {
-      msg <- paste("Location extracted from eventID is not unique: ", 
-                   paste(locationID, collapse = ", "))
-      write_log_message(msg, logger = logger, level = "warn")
-      warning(msg)
-    }
-    
-    res$locationID <- locationID
-    
-    # --- Season
-    season <- str_match(res$season, "^.*_S(.*)$")[,2] # Get second match
-    res$season <- season
-    
-  } else if (classifier == "traptagger") {
-    res <- fill_capture_info_traptagger(df, logger = logger)
-  } else if (classifier == "digikam") {
-    res <- fill_capture_info_digikam(df)
-  }
-  
-  return(res)
 }
 
 ## Misc -----------------------------------------

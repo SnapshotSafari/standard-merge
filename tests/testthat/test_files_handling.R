@@ -81,7 +81,8 @@ test_that("Get files and folder (file input)", {
 test_that("Write standardized df", {
   data(zooniverse)
   zooniverse_std <- standardize_snapshot_df(zooniverse,
-                                            standard)
+                                            standard,
+                                            verbose = FALSE)
   
   to <- tempdir()
   path <- write_standardized_df(df = zooniverse_std,
@@ -109,7 +110,8 @@ test_that("Write standardized list", {
                    "roaming/MOK.csv" = digikam)
   
   list_std <- standardize_snapshot_list(dat_list,
-                                        standard)
+                                        standard,
+                                        verbose = FALSE)
   
   to <- tempdir()
   path <- write_standardized_list(df_list = list_std, 
