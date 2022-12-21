@@ -270,11 +270,12 @@ standardize_snapshot_df <- function(df, standard_df,
                                     locationID_digikam, classifier,
                                     logger = NA,
                                     verbose = TRUE) {
-
+  
+  ncol_init <- ncol(df)
+  nrow_init <- nrow(df)
   if (verbose) {
-    ncol <- ncol(df)
-    nrow <- nrow(df)
-    msg <- paste("Initial file:", ncol, "columns, ", nrow, "rows.")
+    msg <- paste("Initial file:", ncol_init, "columns, ", 
+                 nrow_init, "rows.")
     write_log_message(msg, logger = logger, level = "info")
     message(msg)
   }
@@ -345,6 +346,7 @@ standardize_snapshot_df <- function(df, standard_df,
     write_log_message(msg, logger = logger, level = "info")
     message(msg)
   }
+  
   if(any(is.na(std_dat$locationID))) {
     msg <- "NA present in locationID: will not clean locationID."
     write_log_message(msg, logger = logger, level = "warn")
@@ -367,10 +369,49 @@ standardize_snapshot_df <- function(df, standard_df,
   # Remove capture column
   # std_dat <- std_dat %>% select(-capture)
   
+  ncol_fin <- ncol(std_dat)
+  nrow_fin <- nrow(std_dat)
+  
+  # Check output
+  if (nrow_init != nrow_fin) {
+    msg <- paste("Different number of rows: initial data has", nrow_init, "rows and final data has",
+                 nrow_fin, "rows.")
+    write_log_message(msg, logger = logger, level = "warn")
+    warning(msg)
+  }
+  
+  if ( has_empty_values(std_dat$locationID) ) {
+    msg <- paste("Empty values in locationID.")
+    write_log_message(msg, logger = logger, level = "warn")
+    warning(msg)
+  }
+  
+  if ( has_empty_values(std_dat$cameraID) ) {
+    msg <- paste("Empty values in cameraID")
+    write_log_message(msg, logger = logger, level = "warn")
+    warning(msg)
+  }
+  
+  if ( has_empty_values(std_dat$snapshotName) ) {
+    msg <- paste("Empty values in snapshotName")
+    write_log_message(msg, logger = logger, level = "warn")
+    warning(msg)
+  }
+  
+  if ( has_empty_values(std_dat$eventDate) ) {
+    msg <- paste("Empty values in eventDate")
+    write_log_message(msg, logger = logger, level = "warn")
+    warning(msg)
+  }
+  
+  if ( has_empty_values(std_dat$eventTime) ) {
+    msg <- paste("Empty values in eventTime")
+    write_log_message(msg, logger = logger, level = "warn")
+    warning(msg)
+  }
+  
   if (verbose) {
-    ncol <- ncol(std_dat)
-    nrow <- nrow(std_dat)
-    msg <- paste("Final file:", ncol, "columns, ", nrow, "rows.")
+    msg <- paste("Final file:", ncol_fin, "columns, ", nrow_fin, "rows.")
     write_log_message(msg, logger = logger, level = "info")
     message(msg)
     
@@ -380,7 +421,9 @@ standardize_snapshot_df <- function(df, standard_df,
     if (!all(is.na(logger))) {
       file_con <- file(logger$logfile, open = "a")
       write.table(msg, file = file_con,
-                  row.names = FALSE)
+                  row.names = FALSE,
+                  quote = FALSE,
+                  sep = "\t")
       writeLines("", file_con)
       close(file_con)
     }
@@ -1266,4 +1309,30 @@ locationID_from_filename <- function(filename, logger = NA) {
     locationID <- str_extract(fname, "^[A-Z]+")
   }
   return(locationID)
+}
+
+#' Check values
+#'
+#' @param vec A vector of values
+#'
+#' @return TRUE if any value is `NA`, `NULL`, `""` (empty chacacter),
+#' `NaN`.
+#' 
+#'
+#' @noRd
+has_empty_values <- function(vec) {
+  
+  # NA
+  if ( any(is.na(vec)) ) return(TRUE)
+  
+  # NULL
+  if ( any(is.null(vec)) ) return(TRUE)
+  
+  # ""
+  if ( any(as.character(vec) == "") ) return(TRUE)
+  
+  # NaN
+  if ( any(is.nan(vec)) ) return(TRUE)
+  
+  return(FALSE)
 }

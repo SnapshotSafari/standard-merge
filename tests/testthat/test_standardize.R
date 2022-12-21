@@ -226,11 +226,13 @@ test_that("standardize_snapshot_df (Traptagger)", {
 
 test_that("standardize_snapshot_df (Digikam)", {
   
-  expect_warning(standardize_snapshot_df(dat_digikam, standard_df = standard,
+  expect_warning(standardize_snapshot_df(dat_digikam, 
+                                         standard_df = standard,
                                          verbose = FALSE),
                  "Digikam data requires 'locationID_digikam' to be provided: without a it, locationID will be set to NA in the standardized data.")
   
-  expect_warning(standardize_snapshot_df(dat_digikam, standard_df = standard,
+  expect_warning(standardize_snapshot_df(dat_digikam, 
+                                         standard_df = standard,
                                          verbose = FALSE),
                  "NA present in locationID: will not clean locationID.")
   

@@ -16,7 +16,7 @@
 #' 
 #' @param cameras a character vector of camera names
 #' @param locations a character vector of locations (must be the same length as `cameras`)
-#' @param silence_warning print a warning if some locations are `NA`?
+#' @param silence_warnings Should a warning be displayed when `locationID` is `NA`?
 #' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
 #' else `NA`. 
 #'
@@ -26,10 +26,10 @@
 #' 
 #' @examples get_camnames(c("APN_A01", "MAD_B01"), c("APN", "MAD"))
 get_camnames <- function(cameras, locations, 
-                         silence_warning = FALSE, logger = NA) {
+                         silence_warnings = FALSE, logger = NA) {
   
   if ( any(is.na(locations))) {
-    if (!silence_warning) {
+    if (!silence_warnings) {
       msg <- "Some locations are NA, so camnames might be incorrect if they contain an underscore"
       write_log_message(msg, logger = logger, level = "warn")
       warning(msg)
@@ -49,9 +49,10 @@ get_camnames <- function(cameras, locations,
 #' @param df a dataframe that must have columns `cameraID`, `locationID` and `classifier`.
 #' @param camera should `cameraID` column be cleaned?
 #' @param location should `locationID` column be cleaned?
+#' @param silence_warnings Should a warning be displayed when `locationID` is `NA`?
 #' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
 #' else `NA`. 
-#' 
+#'
 #' @return The dataframe with cleaned columns `cameraID` and/or `locationID`
 #' (depending whether `camera` and `location` are `TRUE`) and `eventID`
 #' refactored to match new `cameraID`/`locationID`.
@@ -79,6 +80,7 @@ get_camnames <- function(cameras, locations,
 #' @noRd
 clean_camera_location <- function(df, camera = TRUE, 
                                   location = TRUE,
+                                  silence_warnings = FALSE,
                                   logger = NA) {
   
   # Initialize result
@@ -86,12 +88,16 @@ clean_camera_location <- function(df, camera = TRUE,
   
   if (location) {
   clean_df <- clean_df %>%
-    mutate(locationID = clean_locations(cameraID, locationID,
+    mutate(locationID = clean_locations(cameraID, 
+                                        locationID,
                                         logger = logger))
   } 
   if (camera) {
     clean_df <- clean_df %>%
-      mutate(cameraID = clean_cameras(cameraID, locationID, classifier,
+      mutate(cameraID = clean_cameras(cameraID, 
+                                      locationID, 
+                                      classifier,
+                                      silence_warnings = silence_warnings,
                                       logger = logger))
   }
   
@@ -262,6 +268,7 @@ clean_species <- function(species){
 #' @param cameras Cameras vector
 #' @param locations locations vector
 #' @param classifiers Classifier vector
+#' @param silence_warnings Should a warning be displayed when `locationID` is `NA`?
 #' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
 #' else `NA`. 
 #' 
@@ -291,11 +298,16 @@ clean_species <- function(species){
 #' @noRd
 clean_cameras <- function(cameras, locations, 
                           classifiers,
+                          silence_warnings = FALSE,
                           logger = NA) {
   
-  cameras_final <- sapply(1:length(cameras), 
+  camnames <- get_camnames(cameras,
+                           locations,
+                           silence_warnings = silence_warnings)
+  
+  cameras_final <- sapply(1:length(camnames), 
                           function(i) {
-                            clean_camera(cameras[i], 
+                            clean_camera(camnames[i], 
                                          location = locations[i],
                                          classifier = classifiers[i])
                           })
@@ -370,24 +382,24 @@ clean_camera <- function(camera, location,
     return(camera)
   }
   
-  camname <- get_camnames(camera, location, logger = logger)
+  res <- camera
   
   if(classifier == "traptagger") {
     if (grepl(pattern = "^KHO$|^SAM$|^TSW$", location)) {
       # Subset the dash in camera name
-      camname <- gsub("_", "", camname)
+      res <- gsub("_", "", res)
     }
   } else if (classifier == "zooniverse") {
     if (grepl(pattern = "^KHO$", location)) {
-      camname <-  gsub("^KHOG", "E", camname)
-      camname <-  gsub("^KHOL", "M", camname)
+      res <-  gsub("^KHOG", "E", res)
+      res <-  gsub("^KHOL", "M", res)
     } else if (grepl(pattern = "^DHP$", location)){
-      camname <- gsub("^^D", "", camname)
+      res <- gsub("^^D", "", res)
     } else if (grepl(pattern = "^OVE$", location)){
-      camname <- gsub("^O", "", camname)
+      res <- gsub("^O", "", res)
     }
   }
-  return(camname)
+  return(res)
 }
 
 #' Clean a unique location

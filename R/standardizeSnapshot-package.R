@@ -5,7 +5,7 @@
 #' (https://www.sajs.co.za/article/view/8134)
 #' 
 #' @importFrom magrittr %>%
-#' @importFrom dplyr select filter mutate rename arrange group_by
+#' @importFrom dplyr select filter mutate rename arrange group_by ungroup
 #' @importFrom stringr str_split str_extract str_match
 #' @importFrom tidyselect all_of
 #' @importFrom utils read.csv write.csv head
