@@ -66,7 +66,7 @@ std_list <- read_snapshot_files(input = input,
                                 except = to_ignore,
                                 basepath = IN_DATADIR,
                                 logger = logger,
-                                verbose = FALSE)
+                                verbose = TRUE)
 std_df <- read.csv(input_file)
 
 # Standardize files -------------------------------------------------------
@@ -76,13 +76,6 @@ std_list <- standardize_snapshot_list(std_list,
 std_df <- standardize_snapshot_df(std_df,
                                   standard,
                                   logger = loggerf)
-
-vec <- std_df$locationID
-vec2 <- gsub(pattern = "^\\s+|\\s+$",
-             replacement = "", 
-             vec)
-vec2
-
 
 # Write files -------------------------------------------------------------
 write_standardized_list(df_list = std_list,

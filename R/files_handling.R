@@ -144,7 +144,8 @@ read_snapshot_files <- function(input, except,
     folder <- files_df$folders[i]
     
     if(verbose) {
-      msg <- paste("Reading file", in_filename, "---")
+      msg <- paste0("Reading file ", in_filename, 
+                   " (", i,"/", nrow(files_df), ") ", "---")
       write_log_message(msg, logger = logger, level = "info")
       message(msg)
     }
@@ -166,6 +167,15 @@ read_snapshot_files <- function(input, except,
     write_log_message(msg, logger = logger, level = "info")
     message(msg)
   }
+  
+  # Add newline to logger after reading standardized list
+  if (!all(is.na(logger))) {
+    file_con <- file(logger$logfile, open = "a")
+    writeLines("", file_con)
+    close(file_con)
+  }
+  
+  
   
   return(df_list)
 }
@@ -276,7 +286,7 @@ write_standardized_df <- function(df, to,
   
   if(write) {
     if(verbose) {
-      msg <- paste("Writing file", filepath)
+      msg <- paste("Writing file", filepath, "---")
       write_log_message(msg, logger = logger, level = "info")
       message(msg)
     }
@@ -364,6 +374,13 @@ write_standardized_list <- function(df_list,
     stop(msg)
   }
   
+  # Add newline to logger before writing standardized list
+  if (!all(is.na(logger))) {
+    file_con <- file(logger$logfile, open = "a")
+    writeLines("", file_con)
+    close(file_con)
+  }
+  
   path_list <- c()
   for(i in 1:length(df_list)) {
     
@@ -417,7 +434,8 @@ write_standardized_list <- function(df_list,
       } else {
         final_name_message <- final_name
       }
-      msg <- paste("Writing file", initial_name, "->", final_name_message, "---")
+      msg <- paste0("Writing file ", initial_name, " -> ", final_name_message,
+                    " (", i,"/", length(df_list), ") ", "---")
       write_log_message(msg, logger = logger, level = "info")
       message(msg)
     }
@@ -501,9 +519,10 @@ list_csv_in_folder <- function(folder, except, basepath, logger = NA){
       } else {
         discarded_files <- in_files_list[discarded]
       }
-      msg <- paste0("Files:\n", 
-                   paste(discarded_files, collapse = "\n"),
-                   "\nwill be ignored (they are in 'except').")
+      msg <- paste0("The following file(s) will be ignored (they are in 'except'):\n", 
+                    paste(paste0("\t", discarded_files), 
+                          collapse = "\n")
+                    )
       write_log_message(msg, logger = logger, level = "info")
       message(msg)
       in_files_list <- in_files_list[-discarded]

@@ -134,6 +134,24 @@ standardize_snapshot_list <- function(df_list, standard_df,
     }
   }
   
+  # --- Message
+  if (verbose) {
+    msg <- paste(length(df_list), "files to standardize.")
+    
+    if (!all(is.na(logger))) {
+      file_con <- file(logger$logfile, open = "a")
+      writeLines("", file_con)
+      close(file_con)
+      
+      write_log_message(msg, logger = logger, level = "info")
+      
+      file_con <- file(logger$logfile, open = "a")
+      writeLines("", file_con)
+      close(file_con)
+    }
+    message(msg)
+  }
+  
   # --- Initialize empty list
   std_list <- vector(mode = "list", length = length(df_list))
   names(std_list) <- names(df_list)
@@ -147,7 +165,8 @@ standardize_snapshot_list <- function(df_list, standard_df,
     } else {
       iter <- i
     }
-    msg <- paste("Standardizing file", iter, "---")
+    msg <- paste0("Standardizing file ", iter, 
+                  " (", i,"/", length(df_list), ") ", "---")
     write_log_message(msg, logger = logger, level = "info")
     message(msg)
     
@@ -342,7 +361,7 @@ standardize_snapshot_df <- function(df, standard_df,
   
   # Clean location/camera
   if (verbose) {
-    msg <- "Cleaning location, camera and species"
+    msg <- "Cleaning location/camera, species and columns values"
     write_log_message(msg, logger = logger, level = "info")
     message(msg)
   }
@@ -414,7 +433,7 @@ standardize_snapshot_df <- function(df, standard_df,
   }
   
   if (verbose) {
-    msg <- paste("Final file:", ncol_fin, "columns, ", nrow_fin, "rows. Here is a sneak peek:")
+    msg <- paste("Final file:", ncol_fin, "columns,", nrow_fin, "rows. Here is a sneak peek:")
     write_log_message(msg, logger = logger, level = "info")
     message(msg)
     

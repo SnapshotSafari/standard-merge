@@ -250,6 +250,7 @@ clean_species <- function(species){
   # Questions
   # "porcupine" = "porcupinecape"?
   # "zebramountain" = "zebramountaincape"?
+  # spider -> "insect"?
   
   return(res)
 }
