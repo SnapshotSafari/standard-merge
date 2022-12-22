@@ -123,11 +123,11 @@ test_that("Write standardized list", {
                        file.path(to, "roaming/MOK_SNA_R1.csv")))
   
   messages <- c(paste0("Creating folder ", to, "/APN"),
-                "Writing file APN/zooniverse.csv -> APN/APN_S1_R1-2.csv ---",
+                "Writing file APN/zooniverse.csv -> APN/APN_S1_R1-2.csv (1/2) ---",
                 # paste0("Creating folder ", to, "/roaming"), 
                 # Not tested because creates during the first run 
                 # and can't find a way to test 2 messages...
-                "Writing file roaming/MOK.csv -> roaming/MOK_SNA_R1.csv ---")
+                "Writing file roaming/MOK.csv -> roaming/MOK_SNA_R1.csv (2/2) ---")
   expect_message(write_standardized_list(df_list = list_std,
                                          to = to,
                                          write = TRUE,
