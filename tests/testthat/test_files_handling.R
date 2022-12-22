@@ -8,9 +8,8 @@ test_that("Read csv", {
                         paste0(f, "APN_S3_full_report_0-50__agreement_corrected_fin.csv"))
           expect_equal(suppressWarnings(list_csv_in_folder(f)), csv_goal)
           
-          w <- paste0("File(s) ", 
-                      paste0(f, "APN_S3_full_report_0-50__agreement_corrected_fin.xlsx"),
-                      " will be ignored (they are not csv).")
+          w <- paste0("The following file(s) will be ignored (they are not csv):\n", 
+                      paste0("\t", f, "APN_S3_full_report_0-50__agreement_corrected_fin.xlsx"))
           expect_message(list_csv_in_folder(f), w, fixed = TRUE)
 })
 

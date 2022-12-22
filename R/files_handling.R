@@ -537,9 +537,8 @@ list_csv_in_folder <- function(folder, except, basepath, logger = NA){
   
   # --- Keep only csv
   if(length(not_csv) != 0) {
-    msg <- paste0("File(s) ", 
-                  paste(not_csv, collapse = ", "),
-                  " will be ignored (they are not csv).")
+    msg <- paste0("The following file(s) will be ignored (they are not csv):\n", 
+                  paste(paste0("\t", not_csv), collapse = "\n"))
     write_log_message(msg, logger = logger, level = "info")
     message(msg)
   }

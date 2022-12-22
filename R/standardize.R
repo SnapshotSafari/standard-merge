@@ -293,7 +293,7 @@ standardize_snapshot_df <- function(df, standard_df,
   ncol_init <- ncol(df)
   nrow_init <- nrow(df)
   if (verbose) {
-    msg <- paste("Initial file:", ncol_init, "columns, ", 
+    msg <- paste("Initial file:", ncol_init, "columns,", 
                  nrow_init, "rows.")
     write_log_message(msg, logger = logger, level = "info")
     message(msg)
