@@ -7,6 +7,7 @@
 #'   \item{\code{digikam}}{character Expected columns names for Digikam data}
 #'   \item{\code{new}}{character Columns names for the output standardized data} 
 #'}
+#' @noRd
 "standard"
 
 #' @title Zooniverse sample data
@@ -38,6 +39,7 @@
 #'   \item{\code{p_users_identified_this_species}}{double Proportion of users who identified the consensus species}
 #'   \item{\code{pielous_evenness_index}}{double Pielou evenness index}
 #'}
+#' @noRd
 "zooniverse"
 
 #' @title Digikam sample data
@@ -67,6 +69,7 @@
 #'   \item{\code{metadata_Numberofindividuals}}{logical Tagged number of individuals on the picture}
 #'   \item{\code{HierarchicalSubject}}{character Summary column for all metadata_...} 
 #'}
+#' @noRd
 "digikam"
 
 #' @title TrapTagger sample data
@@ -83,4 +86,5 @@
 #'   \item{\code{capture_sighting_count}}{integer Species count}
 #'   \item{\code{capture_url}}{character Picture url (mock data)} 
 #'}
+#' @noRd
 "traptagger"
