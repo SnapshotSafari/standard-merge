@@ -142,7 +142,7 @@ Then, we standardize the file. The function `standardize_snapshot_list` allows t
 This function has a number of options, but the only ones that are mandatory are:
 
 + `df_list`: the list of dataframes to standardize
-+ `standard_df`: the reference dataframe telling the function how to rename the columns.
++ `standard_df`: the reference dataframe telling the function how to rename the columns. Here, we use the built-in dataset `standard`.
 
 ```{r}
 dat_list <- standardize_snapshot_list(df_list = dat_list,

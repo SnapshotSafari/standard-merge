@@ -85,7 +85,7 @@ Then, we standardize the file. The function `standardize_snapshot_df` allows to 
 This function has a number of options, but the only ones that are mandatory are:
 
 + `df`: the dataframe to standardize
-+ `standard_df`: the reference dataframe telling the function how to rename the columns.
++ `standard_df`: the reference dataframe telling the function how to rename the columns. Here, we use the built-in dataset `standard`.
 
 ```{r}
 std_df <- standardize_snapshot_df(df = df, 
