@@ -23,6 +23,32 @@ This vignette shows the typical workflow to standardize a Snapshot Safari file.
 library(standardizeSnapshot)
 ```
 
+```{r, echo = FALSE, message = FALSE, results = FALSE}
+unlink(file.path(tempdir(), "data_in"), 
+       recursive = TRUE) 
+unlink(file.path(tempdir(), "data_out"), 
+       recursive = TRUE) 
+unlink(file.path(tempdir(), "log"), 
+       recursive = TRUE) 
+```
+
+```{r write_data, echo = FALSE, message = FALSE}
+# Prepare data
+data(digikam)
+digikam_write <- digikam
+digikam_write$HierarchicalSubject <- paste0("\"", digikam_write$HierarchicalSubject, "\"")
+
+# Create folder
+in_folder <- file.path(tempdir(), "data_in")
+dir.create(in_folder)
+
+# Write data
+write.csv(digikam_write, 
+          file.path(in_folder, "digikam.csv"),
+          row.names = FALSE,
+          quote = FALSE)
+```
+
 ## Setup a logger
 
 This is an optional but recommended step. If you want not only to print messages to the console, but also to save them in a file, you can use a logger.
@@ -30,7 +56,7 @@ This is an optional but recommended step. If you want not only to print messages
 The function `create_logger` allows to create a file in the specified location and setup the logging:
 
 ```{r}
-logfile <- file.path(tempdir(), "logger.log") # create the logfile
+logfile <- file.path(tempdir(), "log", "logger.log")
 logfile
 
 logger <- create_logger(my_logfile = logfile, 
@@ -39,18 +65,18 @@ logger <- create_logger(my_logfile = logfile,
 
 ## Read the file
 
-First, we need to read the data. Here, we will use the `digikam` dataframe, which represents Digikam-like data:
+First, we need to read the data. Here, we read a file that was previously written in ``r in_folder`` (not shown). This dataframe represents Digikam-like data:
 
 ```{r}
-data("digikam")
-head(digikam, 3)
+in_folder <- file.path(tempdir(), "data_in")
+in_folder
+
+df <- read.csv(file.path(in_folder,  "digikam.csv"))
+head(df, 3)
 ```
 
-We could also use a simple `read.csv`.
-```{r, eval=FALSE}
-# Not run
-digikam <- read.csv("path/to/file")
-```
+*NB: this file is the same as the `digikam` dataset included in the package.*
+
 
 ## Standardize the file
 
@@ -62,7 +88,7 @@ This function has a number of options, but the only ones that are mandatory are:
 + `standard_df`: the reference dataframe telling the function how to rename the columns.
 
 ```{r}
-std_df <- standardize_snapshot_df(df = digikam, 
+std_df <- standardize_snapshot_df(df = df, 
                                   standard_df = standard,
                                   locationID_digikam = "MOK",
                                   logger = logger)
@@ -86,11 +112,11 @@ This function has only 2 mandatory arguments:
 + `to`: the folder in which the file should be copied.
 
 ```{r}
-final_folder <- file.path(tempdir(), "data") # the folder in which to copy the file
-final_folder
+out_folder <- file.path(tempdir(), "data_out") # the folder in which to copy the file
+out_folder
 
 write_standardized_df(df = std_df,
-                      to = final_folder,
+                      to = out_folder,
                       logger = logger)
 ```
 
@@ -99,12 +125,13 @@ Here, we also use the `logger` argument, which is a logger created with `create_
 
 The file is now written in the destination.
 ```{r}
-list.files(final_folder)
+list.files(out_folder)
 ```
 
 
 We can check that the logger was filled:
 
 ```{r}
+list.files(file.path(tempdir(), "log"))
 readLines(logfile)
 ```

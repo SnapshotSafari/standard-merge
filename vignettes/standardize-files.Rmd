@@ -23,6 +23,51 @@ This vignette shows the typical workflow to standardize multiple Snapshot Safari
 library(standardizeSnapshot)
 ```
 
+```{r, echo = FALSE, message = FALSE}
+unlink(file.path(tempdir(), "data_in"), 
+       recursive = TRUE) 
+unlink(file.path(tempdir(), "data_out"), 
+       recursive = TRUE) 
+unlink(file.path(tempdir(), "log"), 
+       recursive = TRUE) 
+```
+
+```{r write_data, echo = FALSE, message = FALSE, results = FALSE}
+# Load data
+data(digikam)
+data(traptagger)
+data(zooniverse)
+
+# Prepare data
+digikam_write <- digikam
+digikam_write$HierarchicalSubject <- paste0("\"", digikam_write$HierarchicalSubject, "\"")
+
+# Create folders
+in_folder <- file.path(tempdir(), "data_in")
+dir.create(in_folder)
+dir.create(file.path(in_folder, "APN"))
+dir.create(file.path(in_folder, "ATH"))
+dir.create(file.path(in_folder, "MOK"))
+file.create(file.path(in_folder, "foo.csv"))
+file.create(file.path(in_folder, "bar.csv"))
+
+# Write data
+write.csv(digikam_write, 
+          file.path(in_folder, "MOK",
+                    "MOK_record_table_0min_deltaT_2021-05-07.csv"),
+          quote = FALSE)
+write.csv(traptagger, 
+          file.path(in_folder, "ATH", 
+                    "ATH_Roll1_Snapshot.csv"),
+          row.names = FALSE, 
+          quote = FALSE)
+write.csv(zooniverse, 
+          file.path(in_folder, "APN",
+                    "APN_S1_full_report_0-50__agreement_corrected_fin.csv"),
+          row.names = FALSE, 
+          quote = FALSE)
+```
+
 ## Setup a logger
 
 This is an optional but recommended step. If you want not only to print messages to the console, but also to save them in a file, you can use a logger.
@@ -30,7 +75,7 @@ This is an optional but recommended step. If you want not only to print messages
 The function `create_logger` allows to create a file in the specified location and setup the logging:
 
 ```{r}
-logfile <- file.path(tempdir(), "logger.log") # create the logfile
+logfile <- file.path(tempdir(), "log", "logger.log") # create the logfile
 logfile
 
 logger <- create_logger(my_logfile = logfile, 
@@ -39,37 +84,24 @@ logger <- create_logger(my_logfile = logfile,
 
 ## Read the files
 
-First, we need to read the data. Here, we will use three built-in datasets: `digikam`, `traptagger` and `zooniverse` (which are respectively Digikam-, TrapTagger- and Zooniverse-like data).
-
-```{r load_digikam}
-data("digikam")
-head(digikam, 3)
-```
-
-```{r load_traptagger}
-data("traptagger")
-head(traptagger, 3)
-```
-
-```{r load_zooniverse}
-data("zooniverse")
-head(zooniverse, 3)
-```
-
-## Format data manually
-
-The data need to be formatted as a list (which must be named for Digikam data, if we want the `locationID` to work properly).
+First, we need to read the data. Here, we read files that were previously written in ``r in_folder`` (not shown).
 
 ```{r}
-dat_list <- list("MOK" = digikam,
-                 "ATH" = traptagger,
-                 "APN" = zooniverse)
+in_folder <- file.path(tempdir(), "data_in")
+in_folder
+list.files(in_folder, recursive = TRUE)
 ```
 
-**Warning: this structure of "lists of dataframes" can take-up a lot of space. Therefore, it is better to copy the standardized results to the same list to overwrite older results and save space.**
 
+The data we want to read are:
 
-## Automated formatting 
++ `APN/APN_S1_full_report_0-50__agreement_corrected_fin.csv`
++ `ATH/ATH_Roll1_Snapshot.csv`
++ `MOK/MOK_record_table_0min_deltaT_2021-05-07.csv`
+
+*NB: these are the same files as the `zooniverse`, `traptagger` and `digikam` datasets included in the package.*
+
+The files `foo.csv` and `bar.csv` should be ignored.
 
 There is a built-in function to read multiple files into a list in the package: the `read_snapshot_files` function. 
 
@@ -78,25 +110,29 @@ The 2 mandatory arguments to this function are:
 + `input`: a vector of valid paths, that can be files and/or folders
 + `basepath`: the part of the path that should be ignored when copying final files (which will be used to name the list).
 
-```{r, eval=FALSE}
-# Not run
-dat_list <- read_snapshot_files(input = c("path/to/data/dat1.csv",
-                                          "path/to/data/dat2.csv",
-                                          "path/to/data/dat3.csv")
-                                basepath = "path/to/data/")
+```{r}
+dat_list <- read_snapshot_files(input = in_folder,
+                                basepath = in_folder, 
+                                except = c("foo.csv", "bar.csv"),
+                                logger = logger)
 ```
 
-Another useful argument is `except`, which is a vector of files that should be ignored. This is useful if some of the folder(s) in `input` contains files that should be ignored. A typical content of `except` could be:
+Here, we also use:
+
++ `except`, which is a vector of files that should be ignored.
++ a logger to copy messages to a logfile.
+
+
+The result is a named list of dataframes:
 
 ```{r}
-except <- c("reports_FBIP_format_all_recs",
-            "README_FILES_for_TEAMS.txt",
-            "Special Projects /*",
-            "DHP/DHP+OVE_same_file",
-            "KGA/KGA-KHO_together")
+names(dat_list)
+head(dat_list$`APN/APN_S1_full_report_0-50__agreement_corrected_fin.csv`, 3)
+head(dat_list$`ATH/ATH_Roll1_Snapshot.csv`, 3)
+head(dat_list$`MOK/MOK_record_table_0min_deltaT_2021-05-07.csv`, 3)
 ```
 
-A logger can also be passed-on to this function with the argument `logger` (to copy messages to a logfile).
+**Warning: this structure of "lists of dataframes" can take-up a lot of space. Therefore, it is better to copy the standardized results to the same list to overwrite older results and save space.**
 
 
 ## Standardize the files
@@ -129,11 +165,11 @@ This function has only 2 mandatory arguments:
 + `to`: the folder in which the file should be copied.
 
 ```{r}
-final_folder <- file.path(tempdir(), "data") # the folder in which to copy the file
-final_folder
+out_folder <- file.path(tempdir(), "data_out") # the folder in which to copy the file
+out_folder
 
 write_standardized_list(df_list = dat_list,
-                        to = final_folder,
+                        to = out_folder,
                         logger = logger)
 ```
 
@@ -142,7 +178,7 @@ Here, we also use the `logger` argument, which is a logger created with `create_
 
 The files are now written in the destination.
 ```{r}
-list.files(final_folder)
+list.files(out_folder, recursive = TRUE)
 ```
 
 
