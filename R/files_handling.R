@@ -152,7 +152,7 @@ read_snapshot_files <- function(input, except,
     # Read file
     dat_in <- read_snapshot_file(in_filename, 
                                  base_folder = folder,
-                                 verbose = verbose)
+                                 verbose = FALSE)
     df_list[[i]] <- dat_in
   }
   

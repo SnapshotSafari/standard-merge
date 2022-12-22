@@ -560,3 +560,28 @@ get_camname <- function(camera, location) {
   return(res)
 
 }
+
+## Misc -------------------
+#' Clean blanks
+#' 
+#' Removes the blanks at the beginning or end of the contents of
+#' the columns of a dataframe.
+#'  
+#' @param df The dataframe
+#'
+#' @return The dataframe with cleaned columns
+#' 
+#'
+#' @noRd
+clean_blanks <- function(df) {
+  
+  df_res <- lapply(df, 
+                   function(i) {
+                     gsub(pattern = "^\\s+|\\s+$", 
+                          replacement = "", 
+                          i)
+                   }
+  )
+  df_res <- as.data.frame(df_res)
+  return(df_res)
+}

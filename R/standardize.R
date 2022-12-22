@@ -369,10 +369,13 @@ standardize_snapshot_df <- function(df, standard_df,
   # Remove capture column
   # std_dat <- std_dat %>% select(-capture)
   
+  # Remove blanks
+  std_dat <- clean_blanks(std_dat)
+  
+  # Check output
   ncol_fin <- ncol(std_dat)
   nrow_fin <- nrow(std_dat)
   
-  # Check output
   if (nrow_init != nrow_fin) {
     msg <- paste("Different number of rows: initial data has", nrow_init, "rows and final data has",
                  nrow_fin, "rows.")
@@ -411,7 +414,7 @@ standardize_snapshot_df <- function(df, standard_df,
   }
   
   if (verbose) {
-    msg <- paste("Final file:", ncol_fin, "columns, ", nrow_fin, "rows.")
+    msg <- paste("Final file:", ncol_fin, "columns, ", nrow_fin, "rows. Here is a sneak peek:")
     write_log_message(msg, logger = logger, level = "info")
     message(msg)
     
@@ -427,7 +430,7 @@ standardize_snapshot_df <- function(df, standard_df,
       writeLines("", file_con)
       close(file_con)
     }
-    print(msg)
+    message(df_for_message(msg))
   }
   
   return(std_dat)
@@ -1336,3 +1339,34 @@ has_empty_values <- function(vec) {
   
   return(FALSE)
 }
+
+
+#' Prepare df to print as message
+#'
+#' Prepares a dataframe to be written to the console with `message()`
+#' (transforms the dataframe to a single string).
+#' 
+#' @param df The dataframe
+#'
+#' @return A string with tabulations and newlines to print 
+#' a dataframe in a good form
+#' 
+#' @noRd
+#'
+#' @examples
+#' df_for_message(head(traptagger, 3))
+df_for_message <- function(df) {
+  
+  # Transform to matrix
+  dfm <- as.matrix(df)
+  
+  # Add names
+  dfm <- rbind(colnames(df), dfm)
+  
+  # Paste
+  dfp <- apply(dfm, 1, paste, collapse = "\t")
+  dfp <- paste(dfp, collapse = "\n")
+  
+  return(dfp)
+}
+
