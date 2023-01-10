@@ -3,6 +3,9 @@ This is a R package to standardize data across multiple classifying platforms (Z
 
 ##  /!\ this is a work in progress /!\ 
 
+**While the main functions are working, all outputs have not been thouroughly ckecked out (in particular for the camera IDs).**
+
+
 ## Purpose
 
 Snapshot Safari data comes in different standards, following the method that was used to classify pictures (Zooniverse, TrapTagger or Digikam). The codes in this folder allow to standardize all data sources to a unique file format.
@@ -10,15 +13,14 @@ Snapshot Safari data comes in different standards, following the method that was
 
 ## Installation 
 
-For now, you can install the package by downloading the source code in zip format. Then, in R use:
-```r 
-devtools::install_local("standard-merge-main.zip")
-```
+You can install this package using the following commands in the R console (NB: you need an internet connection)
 
-Once the repository will be public: it will be possible to install it via:
 ```r 
+install.packages("devtools") # if devtools is not installed already
+library(devtools)
 devtools::install_github("https://github.com/SnapshotSafari/standard-merge")
 ```
+
 ## Vignettes
 
 There are 2 vignette showing the typical workflow for the package.
@@ -37,15 +39,16 @@ vignette("standardize-files")
 
 ### Codes
 
-The R/ folder contains all the package functions.
+The `R/` folder contains all the package functions.
 
 ### Tests
 
-Tests were run with the R package testthat. These tests can be found in tests/.
+Unitari tests were run with the R package `testthat`. These tests can be found in `tests/`.
+Diverse tests run with files installed locally can also be found in `scripts_tests/`.
 
 ### Documentation
 
-standardizeSnapshot.pdf contains the documentation for the package's functions. The .Rd files generated with Roxygen2 can also be found in man/.
+`standardizeSnapshot_xx.pdf` contains the package documentation. The .Rd files generated with `Roxygen2` can also be found in `man/`.
 
 
 
