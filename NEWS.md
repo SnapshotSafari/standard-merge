@@ -1,3 +1,5 @@
+# standardizeSnapshot 1.0.1
+
 # standardizeSnapshot 1.0.0
 
 # standardizeSnapshot 0.4.2
