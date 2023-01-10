@@ -437,9 +437,13 @@ clean_camera <- function(camera, location,
       res <-  gsub("^KHOG", "E", res)
       res <-  gsub("^KHOL", "M", res)
     } else if (grepl(pattern = "^DHP$", location)){
-      res <- gsub("^^D", "", res)
+      if(nchar(res) >= 4) { # This condition to avoid deleting D in eg "D04"
+        res <- gsub("^D", "", res)
+      }
     } else if (grepl(pattern = "^OVE$", location)){
-      res <- gsub("^O", "", res)
+      if(nchar(res) >= 4){ # This condition to avoid deleting D in eg "O04" (even if not sure it exists)
+        res <- gsub("^O", "", res)
+      }
     }
   }
   return(res)
@@ -480,7 +484,11 @@ clean_location <- function(camera, location, logger = NA) {
     } else if (location == "DHP") {
       # If OVE pattern detected
       if (grepl(pattern = "^O", camname)) {
-        new_location <- "OVE"
+        if (nchar(camname >= 4)) {
+          # This condition to avoid changing location 
+          # to OVE if camname is eg "O04" (even if not sure it exists)
+          new_location <- "OVE"
+        }
       }
     }
   }
