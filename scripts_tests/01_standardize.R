@@ -32,20 +32,21 @@ OUT_DATADIR_FILE <- "/home/lnicvert/Documents/PhD/Snapshot/data/test_file"
 # File or folder you actually want to copy, within IN_DATADIR and to OUT_DATADIR.
 # If this has a subfolder structure, it will be copied into OUT_DATADIR.
 
-input <- IN_DATADIR # Here we standardize all files in IN_DATADIR
+# input <- IN_DATADIR # Here we standardize all files in IN_DATADIR
 input_file <- file.path(IN_DATADIR, "APN/APN_S1_full_report_0-50__agreement_corrected_fin.csv")
-# input <- c(file.path(IN_DATADIR, "APN/APN_S1_full_report_0-50__agreement_corrected_fin.csv"),
-#            file.path(IN_DATADIR, "ATH/ATH_Roll1_Snapshot.csv"),
-#            file.path(IN_DATADIR, "roaming/AUG_sp_report_digikam_2020-08-26_fin.csv"),
-#            file.path(IN_DATADIR, "KHO/KHO_S1_full_report_0-50__agreement_corrected_fin.csv"),
-#            file.path(IN_DATADIR, "DHP"))
+# input_MAD <- file.path(IN_DATADIR, "MAD/MAD_S2_full_report_0-50__agreement_corrected_fin.csv")
+input <- c(file.path(IN_DATADIR, "APN/APN_S1_full_report_0-50__agreement_corrected_fin.csv"),
+           file.path(IN_DATADIR, "ATH/ATH_Roll1_Snapshot.csv"),
+           file.path(IN_DATADIR, "roaming/AUG_sp_report_digikam_2020-08-26_fin.csv"),
+           file.path(IN_DATADIR, "KHO/KHO_S1_full_report_0-50__agreement_corrected_fin.csv"),
+           file.path(IN_DATADIR, "DHP"))
 
 # --- Any files/folders to ignore?
 # Files or folders in IN_DATADIR that should be ignored.
 # You can use "*" to match any character of any length (possibly empty)
 to_ignore <- c("reports_FBIP_format_all_recs",
                "README_FILES_for_TEAMS.txt",
-               # "Special Projects /*",
+               # "Special Projects ",
                "DHP/DHP+OVE_same_file",
                "KGA/KGA-KHO_together")
 
@@ -55,7 +56,6 @@ logfile_file <- here("scripts_tests/log/log_file.log")
 # Read standard column names ----------------------------------------------
 # Read the  file
 data(standard)
-
 
 # Logging -----------------------------------------------------------------
 logger <- create_logger(logfile_folder, console = FALSE)
@@ -67,6 +67,7 @@ std_list <- read_snapshot_files(input = input,
                                 basepath = IN_DATADIR,
                                 logger = logger,
                                 verbose = TRUE)
+
 std_df <- read.csv(input_file)
 
 # Standardize files -------------------------------------------------------

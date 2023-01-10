@@ -42,6 +42,45 @@ get_camnames <- function(cameras, locations,
          })
 }
 
+#' Add location prefix
+#' 
+#' Adds a prefix to a set of cameras, previously verifying that the prefix is not in the camera 
+#' name.
+#'
+#' @param cameras a character vector of camera names
+#' @param locations a character vector of locations (must be the same length as `cameras`)
+#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
+#' else `NA`. 
+#'
+#' @return A character vector of the same length as `cameras` where each value is prefixed
+#' with the corresponding value of `locations` (in the same order).
+#' 
+#' @export
+#'
+#' @examples
+#' cameras <- c("A01", "B01", "KAR_A01")
+#' locations <- c("KAR", "KAR", "KAR")
+#' add_location_prefix(cameras, locations)
+add_location_prefix <- function(cameras,
+                                locations,
+                                logger = NA) {
+  
+  cameras <- get_camnames(cameras,
+                          locations,
+                          silence_warnings = TRUE,
+                          logger = logger)
+  
+  if ( any(is.na(locations))) {
+    msg <- "Some locations are NA: camera codes have been modified accordingly to NA_cam."
+    write_log_message(msg, logger = logger, level = "warn")
+    warning(msg)
+  }
+  
+  locations_cameras <- paste(locations, cameras, sep = "_")
+  
+  return(locations_cameras)
+}
+
 #' Clean locations and cameras
 #'
 #' Cleans locations and cameras for a dataframe
@@ -101,8 +140,11 @@ clean_camera_location <- function(df, camera = TRUE,
                                       logger = logger))
   }
   
+  # Add location code prefix to camera
+  clean_df <- clean_df %>% mutate(cameraID = add_location_prefix(cameraID, locationID))
+  
   clean_df <- clean_df %>%
-    mutate(eventID = get_eventID(locationID, cameraID, roll, capture))
+    mutate(eventID = get_eventID(cameraID, roll, capture))
   
   return(clean_df)
 }
@@ -507,20 +549,18 @@ get_cameraID <- function(locationID, camera, classifier, logger = NA) {
 #' Get the eventID from the capture info. All vectors must be the
 #' same length or they will be recycled.
 #' 
-#' @param locationID character vector of location
 #' @param cameraID character vector of cam_site
 #' @param roll character vector of roll
 #' @param capture character vector of capture
 #'
 #' @return A character vector of the same length of the inputs (or the
 #' longest input) with fields formatted as 
-#' season#cam_site#roll#event_no
+#' cam_site#roll#event_no
 #' 
 #' @noRd
-get_eventID <- function(locationID, cameraID, roll, capture) {
+get_eventID <- function(cameraID, roll, capture) {
   
-  eventID <- paste(locationID,
-                   cameraID,
+  eventID <- paste(cameraID,
                    roll, 
                    capture,
                    sep = "#")

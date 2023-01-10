@@ -385,9 +385,6 @@ standardize_snapshot_df <- function(df, standard_df,
   # Reorder data (rows)
   std_dat <- std_dat %>% arrange(cameraID, eventDate, eventTime)
   
-  # Remove capture column
-  # std_dat <- std_dat %>% select(-capture)
-  
   # Remove blanks
   std_dat <- clean_blanks(std_dat)
   
@@ -442,10 +439,10 @@ standardize_snapshot_df <- function(df, standard_df,
     
     if (!all(is.na(logger))) {
       file_con <- file(logger$logfile, open = "a")
-      write.table(msg, file = file_con,
-                  row.names = FALSE,
-                  quote = FALSE,
-                  sep = "\t")
+      utils::write.table(msg, file = file_con,
+                         row.names = FALSE,
+                         quote = FALSE,
+                         sep = "\t")
       writeLines("", file_con)
       close(file_con)
     }

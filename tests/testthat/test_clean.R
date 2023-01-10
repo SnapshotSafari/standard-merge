@@ -30,3 +30,12 @@ test_that("Clean location", {
                                           c("DHP", NA, NA)))
   expect_equal(res, c("DHP", NA, NA))
 })
+
+test_that("Add location prefix", {
+  res <- add_location_prefix(c("APN_A01", "B01", "C01", "AS1_B01"), 
+                             locations = c("APN", "MAD", "MAD", "MAD"))
+  expect_equal(res, c("APN_A01", "MAD_B01", "MAD_C01", "MAD_AS1_B01"))
+  
+  expect_warning(add_location_prefix("A01", NA),
+                 "Some locations are NA: camera codes have been modified accordingly to NA_cam.")
+})

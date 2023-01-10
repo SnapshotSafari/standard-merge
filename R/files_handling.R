@@ -603,7 +603,11 @@ read_snapshot_file <- function(filename, base_folder, verbose = FALSE, logger = 
   }
   
   # Issue, empty columns
-  if(grepl(filename, pattern = "MAD_S2_full_report_0-50__agreement_corrected_fin.csv")){
+  if(grepl(filename, pattern = "MAD_S2")){
+    msg <- paste("Using fread for MAD season 2 (empty columns).")
+    write_log_message(msg, logger = logger, level = "info")
+    message(msg)
+    
     dat <- data.table::fread(in_file, select = c(1:26))
     dat <- as.data.frame(dat)
   }else{
