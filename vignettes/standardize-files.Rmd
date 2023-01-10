@@ -134,6 +134,17 @@ head(dat_list$`MOK/MOK_record_table_0min_deltaT_2021-05-07.csv`, 3)
 
 **Warning: this structure of "lists of dataframes" can take-up a lot of space. Therefore, it is better to copy the standardized results to the same list to overwrite older results and save space.**
 
+You can reproduce the following results by using:
+```{r, eval = FALSE}
+data(zooniverse)
+data(traptagger)
+data(digikam)
+
+dat_list <- list("APN/APN_S1_full_report_0-50__agreement_corrected_fin.csv" = zooniverse,
+                 "ATH/ATH_Roll1_Snapshot.csv" = traptagger,
+                 "MOK/MOK_record_table_0min_deltaT_2021-05-07.csv" = digikam)
+```
+
 
 ## Standardize the files
 

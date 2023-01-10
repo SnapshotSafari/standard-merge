@@ -65,7 +65,7 @@ logger <- create_logger(my_logfile = logfile,
 
 ## Read the file
 
-First, we need to read the data. Here, we read a file that was previously written in ``r in_folder`` (not shown). This dataframe represents Digikam-like data:
+First, we need to read the data. Here, we read a file that was previously written in `r in_folder` (not shown). This dataframe represents Digikam-like data:
 
 ```{r}
 in_folder <- file.path(tempdir(), "data_in")
@@ -76,6 +76,13 @@ head(df, 3)
 ```
 
 *NB: this file is the same as the `digikam` dataset included in the package.*
+
+You can reproduce the following results by using:
+
+```{r, eval = FALSE}
+data(digikam)
+df <- digikam
+```
 
 
 ## Standardize the file
