@@ -7,7 +7,7 @@ test_that("Test clean cameras", {
   classifier <- c("traptagger", "traptagger", "traptagger", "digikam", "zooniverse")
   
   res <- clean_cameras(cam, cloc, classifier)
-  expected <- c("EB03", "MA02", "M_A01", "C02", "A03")
+  expected <- c("KHO_EB03", "KHO_MA02", "APN_M_A01", "MOK_C02", "OVE_A03")
   expect_equal(res, expected)
 })
 

@@ -53,7 +53,8 @@ get_camnames <- function(cameras, locations,
 #' else `NA`. 
 #'
 #' @return A character vector of the same length as `cameras` where each value is prefixed
-#' with the corresponding value of `locations` (in the same order).
+#' with the corresponding value of `locations` (in the same order). The function will not double
+#' the prefix in case it was already present.
 #' 
 #' @export
 #'
@@ -104,17 +105,17 @@ add_location_prefix <- function(cameras,
 #' 
 #' For column `cameraID`:
 #' 
-#' + For TrapTagger data: will remove the leading location code part for all data 
-#' (eg if `location` is `ATH`, will change `cameras` `ATH_A01` -> `A01`).
-#' Also, if the location code is `KHO`, `SAM` or `TSW`: will remove the dash in 
-#' the camera name (e.g `KHO_E_A01` -> `EA01`)
+#' + For all cameras: will prefix the camera name with the location (e.g. `A01` -> `KHO_A01`)
+#' 
+#' + For TrapTagger data: if the location code is `KHO`, `SAM` or `TSW`: 
+#' will remove the dash in the camera name (e.g. `KHO_E_A01` -> `KHO_EA01`)
 #' 
 #' + For Zooniverse data: if the location code is `KHO`, will replace 
-#' `KHOG` with `E` and  `KHOL` with `M` in `cameras`.
-#' If the location code is `DHP`, will remove leading `D` in `cameraID`.
-#' If the location code is `OVE`, will remove leading `O` in `cameraID`.
+#' `KHOG` with `E` and  `KHOL` with `M` in `cameras` (and add the location prefix).
+#' If the location code is `DHP`, will remove leading `D` in `cameraID` (and add the location prefix).
+#' If the location code is `OVE`, will remove leading `O` in `cameraID`(and add the location prefix).
 #' 
-#' + For column `eventID`: the event ID formatted as season#cam_site#roll#event_no.
+#' + For column `eventID`: the event ID formatted as cameraID#roll#event_no.
 #' 
 #' @noRd
 clean_camera_location <- function(df, camera = TRUE, 
@@ -139,9 +140,6 @@ clean_camera_location <- function(df, camera = TRUE,
                                       silence_warnings = silence_warnings,
                                       logger = logger))
   }
-  
-  # Add location code prefix to camera
-  clean_df <- clean_df %>% mutate(cameraID = add_location_prefix(cameraID, locationID))
   
   clean_df <- clean_df %>%
     mutate(eventID = get_eventID(cameraID, roll, capture))
@@ -307,7 +305,6 @@ clean_species <- function(species){
 #' 
 #' Standardize cameras names
 #'
-#' 
 #' @param cameras Cameras vector
 #' @param locations locations vector
 #' @param classifiers Classifier vector
@@ -315,23 +312,22 @@ clean_species <- function(species){
 #' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
 #' else `NA`. 
 #' 
-#' @return a character vector of locations with the same length as input.
+#' @return a character vector of cameras with the same length as input.
 #' 
 #' @details 
+#' For all data: will add the location prefix.
+#' 
 #' For TrapTagger data: 
-#' + will remove the leading location code part for all data (eg if `location` is `ATH`, will change `cameras` `ATH_A01` -> `A01`)
-#' + if the location code is `KHO`: will remove the dash in the camera name (e.g `KHO_E_A01` -> `EA01`)
-#' + if the location code is `SAM`: will remove the dash in the camera name (e.g `SAM_B_A01` -> `BA01`)
-#' + if the location code is `SAM`: will remove the dash in the camera name (e.g `TSW_L_A01` -> `LA01`)
+#' + if the location code is `KHO`: will remove the dash in the camera name (e.g `KHO_E_A01` -> `KHO_EA01`)
+#' + if the location code is `SAM`: will remove the dash in the camera name (e.g `SAM_B_A01` -> `SAM_BA01`)
+#' + if the location code is `SAM`: will remove the dash in the camera name (e.g `TSW_L_A01` -> `TSW_LA01`)
 #' 
 #' For Zooniverse data:
 #' 
-#' + if the location code is `KHO`, will replace `KHOG` with `E` and  `KHOL` with `M` in `cameras`.
-#' + if the location code is `DHP`, will remove leading `D` in `cameras`.
-#' + if the location code is `OVE`, will remove leading `O` in `cameras`.
+#' + if the location code is `KHO`, will replace `KHOG` with `E` and  `KHOL` with `M` in `cameras` (and add location prefix).
+#' + if the location code is `DHP`, will remove leading `D` in `cameras`  (and add location prefix).
+#' + if the location code is `OVE`, will remove leading `O` in `cameras`  (and add location prefix).
 #' 
-#' The code `KGA` is replaced with `KHO` if the corresponding camera code starts with 'KHO'.
-#'
 #' @examples
 #' cameras <- c("KHO_E_A01", "OCO2")
 #' locations <- c("KHO", "OVE")
@@ -354,6 +350,10 @@ clean_cameras <- function(cameras, locations,
                                          location = locations[i],
                                          classifier = classifiers[i])
                           })
+  
+  # Add location prefix
+  cameras_final <- add_location_prefix(cameras_final, locations, 
+                                       logger = logger)
   
   return(cameras_final)
 }
@@ -390,7 +390,7 @@ clean_locations <- function(cameras, locations, logger = NA) {
 
 #' Clean one camera
 #' 
-#' Standardize a camera name
+#' Standardize a camera name. This function assumes that there is no location prefix.
 #'
 #' @param classifier Classifier vector
 #' @param camera A camera
@@ -398,7 +398,7 @@ clean_locations <- function(cameras, locations, logger = NA) {
 #' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
 #' else `NA`. 
 #' 
-#' @return a cleaned camera name
+#' @return a cleaned camera name (without prefix)
 #' 
 #' @details 
 #' See clean_cameras
@@ -444,8 +444,12 @@ clean_camera <- function(camera, location,
       if(nchar(res) >= 4){ # This condition to avoid deleting D in eg "O04" (even if not sure it exists)
         res <- gsub("^O", "", res)
       }
+    } else if (grepl(pattern = "^KGA$", location)) { 
+      # remove KGA before camera name in KGA cameras in Zooniverse data
+      res <- gsub("^KGA", "", res)
     }
   }
+  
   return(res)
 }
 
@@ -497,60 +501,6 @@ clean_location <- function(camera, location, logger = NA) {
 }
 
 ## Adapt columns -------------------
-
-#' Get camera ID
-#' 
-#' Returns the complete cameraID as locationID_camera.
-#'
-#' @param locationID the location code vector (usually 3 letters)
-#' @param camera the "old" camera code vector, which is expected not to contain the locationID already.
-#' In case it does, then it will not be added and give a message.
-#' @param classifier The classifier used. If it is traptagger, will not display message
-#' because it is expected that cameraID will already be locationID_camera.
-#' It is optional (if not specified, it will display the message by default)
-#' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
-#' else `NA`. 
-#' 
-#' @return a vector of same lengths as locationID and camera with pasted
-#' locationID_camera. If camera is already in format locationID_camera, 
-#' then it does not changes and displays a message.
-#' 
-#' @noRd
-get_cameraID <- function(locationID, camera, classifier, logger = NA) {
-  
-  if(missing(classifier)) {
-    classifier <- "placeholder"
-  }
-  
-  # Get unique locationID
-  unique_locationID <- unique(locationID)
-  
-  # Check if camera is already in format locationID_camera.
-  already_loc <- which(grepl(camera, 
-                             pattern = paste0("^", paste0(unique_locationID, collapse = "|"), "_")))
-  
-  if (length(already_loc) != 0) { # if some cameras already begin with code_loc
-    cam_prob <- unique(camera[already_loc])
-    
-    if(classifier != "traptagger") {
-      msg <- paste0("Cameras ",
-                    paste(cam_prob, collapse = ", "),
-                    " already begin with code_loc: not adding the location.")
-      write_log_message(msg, logger = logger, level = "info")
-      message(msg)
-    }
-    
-    cameraID <- camera
-    cameraID[-already_loc] <- paste(locationID[-already_loc], 
-                                    camera[-already_loc],
-                                    sep = "_")
-  } else {
-    cameraID <- paste(locationID, 
-                      camera,
-                      sep = "_")
-  }
-  return(cameraID)
-}
 
 #' Get eventID
 #'

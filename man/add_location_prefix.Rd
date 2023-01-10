@@ -16,7 +16,8 @@ else \code{NA}.}
 }
 \value{
 A character vector of the same length as \code{cameras} where each value is prefixed
-with the corresponding value of \code{locations} (in the same order).
+with the corresponding value of \code{locations} (in the same order). The function will not double
+the prefix in case it was already present.
 }
 \description{
 Adds a prefix to a set of cameras, previously verifying that the prefix is not in the camera

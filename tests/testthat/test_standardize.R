@@ -185,29 +185,6 @@ test_that("Fill capture info traptagger", {
                c(12111, 12232, 12323))
 })
 
-test_that("Change cameraID works well", {
-  locationID <- c("MAD", "MAF", "MAD")
-  
-  # --- Not present (all)
-  camera <- c("A01", "A01", "B01")
-  cameraID <- get_cameraID(locationID, camera)
-  expect_equal(cameraID, c("MAD_A01", "MAF_A01", "MAD_B01"))
-  
-  # --- Already present (all)
-  camera <- c("MAD_A01", "MAF_A01", "MAD_B01")
-  cameraID <- suppressMessages(get_cameraID(locationID, camera))
-  expect_equal(cameraID, c("MAD_A01", "MAF_A01", "MAD_B01"))
-  expect_message(get_cameraID(locationID, camera),
-                 "Cameras MAD_A01, MAF_A01, MAD_B01 already begin with code_loc: not adding the location.")
-  
-  # --- Mix
-  camera <- c("A01", "MAF_A01", "MAD_B01")
-  cameraID <- suppressMessages(get_cameraID(locationID, camera))
-  expect_equal(cameraID, c("MAD_A01", "MAF_A01", "MAD_B01"))
-  expect_message(get_cameraID(locationID, camera),
-                 "Cameras MAF_A01, MAD_B01 already begin with code_loc: not adding the location.")
-})
-
 test_that("standardize_snapshot_df (Zooniverse)", {
   dat_std <- standardize_snapshot_df(dat_zooniverse, 
                                      standard_df = standard,

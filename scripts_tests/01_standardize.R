@@ -32,16 +32,16 @@ OUT_DATADIR_FILE <- "/home/lnicvert/Documents/PhD/Snapshot/data/test_file"
 # File or folder you actually want to copy, within IN_DATADIR and to OUT_DATADIR.
 # If this has a subfolder structure, it will be copied into OUT_DATADIR.
 
-# input <- IN_DATADIR # Here we standardize all files in IN_DATADIR
+input <- IN_DATADIR # Here we standardize all files in IN_DATADIR
 input_file <- file.path(IN_DATADIR, "APN/APN_S1_full_report_0-50__agreement_corrected_fin.csv")
 # input <- c(file.path(IN_DATADIR, "APN/APN_S1_full_report_0-50__agreement_corrected_fin.csv"),
 #            file.path(IN_DATADIR, "ATH/ATH_Roll1_Snapshot.csv"),
 #            file.path(IN_DATADIR, "roaming/AUG_sp_report_digikam_2020-08-26_fin.csv"),
 #            file.path(IN_DATADIR, "KHO/KHO_S1_full_report_0-50__agreement_corrected_fin.csv"),
 #            file.path(IN_DATADIR, "DHP"))
-
-input <- c(file.path(IN_DATADIR, "DHP"),
-           file.path(IN_DATADIR, "OVE"))
+# input <- c(file.path(IN_DATADIR, "DHP"),
+#            file.path(IN_DATADIR, "OVE"))
+# input <- file.path(IN_DATADIR, "KGA")
 
 # --- Any files/folders to ignore?
 # Files or folders in IN_DATADIR that should be ignored.
@@ -79,12 +79,11 @@ std_list <- standardize_snapshot_list(std_list,
 std_df <- standardize_snapshot_df(std_df,
                                   standard,
                                   logger = loggerf)
-unique(std_list$`DHP/DHP_S1_full_report_0-50__agreement_corrected_fin.csv`$cameraID)
-unique(std_list$`OVE/OVE_S1_full_report_0-50__agreement_corrected_fin.csv`$cameraID)
-unique(std_list$`OVE/OVE_S3_full_report_0-50__agreement_corrected_fin.csv`$cameraID)
-unique(std_list$`OVE/OVE_Roll9_Snapshot.csv`$cameraID)
+unique(std_list$`KGA/KGA_S1_full_report_0-50__agreement_corrected_fin.csv`$cameraID)
+unique(std_list$`KGA/KGA_S2_full_report_0-50__agreement_corrected_fin.csv`$cameraID)
+unique(std_list$`KGA/KGA_S3_full_report_0-50__agreement_corrected_fin.csv`$cameraID)
 
-# Write files -------------------------------------------------------------
+++# Write files -------------------------------------------------------------
 write_standardized_list(df_list = std_list,
                         to = OUT_DATADIR,
                         write = TRUE,
