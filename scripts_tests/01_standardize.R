@@ -20,11 +20,11 @@ library(stringr)
 # --- Path to the data
 # Where is the general folder in which you want to read your data ?
 # This path will not be copied into the destination.
-IN_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data"
+IN_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/01_raw_data"
 
 # --- Where wou want to copy data
 # Where do you want to copy your files?
-OUT_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/2_standardized_data"
+OUT_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/02_standardized_data"
 OUT_DATADIR_FILE <- "/home/lnicvert/Documents/PhD/Snapshot/data/test_file"
 # OUT_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/test_clean"
 

@@ -15,7 +15,7 @@ library(magrittr)
 library(dplyr)
 library(stringr)
 
-# Plot points
+# Plot map
 library(sf)
 library(ggplot2)
 library(ggsn)
@@ -23,31 +23,32 @@ library(gridExtra)
 
 # Read data ---------------------------------------------------------------
 metadata <- read.csv("/home/lnicvert/Documents/PhD/Snapshot/metadata/02_raw_data_csv/+1_Metadata_all_fixed_as_snapshot.csv")
-# alldata <- read.csv("/home/lnicvert/Documents/PhD/Snapshot/data/2_standardized_data/alldata.csv")
-alldata <- read.csv(here("scripts_tests/alldata_test.csv"))
+# alldata <- read.csv("/home/lnicvert/Documents/PhD/Snapshot/data/02_standardized_data/alldata.csv")
+
 
 # Reduce data size --------------------------------------------------------
-# alldata <- alldata %>% 
+# alldata <- alldata %>%
 #   select(locationID, cameraID, roll, season, classifier)
 # alldata <- alldata %>% distinct() %>%
 #   arrange(locationID, cameraID, roll)
 # write.csv(alldata, here("scripts_tests/alldata_test.csv"), row.names = FALSE)
 
+# Use the reduced size file
+alldata <- read.csv(here("scripts_tests/alldata_test.csv"))
+
 # Remove spaces ---------------------------------------------------------
 metadata <- standardizeSnapshot:::clean_blanks(metadata)
 
 # Amend cameras not in metadata -------------------------------------------
-alldata <- alldata %>%
-  mutate(locationID = clean_locations(cameraID, locationID))
+# (Useless if data was cleaned in a proper way)
 
-alldata <- alldata %>%
-  mutate(cameraID = clean_cameras(cameras = cameraID, 
-                                  locations = locationID,
-                                  classifiers = classifier))
-
-# Filter out data that is not in the metadata -----------------------------
-alldata <- alldata %>%
-  filter(!(locationID %in% c("SP", "GON")))
+# alldata <- alldata %>%
+#   mutate(locationID = clean_locations(cameraID, locationID))
+# 
+# alldata <- alldata %>%
+#   mutate(cameraID = clean_cameras(cameras = cameraID, 
+#                                   locations = locationID,
+#                                   classifiers = classifier))
 
 # Amend metadata cameras and locations ------------------------------------
 # Generic amendments
@@ -110,32 +111,70 @@ if(ambiguous){
   print(caminfo)
 }
 
-# Get unique cameras ------------------------------------------------------
+
+
+# Get list of cameras -----------------------------------------------------
+
+## In the data -----
+# Filter out data that is not in the metadata at all
+# (we don't want to display those)
+alldata_test <- alldata %>%
+  filter(!(locationID %in% c("SP", "GON")))
 # Cameras that are in data
-cam_data <- sort(unique(alldata$cameraID))
+cam_data <- sort(unique(alldata_test$cameraID))
 
+## In the metadata -----
+# Filter out metadata that is not in the data
+metadata_test <- metadata %>%
+  filter(locationID !="LAN")
 # Cameras that are in metadata
-cam_metadata <- sort(unique(metadata$cameraID))
+cam_metadata <- sort(unique(metadata_test$cameraID))
 
-# Get cameras that are not in the data --------------------------------
+# Get cameras that are not in the data (not a big deal) -------------------
 not_in_data <- cam_metadata[!(cam_metadata %in% cam_data)]
-message(paste(length(not_in_data), "cameras are in the metadata but not in the data: ",
+message(paste(length(not_in_data), 
+              "cameras are in the metadata but not in the data: ",
               paste(not_in_data, collapse = ", "))
-)      
+)
+# APN_BosP, APN_G2, APN_G3, APN_JKB1, APN_KAP1, APN_KAP10, APN_KAP15, 
+#   APN_KAP16, APN_KAP18, APN_KAP3, APN_KAP8, APN_SV3?
+# AUG_B02, AUG_B03, AUG_B04, AUG_B06, AUG_C01, AUG_C04, 
+#   AUG_C05, AUG_C06, AUG_C07, AUG_C08, AUG_D04, AUG_D07, AUG_D08, 
+#   AUG_D09, AUG_D12?
+# BLO_C01, BLO_D07
+# GAR cameras -> in the metadata they are GAR_xxxold and GAR_xxxnew
+# KAR_A02b?
+# MAR_A08, MAR_B07, MAR_B08, MAR_C07?
+# SOM_A1, SOM_C2, SOM_C3, SOM_D3, SOM_D4, 
+#   SOM_E1, SOM_E2, SOM_E3, SOM_E4, SOM_F1, SOM_F2?
+# VEN_C03, VEN_D03?
+# + all cameras from LAN
 
-# Get cameras that are not in the metadata --------------------------------
+# Get cameras that are not in the metadata (important) --------------------
 not_in_metadata <- cam_data[!(cam_data %in% cam_metadata)]
-message(paste(length(not_in_metadata), "cameras are in the data but not in the metadata: ",
+message(paste(length(not_in_metadata), 
+              "cameras are in the data but not in the metadata: ",
               paste(not_in_metadata, collapse = ", "))
         )
+# APN_Jack1, APN_JJP, APN_WS5, APN_WS6?
+# GAR cameras -> in the metadata they are GAR_xxxold and GAR_xxxnew
+# KAR_K06?
+# KGA_C01, KGA_C02, KGA_C03, KGA_C04, KGA_C05, KGA_C06, 
+#   KGA_C07, KGA_C08, KGA_C09, KGA_C10, KGA_D01, KGA_D02, 
+#   KGA_D03, KGA_D04, KGA_D05, KGA_D06, KGA_D07, KGA_D08, KGA_D09, KGA_D10 ?
+# KHO_EW1, KHO_EW2, KHO_EW3, KHO_EW4?
+# MAD_A08, MAD_D02, MAD_E02, MAD_E03, MAD_E05, MAD_E07_2, MAD_F09, 
+#   MAD_F10, MAD_G09, MAD_G10?
+# MTZ_E08?
+# Tswalu -> because of TSW_Roll6_Snapshot (missing sector prefix)
+# + all cameras from SP (special projects) and GON
 
 # Plot coordinates -------------------------------------------------------
 metadata_plot_prep <- metadata %>% 
   select(Lat_Y, Long_X, 
          cameraID, Sector,
          locationID,
-         Reserve.Location) # %>% unique() %>%
-  # filter(!(cameraID %in% cam_ambiguous))
+         Reserve.Location)
 
 metadata_plot <- metadata_plot_prep %>% 
   filter(!(is.na(Lat_Y) | is.na(Long_X)))

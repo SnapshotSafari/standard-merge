@@ -14,7 +14,7 @@ library(dplyr)
 
 
 # Input folder ------------------------------------------------------------
-IN_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/2_standardized_data"
+IN_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/02_standardized_data"
 
 
 # List files --------------------------------------------------------------
@@ -28,11 +28,11 @@ df_all <- do.call('rbind', lapply(files, read.csv))
 # Get species names -------------------------------------------------------
 sort(unique(df_all$snapshotName))
 
-# Remove 0?
+# Remove 0, blanks and the like
 df_all_nozero <- df_all %>% 
   filter(!(snapshotName %in% c("0", "blank", "knockeddown")))
 
-# Write final file --------------------------------------------------------
+# Write final files --------------------------------------------------------
 write.csv(df_all, 
           file.path(IN_DATADIR, "alldata.csv"), row.names = FALSE)
 
