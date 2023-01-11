@@ -307,7 +307,8 @@ clean_species <- function(species){
 #'
 #' @param cameras Cameras vector
 #' @param locations locations vector
-#' @param classifiers Classifier vector
+#' @param classifiers Classifier vector. If the classifier is `NULL`, 
+#' the function will apply all Zooniverse corrections.
 #' @param silence_warnings Should a warning be displayed when `locationID` is `NA`?
 #' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
 #' else `NA`. 
@@ -328,13 +329,13 @@ clean_species <- function(species){
 #' + if the location code is `DHP`, will remove leading `D` in `cameras`  (and add location prefix).
 #' + if the location code is `OVE`, will remove leading `O` in `cameras`  (and add location prefix).
 #' 
+#' @export
+#' 
 #' @examples
 #' cameras <- c("KHO_E_A01", "OCO2")
 #' locations <- c("KHO", "OVE")
 #' classifiers <- c("traptagger", "zooniverse")
 #' clean_cameras(cameras, locations, classifiers)
-#' 
-#' @noRd
 clean_cameras <- function(cameras, locations, 
                           classifiers,
                           silence_warnings = FALSE,
@@ -344,12 +345,21 @@ clean_cameras <- function(cameras, locations,
                            locations,
                            silence_warnings = silence_warnings)
   
-  cameras_final <- sapply(1:length(camnames), 
-                          function(i) {
-                            clean_camera(camnames[i], 
-                                         location = locations[i],
-                                         classifier = classifiers[i])
-                          })
+  if(missing(classifiers)) {
+    cameras_final <- sapply(1:length(camnames), 
+                            function(i) {
+                              clean_camera(camnames[i], 
+                                           location = locations[i])
+                            })
+  } else {
+    cameras_final <- sapply(1:length(camnames), 
+                            function(i) {
+                              clean_camera(camnames[i], 
+                                           location = locations[i],
+                                           classifier = classifiers[i])
+                            })
+  }
+  
   
   # Add location prefix
   cameras_final <- add_location_prefix(cameras_final, locations, 
@@ -375,10 +385,10 @@ clean_cameras <- function(cameras, locations,
 #' The code `DHP` is replaced with `OVE` if the corresponding camera code starts with 'O'.
 #' The code `KGA` is replaced with `KHO` if the corresponding camera code starts with 'KHO'.
 #' 
+#' @export
+#' 
 #' @examples
 #' clean_locations(c("OA01", "KHOGA01"), c("DHP", "KGA"))
-#' 
-#' @noRd
 clean_locations <- function(cameras, locations, logger = NA) {
   
   locations_final <- sapply(1:length(cameras), 
@@ -392,7 +402,8 @@ clean_locations <- function(cameras, locations, logger = NA) {
 #' 
 #' Standardize a camera name. This function assumes that there is no location prefix.
 #'
-#' @param classifier Classifier vector
+#' @param classifier Classifier vector. If the classifier is `NULL`, the function will apply all
+#' Zooniverse corrections.
 #' @param camera A camera
 #' @param location A location
 #' @param logger a `log4r` `logger` object if you want logging (can be created with `create_logger`), 
@@ -408,7 +419,7 @@ clean_locations <- function(cameras, locations, logger = NA) {
 #' 
 #' @noRd
 clean_camera <- function(camera, location, 
-                         classifier = c("zooniverse", "traptagger", "digikam"),
+                         classifier = c(NULL, "zooniverse", "traptagger", "digikam"),
                          logger = NA) {
   
   classifier <- match.arg(classifier)
@@ -432,7 +443,7 @@ clean_camera <- function(camera, location,
       # Subset the dash in camera name
       res <- gsub("_", "", res)
     }
-  } else if (classifier == "zooniverse") {
+  } else if (classifier == "zooniverse" | is.null(classifier)) {
     if (grepl(pattern = "^KHO$", location)) {
       res <-  gsub("^KHOG", "E", res)
       res <-  gsub("^KHOL", "M", res)
