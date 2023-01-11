@@ -1,4 +1,4 @@
-# standardizeSnapshot (development version)
+# standardizeSnapshot 1.1.0
 
 # standardizeSnapshot 1.0.1
 

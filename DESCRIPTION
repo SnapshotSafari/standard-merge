@@ -1,6 +1,6 @@
 Package: standardizeSnapshot
 Title: Standardize and clean Snapshot data
-Version: 1.0.1.9000
+Version: 1.1.0
 Authors@R: person("Lisa", "Nicvert", email = "lisa.nicvert@univ-lyon1.fr", role = c("aut", "cre"))
 Description: standardizeSnapshot is a R package to standardize camera trap records files from the Snapshot Safari project. Snapshot Safari data comes in different standards, following the method that was used to classify pictures (Zooniverse, TrapTagger or Digikam). This package allows to standardize all data sources to a unique file format and then cleans the files to homogenize records.
 Depends: R (>= 3.4.3)
