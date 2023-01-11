@@ -39,10 +39,8 @@ For TrapTagger data:
 \item if the location code is \code{KHO}: will remove the dash in the camera name (e.g \code{KHO_E_A01} -> \code{KHO_EA01})
 \item if the location code is \code{SAM}: will remove the dash in the camera name (e.g \code{SAM_B_A01} -> \code{SAM_BA01})
 \item if the location code is \code{SAM}: will remove the dash in the camera name (e.g \code{TSW_L_A01} -> \code{TSW_LA01})
-}
-
+\item if the location code is \code{PLN}: will replace leading \code{PIL_} with \code{PLN} (e.g \code{PIL_A01} -> \code{PLN_A01})
 For Zooniverse data:
-\itemize{
 \item if the location code is \code{KHO}, will replace \code{KHOG} with \code{E} and  \code{KHOL} with \code{M} in \code{cameras} (and add location prefix).
 \item if the location code is \code{DHP}, will remove leading \code{D} in \code{cameras}  (and add location prefix).
 \item if the location code is \code{OVE}, will remove leading \code{O} in \code{cameras}  (and add location prefix).

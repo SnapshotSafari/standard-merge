@@ -25,6 +25,7 @@ cameras in KHO have the locationID KGA.
 \details{
 The code \code{DHP} is replaced with \code{OVE} if the corresponding camera code starts with 'O'.
 The code \code{KGA} is replaced with \code{KHO} if the corresponding camera code starts with 'KHO'.
+The code \code{PIL} is replaced with \code{PLN}
 }
 \examples{
 clean_locations(c("OA01", "KHOGA01"), c("DHP", "KGA"))

@@ -322,7 +322,7 @@ clean_species <- function(species){
 #' + if the location code is `KHO`: will remove the dash in the camera name (e.g `KHO_E_A01` -> `KHO_EA01`)
 #' + if the location code is `SAM`: will remove the dash in the camera name (e.g `SAM_B_A01` -> `SAM_BA01`)
 #' + if the location code is `SAM`: will remove the dash in the camera name (e.g `TSW_L_A01` -> `TSW_LA01`)
-#' 
+#' + if the location code is `PLN`: will replace leading `PIL_` with `PLN` (e.g `PIL_A01` -> `PLN_A01`)
 #' For Zooniverse data:
 #' 
 #' + if the location code is `KHO`, will replace `KHOG` with `E` and  `KHOL` with `M` in `cameras` (and add location prefix).
@@ -360,7 +360,6 @@ clean_cameras <- function(cameras, locations,
                             })
   }
   
-  
   # Add location prefix
   cameras_final <- add_location_prefix(cameras_final, locations, 
                                        logger = logger)
@@ -384,12 +383,18 @@ clean_cameras <- function(cameras, locations,
 #' @details
 #' The code `DHP` is replaced with `OVE` if the corresponding camera code starts with 'O'.
 #' The code `KGA` is replaced with `KHO` if the corresponding camera code starts with 'KHO'.
-#' 
+#' The code `PIL` is replaced with `PLN`
 #' @export
 #' 
 #' @examples
 #' clean_locations(c("OA01", "KHOGA01"), c("DHP", "KGA"))
 clean_locations <- function(cameras, locations, logger = NA) {
+  
+  if("PIL" %in% locations){
+    msg <- "Will change location PIL -> PLN"
+    write_log_message(msg, logger = logger, level = "info")
+    message(msg)
+  }
   
   locations_final <- sapply(1:length(cameras), 
                             function(i) {
@@ -443,6 +448,12 @@ clean_camera <- function(camera, location,
       # Subset the dash in camera name
       res <- gsub("_", "", res)
     }
+    
+    if (location == "PLN") {
+      # Remove "PIL_" that was the old location_code
+      res <- gsub("^PIL_", "", res)
+    }
+    
   } else if (classifier == "zooniverse" | is.null(classifier)) {
     if (grepl(pattern = "^KHO$", location)) {
       res <-  gsub("^KHOG", "E", res)
@@ -459,6 +470,28 @@ clean_camera <- function(camera, location,
       # remove KGA before camera name in KGA cameras in Zooniverse data
       res <- gsub("^KGA", "", res)
     }
+  }
+  
+  if(location == "APN"){
+    # Correct majuscules/minuscules Umh
+    if(grepl("^Umh", res)) {
+      res <- gsub("^Umh", "UMH", res)
+    }
+    # Correct JJxb -> JJx
+    if(grepl("^JJ(1|5|6|7|8)b$", res)) {
+      res <- gsub("^(JJ(1|5|6|7|8))b$", "\\1", res)
+    }
+    
+  }
+  
+  # Correct c04/05 in ATH
+  if(location == "ATH" & grepl("^c(04|05)$", res)){
+    res <- gsub("^c", "C", res)
+  }
+  
+  # Correct ADWA
+  if(location == "MAD" & grepl("^ADWA", res)){
+    res <- gsub("^ADWA", "MADWA", res)
   }
   
   return(res)
@@ -505,6 +538,8 @@ clean_location <- function(camera, location, logger = NA) {
           new_location <- "OVE"
         }
       }
+    } else if (location == "PIL") { # Replace PLN erroneous code_loc
+      new_location <- "PLN"
     }
   }
   

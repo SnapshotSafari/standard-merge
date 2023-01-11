@@ -7,6 +7,13 @@
 #
 # Script Description: script to merge all data
 
+
+# Libraries etc -----------------------------------------------------------
+library(magrittr)
+library(dplyr)
+
+
+# Input folder ------------------------------------------------------------
 IN_DATADIR <- "/home/lnicvert/Documents/PhD/Snapshot/data/2_standardized_data"
 
 
@@ -22,3 +29,12 @@ df_all <- do.call('rbind', lapply(files, read.csv))
 sort(unique(df_all$snapshotName))
 
 # Remove 0?
+df_all_nozero <- df_all %>% 
+  filter(!(snapshotName %in% c("0", "blank", "knockeddown")))
+
+# Write final file --------------------------------------------------------
+write.csv(df_all, 
+          file.path(IN_DATADIR, "alldata.csv"), row.names = FALSE)
+
+write.csv(df_all_nozero, 
+          file.path(IN_DATADIR, "alldata_nozero.csv"), row.names = FALSE)
