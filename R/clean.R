@@ -472,26 +472,29 @@ clean_camera <- function(camera, location,
     }
   }
   
-  if(location == "APN"){
-    # Correct majuscules/minuscules Umh
-    if(grepl("^Umh", res)) {
-      res <- gsub("^Umh", "UMH", res)
-    }
-    # Correct JJxb -> JJx
-    if(grepl("^JJ(1|5|6|7|8)b$", res)) {
-      res <- gsub("^(JJ(1|5|6|7|8))b$", "\\1", res)
+  if(!is.na(location)) { # For the following corrections we need non-NA location
+    
+    if(location == "APN"){
+      # Correct majuscules/minuscules Umh
+      if(grepl("^Umh", res)) {
+        res <- gsub("^Umh", "UMH", res)
+      }
+      # Correct JJxb -> JJx
+      if(grepl("^JJ(1|5|6|7|8)b$", res)) {
+        res <- gsub("^(JJ(1|5|6|7|8))b$", "\\1", res)
+      }
+      
     }
     
-  }
-  
-  # Correct c04/05 in ATH
-  if(location == "ATH" & grepl("^c(04|05)$", res)){
-    res <- gsub("^c", "C", res)
-  }
-  
-  # Correct ADWA
-  if(location == "MAD" & grepl("^ADWA", res)){
-    res <- gsub("^ADWA", "MADWA", res)
+    # Correct c04/05 in ATH
+    if(location == "ATH" & grepl("^c(04|05)$", res)){
+      res <- gsub("^c", "C", res)
+    }
+    
+    # Correct ADWA
+    if(location == "MAD" & grepl("^ADWA", res)){
+      res <- gsub("^ADWA", "MADWA", res)
+    }
   }
   
   return(res)
