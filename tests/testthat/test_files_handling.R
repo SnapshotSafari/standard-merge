@@ -1,7 +1,7 @@
 library(testthat)
 
 test_that("Read csv", {
-          f <- "/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data/APN/"
+          f <- file.path(raw_data_folder, "APN/")
 
           csv_goal <- c(paste0(f, "APN_S1_full_report_0-50__agreement_corrected_fin.csv"),
                         paste0(f, "APN_S2_full_report_0-50__agreement_corrected_fin.csv"),
@@ -15,12 +15,11 @@ test_that("Read csv", {
 
 test_that("Get files and folder (folder input)", {
   # --- One folder
-  f <- "/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data/ATH/"
-  basepath <- "/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data"
+  f <- file.path(raw_data_folder, "ATH/")
   res <- get_csv_files_and_folders(f, 
-                                   basepath = basepath)
+                                   basepath = raw_data_folder)
   
-  folders <- rep(basepath, 4)
+  folders <- rep(raw_data_folder, 4)
   files <- c("ATH/ATH_Roll1_Snapshot.csv",
              "ATH/ATH_Roll2_Snapshot.csv",
              "ATH/ATH_Roll3_Snapshot.csv",
@@ -30,13 +29,12 @@ test_that("Get files and folder (folder input)", {
   expect_equal(res, expected)
   
   # --- Two folders
-  f2 <- c("/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data/ATH/",
-          "/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data/GON")
-  basepath <- "/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data"
+  f2 <- c(file.path(raw_data_folder, "ATH/"),
+          file.path(raw_data_folder, "GON"))
   res2 <- get_csv_files_and_folders(f2, 
-                                    basepath = basepath)
+                                    basepath = raw_data_folder)
   
-  folders2 <- rep(basepath, 5)
+  folders2 <- rep(raw_data_folder, 5)
   files2 <- c("ATH/ATH_Roll1_Snapshot.csv",
               "ATH/ATH_Roll2_Snapshot.csv",
               "ATH/ATH_Roll3_Snapshot.csv",
@@ -50,25 +48,24 @@ test_that("Get files and folder (folder input)", {
 
 test_that("Get files and folder (file input)", {
   # -- One file
-  f <- "/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data/ATH/ATH_Roll1_Snapshot.csv"
-  basepath <- "/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data"
+  f <- file.path(raw_data_folder, "ATH/ATH_Roll1_Snapshot.csv")
   res <- get_csv_files_and_folders(f,
-                                   basepath = basepath)
+                                   basepath = raw_data_folder)
   
-  folders <- basepath
+  folders <- raw_data_folder
   files <- "ATH/ATH_Roll1_Snapshot.csv"
   expected <- data.frame(folders, files)
   
   expect_equal(res, expected)
   
   # -- 2 files
-  f2 <- c("/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data/ATH/ATH_Roll1_Snapshot.csv",
-          "/home/lnicvert/Documents/PhD/Snapshot/data/1_raw_data/ATH/ATH_Roll2_Snapshot.csv")
+  f2 <- c(file.path(raw_data_folder, "ATH/ATH_Roll1_Snapshot.csv"),
+          file.path(raw_data_folder, "ATH/ATH_Roll2_Snapshot.csv"))
   
   res2 <- get_csv_files_and_folders(f2,
-                                    basepath = basepath)
+                                    basepath = raw_data_folder)
   
-  folders2 <- rep(basepath, 2)
+  folders2 <- rep(raw_data_folder, 2)
   files2 <- c("ATH/ATH_Roll1_Snapshot.csv",
               "ATH/ATH_Roll2_Snapshot.csv")
   expected2 <- data.frame(folders2, files2)
