@@ -1,14 +1,12 @@
 # standardizeSnapshot
 This is a R package to standardize data across multiple classifying platforms (Zooniverse, TrapTagger or Digikam) and merge for complete datasets.
 
-##  /!\ this is a work in progress /!\ 
-
-**While the main functions are working, all outputs have not been thouroughly ckecked out (in particular for the camera IDs).**
+**Warning: the main functions are working, but all outputs have not been thoroughly checked out (in particular for the camera IDs).**
 
 
 ## Purpose
 
-Snapshot Safari data comes in different standards, following the method that was used to classify pictures (Zooniverse, TrapTagger or Digikam). The codes in this folder allow to standardize all data sources to a unique file format.
+Snapshot Safari data comes in different standards, following the method that was used to classify pictures (Zooniverse, TrapTagger or Digikam). This package allows to standardize all data sources to a unique file format.
 
 
 ## Installation 
