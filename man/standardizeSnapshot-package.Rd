@@ -8,8 +8,16 @@
 \description{
 standardizeSnapshot is a R package to standardize camera trap records files from the Snapshot Safari project. Snapshot Safari data comes in different standards, following the method that was used to classify pictures (Zooniverse, TrapTagger or Digikam). This package allows to standardize all data sources to a unique file format and then cleans the files to homogenize records.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/SnapshotSafari/standard-merge}
+  \item \url{https://snapshotsafari.github.io/standardizesnapshot/}
+}
+
+}
 \author{
-\strong{Maintainer}: Lisa Nicvert \email{lisa.nicvert@univ-lyon1.fr}
+\strong{Maintainer}: Lisa Nicvert \email{lisa.nicvert@univ-lyon1.fr} (\href{https://orcid.org/0009-0006-5763-0865}{ORCID})
 
 }
 \keyword{internal}

@@ -1,7 +1,7 @@
 # standardizeSnapshot
 This is a R package to standardize data across multiple classifying platforms (Zooniverse, TrapTagger or Digikam) and merge for complete datasets.
 
-**Warning: the main functions are working, but all outputs have not been thoroughly checked out (in particular for the camera IDs).**
+**Warning: all outputs have not been thoroughly checked (in particular for the camera IDs).**
 
 
 ## Purpose
@@ -42,13 +42,9 @@ The `R/` folder contains all the package functions.
 
 ### Tests
 
-Unitari tests were run with the R package `testthat`. These tests can be found in `tests/`.
+Unitary tests were run with the R package `testthat`. These tests can be found in `tests/`.
 Diverse tests run with files installed locally can also be found in `scripts_tests/`.
 
 ### Documentation
 
 `standardizeSnapshot_xx.pdf` contains the package documentation. The .Rd files generated with `Roxygen2` can also be found in `man/`.
-
-
-
-

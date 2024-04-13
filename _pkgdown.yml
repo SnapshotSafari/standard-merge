@@ -1,0 +1,36 @@
+url: https://snapshotsafari.github.io/standardizesnapshot/
+template:
+  bootstrap: 5
+reference:
+- title: "Standardize data"
+  contents:
+  - standardize_snapshot_df
+  - standardize_snapshot_list
+  - add_location_prefix
+  - clean_locations
+  - clean_cameras
+  - clean_species
+  - get_camnames
+  - guess_classifier
+- title: "Read data"
+  contents:
+  - read_snapshot_files
+  - get_csv_files_and_folders
+- title: "Write data"
+  contents:
+  - write_standardized_df
+  - write_standardized_list
+  - get_final_filename
+  - get_csv_files_and_folders
+- title: "Logging"
+  contents: 
+  - create_logger
+  - write_log_message
+- title: "Example datasets and data standard"
+  contents:
+  - traptagger
+  - digikam
+  - zooniverse
+  - standard
+
+  

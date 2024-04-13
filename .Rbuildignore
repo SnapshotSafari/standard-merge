@@ -4,3 +4,6 @@
 ^README\.md$
 ^data-raw$
 ^standardizeSnapshot_.*.pdf$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

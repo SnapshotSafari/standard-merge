@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-This vignette shows the typical workflow to standardize multiple Snapshot Safari files.
+This vignette shows the typical workflow to standardize multiple  camera trap files from Snapshot Safari.
 
 
 ```{r setup}
@@ -120,7 +120,7 @@ dat_list <- read_snapshot_files(input = in_folder,
 Here, we also use:
 
 + `except`, which is a vector of files that should be ignored.
-+ a logger to copy messages to a logfile.
++ `logger`: a logger created with `create_logger`. If you did not setup a logger, you can ignore this argument.
 
 
 The result is a named list of dataframes:
@@ -161,7 +161,7 @@ dat_list <- standardize_snapshot_list(df_list = dat_list,
                                       logger = logger)
 ```
 
-Here, we also use the optional argument `logger`, which is a logger created with `create_logger`.
+Here, we also use the `logger` argument (as in the data reading step).
 
 
 By default, the function displays the head of the first 8 columns of each file along with numerous messages. 
@@ -184,7 +184,7 @@ write_standardized_list(df_list = dat_list,
                         logger = logger)
 ```
 
-Here, we also use the `logger` argument, which is a logger created with `create_logger`.
+Here, we also use the `logger` argument.
 
 
 The files are now written in the destination.

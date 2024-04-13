@@ -1,16 +1,24 @@
 Package: standardizeSnapshot
 Title: Standardize and clean Snapshot data
 Version: 1.1.0
-Authors@R: person("Lisa", "Nicvert", email = "lisa.nicvert@univ-lyon1.fr", role = c("aut", "cre"))
-Description: standardizeSnapshot is a R package to standardize camera trap records files from the Snapshot Safari project. Snapshot Safari data comes in different standards, following the method that was used to classify pictures (Zooniverse, TrapTagger or Digikam). This package allows to standardize all data sources to a unique file format and then cleans the files to homogenize records.
+Authors@R: 
+  person("Lisa", "Nicvert", email = "lisa.nicvert@univ-lyon1.fr", role = c("aut", "cre"),
+         comment = c(ORCID = "0009-0006-5763-0865"))
+Description: standardizeSnapshot is a R package to standardize camera trap records 
+  files from the Snapshot Safari project. Snapshot Safari data comes 
+  in different standards, following the method that was used to 
+  classify pictures (Zooniverse, TrapTagger or Digikam). 
+  This package allows to standardize all data sources to a unique 
+  file format and then cleans the files to homogenize records.
 Depends: R (>= 3.4.3)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.1
+RoxygenNote: 7.3.1
 Roxygen: list(markdown = TRUE)
 Imports: log4r, data.table, chron, lubridate, dplyr, magrittr, stringr, tidyselect, utils
 Suggests: 
     rmarkdown,
     knitr
 VignetteBuilder: knitr
+URL: https://github.com/SnapshotSafari/standard-merge, https://snapshotsafari.github.io/standardizesnapshot/

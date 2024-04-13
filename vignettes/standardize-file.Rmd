@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-This vignette shows the typical workflow to standardize a Snapshot Safari file.
+This vignette shows the typical workflow to standardize a camera trap file from Snapshot Safari.
 
 
 ```{r setup}
@@ -104,7 +104,7 @@ std_df <- standardize_snapshot_df(df = df,
 Here, we also use 2 optional arguments:
 
 + `locationID_digikam`: a location code, only useful if the data was processed with Digikam: indeed, the location (reserve) cannot be determined from the dataframe alone.
-+ `logger`: a logger created with `create_logger`
++ `logger`: a logger created with `create_logger`. If you did not setup a logger, you can ignore this argument.
 
 
 By default, the function displays the head of the first 8 columns of the file along with numerous messages. 
@@ -127,7 +127,7 @@ write_standardized_df(df = std_df,
                       logger = logger)
 ```
 
-Here, we also use the `logger` argument, which is a logger created with `create_logger`.
+Here, we also use the `logger` argument (as in the data standardization step).
 
 
 The file is now written in the destination.
