@@ -100,22 +100,22 @@ the specified location and setup the logging:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">logfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"log"</span>, <span class="st">"logger.log"</span><span class="op">)</span></span>
 <span><span class="va">logfile</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpITf4RF/log/logger.log"</span></span>
+<span><span class="co">#&gt; [1] "/tmp/Rtmp2TFAKG/log/logger.log"</span></span>
 <span></span>
 <span><span class="va">logger</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_logger.html">create_logger</a></span><span class="op">(</span>my_logfile <span class="op">=</span> <span class="va">logfile</span>, </span>
 <span>                        console <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Create logger /tmp/RtmpITf4RF/log/logger.log</span></span></code></pre></div>
+<span><span class="co">#&gt; Create logger /tmp/Rtmp2TFAKG/log/logger.log</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="read-the-file">Read the file<a class="anchor" aria-label="anchor" href="#read-the-file"></a>
 </h2>
 <p>First, we need to read the data. Here, we read a file that was
-previously written in /tmp/RtmpITf4RF/data_in (not shown). This
+previously written in /tmp/Rtmp2TFAKG/data_in (not shown). This
 dataframe represents Digikam-like data:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">in_folder</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"data_in"</span><span class="op">)</span></span>
 <span><span class="va">in_folder</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpITf4RF/data_in"</span></span>
+<span><span class="co">#&gt; [1] "/tmp/Rtmp2TFAKG/data_in"</span></span>
 <span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">in_folder</span>,  <span class="st">"digikam.csv"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df</span>, <span class="fl">3</span><span class="op">)</span></span>
@@ -214,13 +214,13 @@ this, we use the function <code>write_standardized_df</code>.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out_folder</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"data_out"</span><span class="op">)</span> <span class="co"># the folder in which to copy the file</span></span>
 <span><span class="va">out_folder</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpITf4RF/data_out"</span></span>
+<span><span class="co">#&gt; [1] "/tmp/Rtmp2TFAKG/data_out"</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/write_standardized_df.html">write_standardized_df</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">std_df</span>,</span>
 <span>                      to <span class="op">=</span> <span class="va">out_folder</span>,</span>
 <span>                      logger <span class="op">=</span> <span class="va">logger</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Creating folder /tmp/RtmpITf4RF/data_out</span></span>
-<span><span class="co">#&gt; Writing file /tmp/RtmpITf4RF/data_out/MOK_SNA_R1.csv ---</span></span></code></pre></div>
+<span><span class="co">#&gt; Creating folder /tmp/Rtmp2TFAKG/data_out</span></span>
+<span><span class="co">#&gt; Writing file /tmp/Rtmp2TFAKG/data_out/MOK_SNA_R1.csv ---</span></span></code></pre></div>
 <p>Here, we also use the <code>logger</code> argument (as in the data
 standardization step).</p>
 <p>The file is now written in the destination.</p>
@@ -232,15 +232,15 @@ standardization step).</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"log"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "logger.log"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span><span class="va">logfile</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "INFO  [2024-04-13 17:43:38] Create logger /tmp/RtmpITf4RF/log/logger.log"                                                               </span></span>
-<span><span class="co">#&gt;  [2] "INFO  [2024-04-13 17:43:39] Initial file: 22 columns, 100 rows."                                                                        </span></span>
-<span><span class="co">#&gt;  [3] "INFO  [2024-04-13 17:43:39] Standardizing columns"                                                                                      </span></span>
-<span><span class="co">#&gt;  [4] "INFO  [2024-04-13 17:43:39] Match found in column names: renaming column metadata_Numberofindividuals into metadata_NumberOfIndividuals"</span></span>
-<span><span class="co">#&gt;  [5] "INFO  [2024-04-13 17:43:39] Standardizing dates/times"                                                                                  </span></span>
-<span><span class="co">#&gt;  [6] "INFO  [2024-04-13 17:43:39] Getting location code for Digikam data"                                                                     </span></span>
-<span><span class="co">#&gt;  [7] "INFO  [2024-04-13 17:43:39] Fill capture info"                                                                                          </span></span>
-<span><span class="co">#&gt;  [8] "INFO  [2024-04-13 17:43:39] Cleaning location/camera, species and columns values"                                                       </span></span>
-<span><span class="co">#&gt;  [9] "INFO  [2024-04-13 17:43:39] Final file: 27 columns, 100 rows. Here is a sneak peek:"                                                    </span></span>
+<span><span class="co">#&gt;  [1] "INFO  [2024-04-13 18:02:56] Create logger /tmp/Rtmp2TFAKG/log/logger.log"                                                               </span></span>
+<span><span class="co">#&gt;  [2] "INFO  [2024-04-13 18:02:56] Initial file: 22 columns, 100 rows."                                                                        </span></span>
+<span><span class="co">#&gt;  [3] "INFO  [2024-04-13 18:02:56] Standardizing columns"                                                                                      </span></span>
+<span><span class="co">#&gt;  [4] "INFO  [2024-04-13 18:02:57] Match found in column names: renaming column metadata_Numberofindividuals into metadata_NumberOfIndividuals"</span></span>
+<span><span class="co">#&gt;  [5] "INFO  [2024-04-13 18:02:57] Standardizing dates/times"                                                                                  </span></span>
+<span><span class="co">#&gt;  [6] "INFO  [2024-04-13 18:02:57] Getting location code for Digikam data"                                                                     </span></span>
+<span><span class="co">#&gt;  [7] "INFO  [2024-04-13 18:02:57] Fill capture info"                                                                                          </span></span>
+<span><span class="co">#&gt;  [8] "INFO  [2024-04-13 18:02:57] Cleaning location/camera, species and columns values"                                                       </span></span>
+<span><span class="co">#&gt;  [9] "INFO  [2024-04-13 18:02:57] Final file: 27 columns, 100 rows. Here is a sneak peek:"                                                    </span></span>
 <span><span class="co">#&gt; [10] "locationID\tcameraID\tseason\troll\teventID\tsnapshotName\teventDate\teventTime"                                                        </span></span>
 <span><span class="co">#&gt; [11] "MOK\tMOK_A09\tNA\t1\tMOK_A09#1#1\tgiraffe\t2018-07-08\t12:15:34"                                                                        </span></span>
 <span><span class="co">#&gt; [12] "MOK\tMOK_A09\tNA\t1\tMOK_A09#1#2\tspringbok\t2018-08-26\t10:45:55"                                                                      </span></span>
@@ -248,8 +248,8 @@ standardization step).</p>
 <span><span class="co">#&gt; [14] "MOK\tMOK_B07\tNA\t1\tMOK_B07#1#1\tzebraburchells\t2018-06-28\t07:49:42"                                                                 </span></span>
 <span><span class="co">#&gt; [15] "MOK\tMOK_B07\tNA\t1\tMOK_B07#1#2\tgemsbok\t2018-08-19\t09:11:55"                                                                        </span></span>
 <span><span class="co">#&gt; [16] ""                                                                                                                                       </span></span>
-<span><span class="co">#&gt; [17] "INFO  [2024-04-13 17:43:39] Creating folder /tmp/RtmpITf4RF/data_out"                                                                   </span></span>
-<span><span class="co">#&gt; [18] "INFO  [2024-04-13 17:43:39] Writing file /tmp/RtmpITf4RF/data_out/MOK_SNA_R1.csv ---"</span></span></code></pre></div>
+<span><span class="co">#&gt; [17] "INFO  [2024-04-13 18:02:57] Creating folder /tmp/Rtmp2TFAKG/data_out"                                                                   </span></span>
+<span><span class="co">#&gt; [18] "INFO  [2024-04-13 18:02:57] Writing file /tmp/Rtmp2TFAKG/data_out/MOK_SNA_R1.csv ---"</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

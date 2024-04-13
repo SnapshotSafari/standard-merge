@@ -80,17 +80,12 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="standardizesnapshot">standardizeSnapshot<a class="anchor" aria-label="anchor" href="#standardizesnapshot"></a>
 </h1></div>
-<p>This is a R package to standardize data across multiple classifying platforms (Zooniverse, TrapTagger or Digikam) and merge for complete datasets.</p>
-<p><strong>Warning: all outputs have not been thoroughly checked out (in particular for the camera IDs).</strong></p>
-<div class="section level2">
-<h2 id="purpose">Purpose<a class="anchor" aria-label="anchor" href="#purpose"></a>
-</h2>
-<p>Snapshot Safari data comes in different standards, following the method that was used to classify pictures (Zooniverse, TrapTagger or Digikam). This package allows to standardize all data sources to a unique file format.</p>
-</div>
+<p>Snapshot Safari data comes in different standards, following the method that was used to classify pictures (Zooniverse, TrapTagger or Digikam). This R package allows to standardize all data sources to a unique file format.</p>
+<p><strong>Warning: all outputs have not been thoroughly checked (in particular for the camera IDs).</strong></p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install this package using the following commands in the R console (NB: you need an internet connection)</p>
+<p>You can install this package using the following commands in the R console (<em>NB: you need an internet connection</em>):</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span> <span class="co"># if devtools is not installed already</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
@@ -98,34 +93,17 @@
 <span>                         build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="vignettes">Vignettes<a class="anchor" aria-label="anchor" href="#vignettes"></a>
+<h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
 </h2>
-<p>There are 2 vignette showing the typical workflow for the package.</p>
-<p>The vignette <code>standardize-file</code> shows the workflow to standardize one single file. To view the vignette, launch the following command in the R console:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"standardize-file"</span><span class="op">)</span></span></code></pre></div>
-<p>The vignette <code>standardize-files</code> shows the workflow to standardize multiple files:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"standardize-files"</span><span class="op">)</span></span></code></pre></div>
+<p>The <a href="https://snapshotsafari.github.io/standard-merge/">package website</a> lists the documentation of all functions under the <a href="file:///home/lnicvert/Documents/PhD/Code/standardizeSnapshot/docs/reference/index.html">reference</a> section.</p>
+<p>Two articles on the website also show the typical workflow for the package to standardize <a href="file:///home/lnicvert/Documents/PhD/Code/standardizeSnapshot/docs/articles/standardize-file.html">one</a> or <a href="file:///home/lnicvert/Documents/PhD/Code/standardizeSnapshot/docs/articles/standardize-files.html">several</a> file(s).</p>
+<p><em>NB: you can also read functions documentation in the file <code>standardizeSnapshot_xx.pdf</code> at the root of this directory and view the articles in R with <code><a href="articles/standardize-file.html">vignette("standardize-file")</a></code> or <code><a href="articles/standardize-files.html">vignette("standardize-files")</a></code>.</em></p>
 </div>
 <div class="section level2">
 <h2 id="contents">Contents<a class="anchor" aria-label="anchor" href="#contents"></a>
 </h2>
-<div class="section level3">
-<h3 id="codes">Codes<a class="anchor" aria-label="anchor" href="#codes"></a>
-</h3>
 <p>The <code>R/</code> folder contains all the package functions.</p>
-</div>
-<div class="section level3">
-<h3 id="tests">Tests<a class="anchor" aria-label="anchor" href="#tests"></a>
-</h3>
-<p>Unitary tests were run with the R package <code>testthat</code>. These tests can be found in <code>tests/</code>. Diverse tests run with files installed locally can also be found in <code>scripts_tests/</code>.</p>
-</div>
-<div class="section level3">
-<h3 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
-</h3>
-<p><code>standardizeSnapshot_xx.pdf</code> contains the package documentation. The .Rd files generated with <code>Roxygen2</code> can also be found in <code>man/</code>.</p>
-</div>
+<p>Unitary tests were run with the R package <code>testthat</code> and can be found in <code>tests/</code>. Additional tests run with files installed locally can also be found in <code>scripts_tests/</code>.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

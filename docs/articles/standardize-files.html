@@ -100,22 +100,22 @@ the specified location and setup the logging:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">logfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"log"</span>, <span class="st">"logger.log"</span><span class="op">)</span> <span class="co"># create the logfile</span></span>
 <span><span class="va">logfile</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpRo0ZCS/log/logger.log"</span></span>
+<span><span class="co">#&gt; [1] "/tmp/Rtmpzpfy7V/log/logger.log"</span></span>
 <span></span>
 <span><span class="va">logger</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_logger.html">create_logger</a></span><span class="op">(</span>my_logfile <span class="op">=</span> <span class="va">logfile</span>, </span>
 <span>                        console <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Create logger /tmp/RtmpRo0ZCS/log/logger.log</span></span></code></pre></div>
+<span><span class="co">#&gt; Create logger /tmp/Rtmpzpfy7V/log/logger.log</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="read-the-files">Read the files<a class="anchor" aria-label="anchor" href="#read-the-files"></a>
 </h2>
 <p>First, we need to read the data. Here, we read files that were
-previously written in <code>/tmp/RtmpRo0ZCS/data_in</code> (not
+previously written in <code>/tmp/Rtmpzpfy7V/data_in</code> (not
 shown).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">in_folder</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"data_in"</span><span class="op">)</span></span>
 <span><span class="va">in_folder</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpRo0ZCS/data_in"</span></span>
+<span><span class="co">#&gt; [1] "/tmp/Rtmpzpfy7V/data_in"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">in_folder</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "APN/APN_S1_full_report_0-50__agreement_corrected_fin.csv"</span></span>
 <span><span class="co">#&gt; [2] "ATH/ATH_Roll1_Snapshot.csv"                              </span></span>
@@ -345,16 +345,16 @@ For this, we use the function <code>write_standardized_list</code>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out_folder</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"data_out"</span><span class="op">)</span> <span class="co"># the folder in which to copy the file</span></span>
 <span><span class="va">out_folder</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpRo0ZCS/data_out"</span></span>
+<span><span class="co">#&gt; [1] "/tmp/Rtmpzpfy7V/data_out"</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/write_standardized_list.html">write_standardized_list</a></span><span class="op">(</span>df_list <span class="op">=</span> <span class="va">dat_list</span>,</span>
 <span>                        to <span class="op">=</span> <span class="va">out_folder</span>,</span>
 <span>                        logger <span class="op">=</span> <span class="va">logger</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Creating folder /tmp/RtmpRo0ZCS/data_out/APN</span></span>
+<span><span class="co">#&gt; Creating folder /tmp/Rtmpzpfy7V/data_out/APN</span></span>
 <span><span class="co">#&gt; Writing file APN/APN_S1_full_report_0-50__agreement_corrected_fin.csv -&gt; APN/APN_S1_R1-2.csv (1/3) ---</span></span>
-<span><span class="co">#&gt; Creating folder /tmp/RtmpRo0ZCS/data_out/ATH</span></span>
+<span><span class="co">#&gt; Creating folder /tmp/Rtmpzpfy7V/data_out/ATH</span></span>
 <span><span class="co">#&gt; Writing file ATH/ATH_Roll1_Snapshot.csv -&gt; ATH/ATH_SNA_R1.csv (2/3) ---</span></span>
-<span><span class="co">#&gt; Creating folder /tmp/RtmpRo0ZCS/data_out/MOK</span></span>
+<span><span class="co">#&gt; Creating folder /tmp/Rtmpzpfy7V/data_out/MOK</span></span>
 <span><span class="co">#&gt; Writing file MOK/MOK_record_table_0min_deltaT_2021-05-07.csv -&gt; MOK/MOK_SNA_R1.csv (3/3) ---</span></span></code></pre></div>
 <p>Here, we also use the <code>logger</code> argument.</p>
 <p>The files are now written in the destination.</p>
@@ -364,24 +364,24 @@ For this, we use the function <code>write_standardized_list</code>.</p>
 <p>We can check that the logger was filled:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span><span class="va">logfile</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "INFO  [2024-04-13 17:43:43] Create logger /tmp/RtmpRo0ZCS/log/logger.log"                                                               </span></span>
-<span><span class="co">#&gt;  [2] "INFO  [2024-04-13 17:43:43] The following file(s) will be ignored (they are in 'except'):"                                              </span></span>
+<span><span class="co">#&gt;  [1] "INFO  [2024-04-13 18:03:01] Create logger /tmp/Rtmpzpfy7V/log/logger.log"                                                               </span></span>
+<span><span class="co">#&gt;  [2] "INFO  [2024-04-13 18:03:01] The following file(s) will be ignored (they are in 'except'):"                                              </span></span>
 <span><span class="co">#&gt;  [3] "\tfoo.csv"                                                                                                                              </span></span>
 <span><span class="co">#&gt;  [4] "\tbar.csv"                                                                                                                              </span></span>
-<span><span class="co">#&gt;  [5] "INFO  [2024-04-13 17:43:43] Reading file APN/APN_S1_full_report_0-50__agreement_corrected_fin.csv (1/3) ---"                            </span></span>
-<span><span class="co">#&gt;  [6] "INFO  [2024-04-13 17:43:43] Reading file ATH/ATH_Roll1_Snapshot.csv (2/3) ---"                                                          </span></span>
-<span><span class="co">#&gt;  [7] "INFO  [2024-04-13 17:43:43] Reading file MOK/MOK_record_table_0min_deltaT_2021-05-07.csv (3/3) ---"                                     </span></span>
+<span><span class="co">#&gt;  [5] "INFO  [2024-04-13 18:03:01] Reading file APN/APN_S1_full_report_0-50__agreement_corrected_fin.csv (1/3) ---"                            </span></span>
+<span><span class="co">#&gt;  [6] "INFO  [2024-04-13 18:03:01] Reading file ATH/ATH_Roll1_Snapshot.csv (2/3) ---"                                                          </span></span>
+<span><span class="co">#&gt;  [7] "INFO  [2024-04-13 18:03:01] Reading file MOK/MOK_record_table_0min_deltaT_2021-05-07.csv (3/3) ---"                                     </span></span>
 <span><span class="co">#&gt;  [8] ""                                                                                                                                       </span></span>
 <span><span class="co">#&gt;  [9] ""                                                                                                                                       </span></span>
-<span><span class="co">#&gt; [10] "INFO  [2024-04-13 17:43:44] 3 files to standardize."                                                                                    </span></span>
+<span><span class="co">#&gt; [10] "INFO  [2024-04-13 18:03:01] 3 files to standardize."                                                                                    </span></span>
 <span><span class="co">#&gt; [11] ""                                                                                                                                       </span></span>
-<span><span class="co">#&gt; [12] "INFO  [2024-04-13 17:43:44] Standardizing file APN/APN_S1_full_report_0-50__agreement_corrected_fin.csv (1/3) ---"                      </span></span>
-<span><span class="co">#&gt; [13] "INFO  [2024-04-13 17:43:44] Initial file: 24 columns, 100 rows."                                                                        </span></span>
-<span><span class="co">#&gt; [14] "INFO  [2024-04-13 17:43:44] Standardizing columns"                                                                                      </span></span>
-<span><span class="co">#&gt; [15] "INFO  [2024-04-13 17:43:44] Standardizing dates/times"                                                                                  </span></span>
-<span><span class="co">#&gt; [16] "INFO  [2024-04-13 17:43:44] Fill capture info"                                                                                          </span></span>
-<span><span class="co">#&gt; [17] "INFO  [2024-04-13 17:43:44] Cleaning location/camera, species and columns values"                                                       </span></span>
-<span><span class="co">#&gt; [18] "INFO  [2024-04-13 17:43:44] Final file: 27 columns, 100 rows. Here is a sneak peek:"                                                    </span></span>
+<span><span class="co">#&gt; [12] "INFO  [2024-04-13 18:03:01] Standardizing file APN/APN_S1_full_report_0-50__agreement_corrected_fin.csv (1/3) ---"                      </span></span>
+<span><span class="co">#&gt; [13] "INFO  [2024-04-13 18:03:01] Initial file: 24 columns, 100 rows."                                                                        </span></span>
+<span><span class="co">#&gt; [14] "INFO  [2024-04-13 18:03:01] Standardizing columns"                                                                                      </span></span>
+<span><span class="co">#&gt; [15] "INFO  [2024-04-13 18:03:01] Standardizing dates/times"                                                                                  </span></span>
+<span><span class="co">#&gt; [16] "INFO  [2024-04-13 18:03:02] Fill capture info"                                                                                          </span></span>
+<span><span class="co">#&gt; [17] "INFO  [2024-04-13 18:03:02] Cleaning location/camera, species and columns values"                                                       </span></span>
+<span><span class="co">#&gt; [18] "INFO  [2024-04-13 18:03:02] Final file: 27 columns, 100 rows. Here is a sneak peek:"                                                    </span></span>
 <span><span class="co">#&gt; [19] "locationID\tcameraID\tseason\troll\teventID\tsnapshotName\teventDate\teventTime"                                                        </span></span>
 <span><span class="co">#&gt; [20] "APN\tAPN_13U\t1\t1\tAPN_13U#1#50\tkudu\t2017-07-25\t02:15:22"                                                                           </span></span>
 <span><span class="co">#&gt; [21] "APN\tAPN_6U\t1\t1\tAPN_6U#1#40\tsteenbok\t2017-07-17\t08:56:18"                                                                         </span></span>
@@ -389,13 +389,13 @@ For this, we use the function <code>write_standardized_list</code>.</p>
 <span><span class="co">#&gt; [23] "APN\tAPN_DW\t1\t2\tAPN_DW#2#94\timpala\t2017-07-06\t18:16:19"                                                                           </span></span>
 <span><span class="co">#&gt; [24] "APN\tAPN_DW\t1\t1\tAPN_DW#1#210\tzebraburchells\t2017-07-21\t18:09:16"                                                                  </span></span>
 <span><span class="co">#&gt; [25] ""                                                                                                                                       </span></span>
-<span><span class="co">#&gt; [26] "INFO  [2024-04-13 17:43:44] Standardizing file ATH/ATH_Roll1_Snapshot.csv (2/3) ---"                                                    </span></span>
-<span><span class="co">#&gt; [27] "INFO  [2024-04-13 17:43:44] Initial file: 9 columns, 100 rows."                                                                         </span></span>
-<span><span class="co">#&gt; [28] "INFO  [2024-04-13 17:43:44] Standardizing columns"                                                                                      </span></span>
-<span><span class="co">#&gt; [29] "INFO  [2024-04-13 17:43:44] Standardizing dates/times"                                                                                  </span></span>
-<span><span class="co">#&gt; [30] "INFO  [2024-04-13 17:43:44] Fill capture info"                                                                                          </span></span>
-<span><span class="co">#&gt; [31] "INFO  [2024-04-13 17:43:44] Cleaning location/camera, species and columns values"                                                       </span></span>
-<span><span class="co">#&gt; [32] "INFO  [2024-04-13 17:43:44] Final file: 27 columns, 100 rows. Here is a sneak peek:"                                                    </span></span>
+<span><span class="co">#&gt; [26] "INFO  [2024-04-13 18:03:02] Standardizing file ATH/ATH_Roll1_Snapshot.csv (2/3) ---"                                                    </span></span>
+<span><span class="co">#&gt; [27] "INFO  [2024-04-13 18:03:02] Initial file: 9 columns, 100 rows."                                                                         </span></span>
+<span><span class="co">#&gt; [28] "INFO  [2024-04-13 18:03:02] Standardizing columns"                                                                                      </span></span>
+<span><span class="co">#&gt; [29] "INFO  [2024-04-13 18:03:02] Standardizing dates/times"                                                                                  </span></span>
+<span><span class="co">#&gt; [30] "INFO  [2024-04-13 18:03:02] Fill capture info"                                                                                          </span></span>
+<span><span class="co">#&gt; [31] "INFO  [2024-04-13 18:03:02] Cleaning location/camera, species and columns values"                                                       </span></span>
+<span><span class="co">#&gt; [32] "INFO  [2024-04-13 18:03:02] Final file: 27 columns, 100 rows. Here is a sneak peek:"                                                    </span></span>
 <span><span class="co">#&gt; [33] "locationID\tcameraID\tseason\troll\teventID\tsnapshotName\teventDate\teventTime"                                                        </span></span>
 <span><span class="co">#&gt; [34] "ATH\tATH_B04\tNA\t1\tATH_B04#1#242\tblank\t2020-03-08\t12:33:00"                                                                        </span></span>
 <span><span class="co">#&gt; [35] "ATH\tATH_B04\tNA\t1\tATH_B04#1#95\tzebraburchells\t2020-03-19\t07:05:00"                                                                </span></span>
@@ -403,15 +403,15 @@ For this, we use the function <code>write_standardized_list</code>.</p>
 <span><span class="co">#&gt; [37] "ATH\tATH_B04\tNA\t1\tATH_B04#1#275\twildebeestblue\t2020-03-26\t13:49:00"                                                               </span></span>
 <span><span class="co">#&gt; [38] "ATH\tATH_B04\tNA\t1\tATH_B04#1#315\tblank\t2020-04-15\t14:28:00"                                                                        </span></span>
 <span><span class="co">#&gt; [39] ""                                                                                                                                       </span></span>
-<span><span class="co">#&gt; [40] "INFO  [2024-04-13 17:43:44] Standardizing file MOK/MOK_record_table_0min_deltaT_2021-05-07.csv (3/3) ---"                               </span></span>
-<span><span class="co">#&gt; [41] "INFO  [2024-04-13 17:43:44] Initial file: 23 columns, 100 rows."                                                                        </span></span>
-<span><span class="co">#&gt; [42] "INFO  [2024-04-13 17:43:44] Standardizing columns"                                                                                      </span></span>
-<span><span class="co">#&gt; [43] "INFO  [2024-04-13 17:43:44] Match found in column names: renaming column metadata_Numberofindividuals into metadata_NumberOfIndividuals"</span></span>
-<span><span class="co">#&gt; [44] "INFO  [2024-04-13 17:43:44] Standardizing dates/times"                                                                                  </span></span>
-<span><span class="co">#&gt; [45] "INFO  [2024-04-13 17:43:44] Getting location code for Digikam data"                                                                     </span></span>
-<span><span class="co">#&gt; [46] "INFO  [2024-04-13 17:43:44] Fill capture info"                                                                                          </span></span>
-<span><span class="co">#&gt; [47] "INFO  [2024-04-13 17:43:44] Cleaning location/camera, species and columns values"                                                       </span></span>
-<span><span class="co">#&gt; [48] "INFO  [2024-04-13 17:43:44] Final file: 27 columns, 100 rows. Here is a sneak peek:"                                                    </span></span>
+<span><span class="co">#&gt; [40] "INFO  [2024-04-13 18:03:02] Standardizing file MOK/MOK_record_table_0min_deltaT_2021-05-07.csv (3/3) ---"                               </span></span>
+<span><span class="co">#&gt; [41] "INFO  [2024-04-13 18:03:02] Initial file: 23 columns, 100 rows."                                                                        </span></span>
+<span><span class="co">#&gt; [42] "INFO  [2024-04-13 18:03:02] Standardizing columns"                                                                                      </span></span>
+<span><span class="co">#&gt; [43] "INFO  [2024-04-13 18:03:02] Match found in column names: renaming column metadata_Numberofindividuals into metadata_NumberOfIndividuals"</span></span>
+<span><span class="co">#&gt; [44] "INFO  [2024-04-13 18:03:02] Standardizing dates/times"                                                                                  </span></span>
+<span><span class="co">#&gt; [45] "INFO  [2024-04-13 18:03:02] Getting location code for Digikam data"                                                                     </span></span>
+<span><span class="co">#&gt; [46] "INFO  [2024-04-13 18:03:02] Fill capture info"                                                                                          </span></span>
+<span><span class="co">#&gt; [47] "INFO  [2024-04-13 18:03:02] Cleaning location/camera, species and columns values"                                                       </span></span>
+<span><span class="co">#&gt; [48] "INFO  [2024-04-13 18:03:02] Final file: 27 columns, 100 rows. Here is a sneak peek:"                                                    </span></span>
 <span><span class="co">#&gt; [49] "locationID\tcameraID\tseason\troll\teventID\tsnapshotName\teventDate\teventTime"                                                        </span></span>
 <span><span class="co">#&gt; [50] "MOK\tMOK_A09\tNA\t1\tMOK_A09#1#1\tgiraffe\t2018-07-08\t12:15:34"                                                                        </span></span>
 <span><span class="co">#&gt; [51] "MOK\tMOK_A09\tNA\t1\tMOK_A09#1#2\tspringbok\t2018-08-26\t10:45:55"                                                                      </span></span>
@@ -420,12 +420,12 @@ For this, we use the function <code>write_standardized_list</code>.</p>
 <span><span class="co">#&gt; [54] "MOK\tMOK_B07\tNA\t1\tMOK_B07#1#2\tgemsbok\t2018-08-19\t09:11:55"                                                                        </span></span>
 <span><span class="co">#&gt; [55] ""                                                                                                                                       </span></span>
 <span><span class="co">#&gt; [56] ""                                                                                                                                       </span></span>
-<span><span class="co">#&gt; [57] "INFO  [2024-04-13 17:43:44] Creating folder /tmp/RtmpRo0ZCS/data_out/APN"                                                               </span></span>
-<span><span class="co">#&gt; [58] "INFO  [2024-04-13 17:43:44] Writing file APN/APN_S1_full_report_0-50__agreement_corrected_fin.csv -&gt; APN/APN_S1_R1-2.csv (1/3) ---"     </span></span>
-<span><span class="co">#&gt; [59] "INFO  [2024-04-13 17:43:44] Creating folder /tmp/RtmpRo0ZCS/data_out/ATH"                                                               </span></span>
-<span><span class="co">#&gt; [60] "INFO  [2024-04-13 17:43:44] Writing file ATH/ATH_Roll1_Snapshot.csv -&gt; ATH/ATH_SNA_R1.csv (2/3) ---"                                    </span></span>
-<span><span class="co">#&gt; [61] "INFO  [2024-04-13 17:43:44] Creating folder /tmp/RtmpRo0ZCS/data_out/MOK"                                                               </span></span>
-<span><span class="co">#&gt; [62] "INFO  [2024-04-13 17:43:44] Writing file MOK/MOK_record_table_0min_deltaT_2021-05-07.csv -&gt; MOK/MOK_SNA_R1.csv (3/3) ---"</span></span></code></pre></div>
+<span><span class="co">#&gt; [57] "INFO  [2024-04-13 18:03:02] Creating folder /tmp/Rtmpzpfy7V/data_out/APN"                                                               </span></span>
+<span><span class="co">#&gt; [58] "INFO  [2024-04-13 18:03:02] Writing file APN/APN_S1_full_report_0-50__agreement_corrected_fin.csv -&gt; APN/APN_S1_R1-2.csv (1/3) ---"     </span></span>
+<span><span class="co">#&gt; [59] "INFO  [2024-04-13 18:03:02] Creating folder /tmp/Rtmpzpfy7V/data_out/ATH"                                                               </span></span>
+<span><span class="co">#&gt; [60] "INFO  [2024-04-13 18:03:02] Writing file ATH/ATH_Roll1_Snapshot.csv -&gt; ATH/ATH_SNA_R1.csv (2/3) ---"                                    </span></span>
+<span><span class="co">#&gt; [61] "INFO  [2024-04-13 18:03:02] Creating folder /tmp/Rtmpzpfy7V/data_out/MOK"                                                               </span></span>
+<span><span class="co">#&gt; [62] "INFO  [2024-04-13 18:03:02] Writing file MOK/MOK_record_table_0min_deltaT_2021-05-07.csv -&gt; MOK/MOK_SNA_R1.csv (3/3) ---"</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

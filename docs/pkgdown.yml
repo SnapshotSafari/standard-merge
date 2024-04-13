@@ -4,8 +4,8 @@ pkgdown_sha: ~
 articles:
   standardize-file: standardize-file.html
   standardize-files: standardize-files.html
-last_built: 2024-04-13T15:43Z
+last_built: 2024-04-13T16:02Z
 urls:
-  reference: https://snapshotsafari.github.io/standardizesnapshot/reference
-  article: https://snapshotsafari.github.io/standardizesnapshot/articles
+  reference: https://snapshotsafari.github.io/standard-merge/reference
+  article: https://snapshotsafari.github.io/standard-merge/articles
 

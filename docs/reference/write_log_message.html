@@ -99,7 +99,7 @@ do nothing if logger is <code>NA</code>.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">logger</span> <span class="op">&lt;-</span> <span class="fu"><a href="create_logger.html">create_logger</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="co"># Create a logger</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Create logger /tmp/RtmpXFKYyH/file651213b2cef9</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Create logger /tmp/Rtmp3MYUYp/file6d2b7d1f58d0</span>
 <span class="r-in"><span><span class="fu">write_log_message</span><span class="op">(</span><span class="st">"Test"</span>, level <span class="op">=</span> <span class="st">"debug"</span>, logger <span class="op">=</span> <span class="va">logger</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">write_log_message</span><span class="op">(</span><span class="st">"Test"</span>, level <span class="op">=</span> <span class="st">"info"</span>, logger <span class="op">=</span> <span class="va">logger</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">write_log_message</span><span class="op">(</span><span class="st">"Test"</span>, level <span class="op">=</span> <span class="st">"warn"</span>, logger <span class="op">=</span> <span class="va">logger</span><span class="op">)</span> </span></span>
