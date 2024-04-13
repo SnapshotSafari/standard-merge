@@ -16,7 +16,8 @@ You can install this package using the following commands in the R console (NB: 
 ```r 
 install.packages("devtools") # if devtools is not installed already
 library(devtools)
-devtools::install_github("https://github.com/SnapshotSafari/standard-merge")
+devtools::install_github("https://github.com/SnapshotSafari/standard-merge",
+                         build_vignettes = TRUE)
 ```
 
 ## Vignettes
